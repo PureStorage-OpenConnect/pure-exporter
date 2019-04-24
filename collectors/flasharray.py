@@ -37,8 +37,8 @@ class FlasharrayCollector:
         return self._name
 
     def array_hw(self):
-        """ Create metrics of gauge type for temperature, power and components status,
-        with array name and the hw component name as labels.
+        """ Create metrics of gauge type for temperature, power and components
+        status, with array name and the hw component name as labels.
         Metrics values can be iterated over.
         """
 
@@ -48,59 +48,62 @@ class FlasharrayCollector:
             """
             desc = ''
             hw = cid['name'].split('.')
-            if (hw[0].find('CH',0,2) >= 0) :
+            if (hw[0].find('CH', 0, 2) >= 0):
                 c = hw[0].split('CH')
                 desc = f'Chassis {c[1]}'
                 if len(hw) == 1:
                     return desc
 
-                if (hw[1].find('BAY',0,3) >= 0) :
+                if (hw[1].find('BAY', 0, 3) >= 0):
                     m = hw[1].split('BAY')
                     desc = desc + f' Flash module {m[1]}'
-                elif (hw[1].find('NVB',0,3) >= 0) :
+                elif (hw[1].find('NVB', 0, 3) >= 0):
                     m = hw[1].split('NVB')
                     desc = desc + f' NVRAM module {m[1]}'
-                elif (hw[1].find('TMP',0,3) >= 0) :
+                elif (hw[1].find('TMP', 0, 3) >= 0):
                     m = hw[1].split('TMP')
                     desc = desc + f' Temperature sensor {m[1]}'
-                elif (hw[1].find('FAN',0,3) >= 0) :
+                elif (hw[1].find('FAN', 0, 3) >= 0):
                     m = hw[1].split('FAN')
                     desc = desc + f' Fan {m[1]}'
-                elif (hw[1].find('PWR',0,3) >= 0) :
+                elif (hw[1].find('PWR', 0, 3) >= 0):
                     m = hw[1].split('PWR')
                     desc = desc + f' Power Supply {m[1]}'
-            elif (hw[0].find('CT',0,2) >= 0) :
+            elif (hw[0].find('CT', 0, 2) >= 0):
                 c = hw[0].split('CT')
                 desc = f'Controller {c[1]}'
                 if len(hw) == 1:
                     return desc
 
-            if (hw[1].find('FC',0,2) >= 0) :
+            if (hw[1].find('FC', 0, 2) >= 0):
                 m = hw[1].split('FC')
                 desc = desc + f' Fibre Channel port {m[1]}'
-            elif (hw[1].find('ETH',0,3) >= 0) :
+            elif (hw[1].find('ETH', 0, 3) >= 0):
                 m = hw[1].split('ETH')
                 desc = desc + f' Ethernet Port {m[1]}'
-            elif (hw[1].find('SAS',0,3) >= 0) :
+            elif (hw[1].find('SAS', 0, 3) >= 0):
                 m = hw[1].split('SAS')
                 desc = desc + f' SAS Port {m[1]}'
-            elif (hw[1].find('TMP',0,3) >= 0) :
+            elif (hw[1].find('TMP', 0, 3) >= 0):
                 m = hw[1].split('TMP')
                 desc = desc + f' Temperature sensor {m[1]}'
-            elif (hw[1].find('FAN',0,3) >= 0) :
+            elif (hw[1].find('FAN', 0, 3) >= 0):
                 m = hw[1].split('FAN')
                 desc = desc + f' Fan {m[1]}'
 
             return desc
 
         fa_hw = self.fa.list_hardware()
-        labels=['array','hw_id','hw_desc']
+        labels = ['array', 'hw_id', 'hw_desc']
         temp = GaugeMetricFamily('pure_fa_temp_celsius',
-                                 'Hardware components temperature', labels=labels)
+                                 'Hardware components temperature',
+                                 labels=labels)
         power = GaugeMetricFamily('pure_fa_power_watts',
-                                  'Hardware components Power consumption', labels=labels)
+                                  'Hardware components Power consumption',
+                                  labels=labels)
         status = GaugeMetricFamily('pure_fa_hw_status',
-                                   'Hardware components status', labels=labels)
+                                   'Hardware components status',
+                                   labels=labels)
         for h in fa_hw:
             state = h['status']
             name = h['name']
@@ -118,12 +121,12 @@ class FlasharrayCollector:
         yield status
 
     def array_events(self):
-        """ Create a metric of gauge type for the number of open alerts: 
+        """ Create a metric of gauge type for the number of open alerts:
         critical, warning and info, with array name and the severity as labels.
         Metrics values can be iterated over.
         """
         fa_events = self.fa.list_messages(open=True)
-        labels=['array','severity']
+        labels = ['array', 'severity']
         events = GaugeMetricFamily('pure_fa_open_events_total',
                                    'Number of open events',
                                    labels=labels)
@@ -144,7 +147,7 @@ class FlasharrayCollector:
         yield events
 
     def array_space(self):
-        """ Create array space metrics of gauge type, 
+        """ Create array space metrics of gauge type,
         with array name as label.
         Metrics values can be iterated over.
         """
@@ -166,8 +169,8 @@ class FlasharrayCollector:
                                          'FlashArray overall system space',
                                          labels=labels)
         array_volumes = GaugeMetricFamily('pure_fa_space_volumes_bytes',
-                                         'FlashArray overall volumes space',
-                                         labels=labels)
+                                          'FlashArray overall volumes space',
+                                          labels=labels)
         array_capacity.add_metric([self.name], fa_space[0]['capacity'])
         array_reduction.add_metric([self.name], fa_space[0]['data_reduction'])
         array_provisioned.add_metric([self.name], fa_space[0]['provisioned'])
@@ -210,7 +213,7 @@ class FlasharrayCollector:
                                         labels=labels)
         array_rd_lat.add_metric([self.name], fa_perf[0]['usec_per_read_op'])
         array_wr_lat.add_metric([self.name], fa_perf[0]['usec_per_write_op'])
-        #array_queue.add_metric([self.name], fa_perf[0]['local_queue_usec_per_op'])
+        # array_queue.add_metric([self.name], fa_perf[0]['local_queue_usec_per_op'])
         array_rd_iops.add_metric([self.name], fa_perf[0]['reads_per_sec'])
         array_wr_iops.add_metric([self.name], fa_perf[0]['writes_per_sec'])
         array_rd_bw.add_metric([self.name], fa_perf[0]['output_per_sec'])
@@ -223,14 +226,13 @@ class FlasharrayCollector:
         yield array_rd_bw
         yield array_wr_bw
 
-
     def vol_space(self):
-        """ Create volumes space metrics of gauge type, with array and 
+        """ Create volumes space metrics of gauge type, with array and
         volume name as a labels.
         Metrics values can be iterated over.
         """
         v_space = self.fa.list_volumes(space='true')
-        labels=['array', 'volume']
+        labels = ['array', 'volume']
         vol_dr = GaugeMetricFamily('pure_fa_vol_data_reduction',
                                    'FlashArray volume data reduction ratio',
                                    labels=labels)
@@ -241,8 +243,8 @@ class FlasharrayCollector:
                                      'FlashArray volume snapshots space',
                                      labels=labels)
         vol_tot = GaugeMetricFamily('pure_fa_vol_total_bytes',
-                                     'FlashArray volume total allocated size',
-                                     labels=labels)
+                                    'FlashArray volume total allocated size',
+                                    labels=labels)
         vol_vols = GaugeMetricFamily('pure_fa_vol_volumes_space_bytes',
                                      'FlashArray volume volumes space',
                                      labels=labels)
@@ -263,39 +265,44 @@ class FlasharrayCollector:
             yield vol_tot
             yield vol_vols
 
-
     def vol_perf(self):
-        """ Create volumes performance metrics of gauge type, with array and 
+        """ Create volumes performance metrics of gauge type, with array and
         volume name as a labels.
         Metrics values can be iterated over.
         """
         v_perf = self.fa.list_volumes(action='monitor')
-        labels=['array', 'volume']
+        labels = ['array', 'volume']
         vol_rd_lat = GaugeMetricFamily('pure_fa_vol_rd_latency_usec',
-                                     'FlashArray volume read latency',
-                                     labels=labels)
+                                       'FlashArray volume read latency',
+                                       labels=labels)
         vol_wr_lat = GaugeMetricFamily('pure_fa_vol_wr_latency_usec',
-                                     'FlashArray volume write latency',
-                                     labels=labels)
+                                       'FlashArray volume write latency',
+                                       labels=labels)
         vol_rd_bw = GaugeMetricFamily('pure_fa_vol_rd_bw_bps',
-                                     'FlashArray volume read bandwidth',
-                                     labels=labels)
+                                      'FlashArray volume read bandwidth',
+                                      labels=labels)
         vol_wr_bw = GaugeMetricFamily('pure_fa_vol_wr_bw_bps',
-                                     'FlashArray volume write bandwidth',
-                                     labels=labels)
+                                      'FlashArray volume write bandwidth',
+                                      labels=labels)
         vol_rd_iops = GaugeMetricFamily('pure_fa_vol_rd_ops',
-                                     'FlashArray volume read IOPS',
-                                     labels=labels)
+                                        'FlashArray volume read IOPS',
+                                        labels=labels)
         vol_wr_iops = GaugeMetricFamily('pure_fa_vol_wr_ops',
-                                     'FlashArray volume write IOPS',
-                                     labels=labels)
+                                        'FlashArray volume write IOPS',
+                                        labels=labels)
         for v in v_perf:
-            vol_rd_lat.add_metric([self.name, v['name']], v['usec_per_read_op'])
-            vol_wr_lat.add_metric([self.name, v['name']], v['usec_per_write_op'])
-            vol_rd_bw.add_metric([self.name, v['name']], v['input_per_sec'])
-            vol_wr_bw.add_metric([self.name, v['name']], v['output_per_sec'])
-            vol_rd_iops.add_metric([self.name, v['name']], v['reads_per_sec'])
-            vol_wr_iops.add_metric([self.name, v['name']], v['writes_per_sec'])
+            vol_rd_lat.add_metric([self.name, v['name']],
+                                  v['usec_per_read_op'])
+            vol_wr_lat.add_metric([self.name, v['name']],
+                                  v['usec_per_write_op'])
+            vol_rd_bw.add_metric([self.name, v['name']],
+                                 v['input_per_sec'])
+            vol_wr_bw.add_metric([self.name, v['name']],
+                                 v['output_per_sec'])
+            vol_rd_iops.add_metric([self.name, v['name']],
+                                   v['reads_per_sec'])
+            vol_wr_iops.add_metric([self.name, v['name']],
+                                   v['writes_per_sec'])
             yield vol_rd_lat
             yield vol_wr_lat
             yield vol_rd_bw
