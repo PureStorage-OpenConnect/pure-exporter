@@ -37,12 +37,15 @@ class FlasharrayCollector:
         return self._name
 
     def array_hw(self):
-        """ Creates metrics for: temperature, power and components status of
-        gauge type with array name and the hw component name as labels.
+        """ Create metrics of gauge type for temperature, power and components status,
+        with array name and the hw component name as labels.
         Metrics values can be iterated over.
         """
 
         def _get_desc(cid):
+            """ Utility function to create human readable labels for
+            hardware components
+            """
             desc = ''
             hw = cid['name'].split('.')
             if (hw[0].find('CH',0,2) >= 0) :
@@ -115,9 +118,8 @@ class FlasharrayCollector:
         yield status
 
     def array_events(self):
-        """
-        Create a metric for the number of open alerts: critical, warning and
-        info of gauge type, with array name and the severity as labels.
+        """ Create a metric of gauge type for the number of open alerts: 
+        critical, warning and info, with array name and the severity as labels.
         Metrics values can be iterated over.
         """
         fa_events = self.fa.list_messages(open=True)
@@ -142,8 +144,8 @@ class FlasharrayCollector:
         yield events
 
     def array_space(self):
-        """
-        Create array space metrics of type gauge with array name as label.
+        """ Create array space metrics of gauge type, 
+        with array name as label.
         Metrics values can be iterated over.
         """
         fa_space = self.fa.get(space=True)
@@ -180,8 +182,7 @@ class FlasharrayCollector:
         yield array_volumes
 
     def array_perf(self):
-        """
-        Create array performance metrics of type gauge with array name as label.
+        """ Create array performance metrics of gauge type, with array name as label.
         Metrics values can be iterated over.
         """
         fa_perf = self.fa.get(action='monitor')
@@ -224,8 +225,7 @@ class FlasharrayCollector:
 
 
     def vol_space(self):
-        """
-        Create volume space metrics of type gauge with array and
+        """ Create volumes space metrics of gauge type, with array and 
         volume name as a labels.
         Metrics values can be iterated over.
         """
@@ -265,8 +265,7 @@ class FlasharrayCollector:
 
 
     def vol_perf(self):
-        """
-        Create volume performance metrics of type gauge with array and
+        """ Create volumes performance metrics of gauge type, with array and 
         volume name as a labels.
         Metrics values can be iterated over.
         """
