@@ -37,24 +37,24 @@ In both the cases it is necessary to specify two additional paramethers to ident
 
 A possible configuration of the prometheus.yaml scrape section looks like the following
 
-global:
-
-...
-
-scrape_configs:
-- job_name: x20-prod01
-  metrics_path: /metrics/flasharray
-  static_configs:
-  - targets:
-    - 192.168.103.110:9091
-  params:
-    endpoint: ['172.16.10.80']
-    api-token: ['5d8ad02f-547d-fc24-bb51-fa0d2b0de973']
-- job_name: fb01
-  metrics_path: /metrics/flashblade
-  static_configs:
-  - targets:
-    - 192.168.103.110:9091
-  params:
-    endpoint: ['172.16.10.113']
-    api-token: ['T-77ed85aa-d7b1-45cf-ab14-7b5c26ecea01']
+    global:
+    
+    ...
+    
+    scrape_configs:
+    - job_name: x20-prod01
+      metrics_path: /metrics/flasharray
+      static_configs:
+      - targets:
+        - 192.168.103.110:9091
+      params:
+        endpoint: ['172.16.10.80']
+        api-token: ['5d8ad02f-547d-fc24-bb51-fa0d2b0de973']
+    - job_name: fb01
+      metrics_path: /metrics/flashblade
+      static_configs:
+      - targets:
+        - 192.168.103.110:9091
+      params:
+        endpoint: ['172.16.10.113']
+        api-token: ['T-77ed85aa-d7b1-45cf-ab14-7b5c26ecea01']
