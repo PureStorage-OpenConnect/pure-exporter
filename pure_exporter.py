@@ -1,18 +1,4 @@
 #!/usr/bin/env python
-# Copyright (c) 2019 Pure Storage, Inc.
-#
-# Prometheus exporter for Pure Storage FlashArray and FlashBlade.
-# The Pure Storage Python REST Client is used to query
-# FlashArray/FlashBlade occupancy and performance indicators.
-#
-
-__author__ = "Eugenio Grosso"
-__copyright__ = "Copyright 2019, Pure Storage Inc."
-__license__ = "Apache v2.0"
-__version__ = "0.2"
-__maintainer__ = "Eugenio Grosso"
-__email__ = "geneg@purestorage.com"
-__status__ = "Development"
 
 from flask import Flask, request, abort, make_response
 from prometheus_client import generate_latest, CollectorRegistry, CONTENT_TYPE_LATEST
