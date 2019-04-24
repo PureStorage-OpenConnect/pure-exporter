@@ -63,8 +63,7 @@ class FlashbladeCollector:
         yield status
 
     def array_events(self):
-        """
-        Create a metric of gauge type for the number of open alerts: critical, warning 
+        """ Create a metric of gauge type for the number of open alerts: critical, warning 
         and info, with array name and the severity as labels.
         Metrics values can be iterated over.
         """
@@ -89,8 +88,8 @@ class FlashbladeCollector:
         yield events
 
     def array_space(self):
-        """
-        Create metrics of gauge type for array space indicators, with array name as label.
+        """ Create metrics of gauge type for array space indicators, with array name 
+        as label.
         Metrics values can be iterated over.
         """
         fb_space = self.fb.arrays.list_arrays_space().items[0]
@@ -117,8 +116,8 @@ class FlashbladeCollector:
         yield tot_snapshots
 
     def buckets_space(self):
-        """
-        Create metrics of gauge type for buckets space indicators, with array name as label.
+        """ Create metrics of gauge type for buckets space indicators, with array 
+        name as label.
         Metrics values can be iterated over.
         """
         fb_buckets = self.fb.buckets.list_buckets()
@@ -158,8 +157,7 @@ class FlashbladeCollector:
             yield uniq_space
 
     def collect(self):
-        """
-        Overall collector method for all the collected metrics.
+        """ Overall collector method for all the collected metrics.
         """
         yield from self.array_hw()
         yield from self.array_events()
