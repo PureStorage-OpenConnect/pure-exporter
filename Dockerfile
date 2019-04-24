@@ -1,10 +1,19 @@
 FROM python:3-alpine
-COPY pure_fa_collector.py /
-COPY pure_fb_collector.py /
-COPY pure_prom_exporter.py /
-COPY requirements.txt /
-RUN pip install -r requirements.txt
-RUN pip install gunicorn
-COPY gunicorn.conf /
-EXPOSE 9091
-CMD [ "gunicorn", "-c", "gunicorn.conf", "pure_prom_exporter:app" ]
+
+# Application directory
+WORKDIR /app
+COPY . /app
+
+# Install dependencies and WSGI server
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir gunicorn
+
+# Run as non-root user
+RUN addgroup -S app && adduser -S -G app app
+USER app
+
+# Configure the image properties
+# gunicorn settings: bind any, 2 threads, log to stdout/stderr (docker/k8s handles logs)
+ENV GUNICORN_CMD_ARGS="--bind=0.0.0.0:9491 --workers=2 --access-logfile=- --error-logfile=-"
+EXPOSE 9491
+ENTRYPOINT ["gunicorn", "pure_exporter:app"]
