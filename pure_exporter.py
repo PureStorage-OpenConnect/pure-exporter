@@ -12,6 +12,7 @@ import logging
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
 
+
 @app.route('/')
 def route_index():
     """
@@ -42,6 +43,7 @@ def route_index():
     </table>
     '''
 
+
 @app.route('/metrics/flasharray', methods=['GET'])
 def route_metrics_flasharray():
     """
@@ -63,6 +65,7 @@ def route_metrics_flasharray():
     resp = make_response(generate_latest(_reg), 200)
     resp.headers['Content-type'] = CONTENT_TYPE_LATEST
     return resp
+
 
 @app.route('/metrics/flashblade', methods=['GET'])
 def route_metrics_flashblade():
@@ -87,12 +90,14 @@ def route_metrics_flashblade():
 
     return resp
 
+
 @app.errorhandler(400)
 def route_error_400(error):
     """
     Handle invalid request errors
     """
     return 'Invalid request parameters', 400
+
 
 @app.errorhandler(404)
 def route_error_404(error):
@@ -101,6 +106,7 @@ def route_error_404(error):
     """
     return 'Not found', 404
 
+
 @app.errorhandler(500)
 def route_error_500(error):
     """
@@ -108,9 +114,9 @@ def route_error_500(error):
     """
     return 'Internal server error', 500
 
+
 # Run in debug mode when not called by WSGI
 if __name__ == "__main__":
     app.logger.setLevel(logging.DEBUG)
     app.logger.debug('running in debug mode...')
     app.run(host="0.0.0.0", port=8080, debug=True)
-
