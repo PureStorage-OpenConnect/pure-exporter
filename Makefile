@@ -13,7 +13,13 @@ build: Dockerfile
 	docker build -t $(NS)/$(IMAGE_NAME):$(VERSION) -f Dockerfile .
 
 run:
-	docker run -d --name $(CONTAINER_NAME)-$(CONTAINER_INSTANCE) -p$(PORTS) $(NS)/$(IMAGE_NAME):$(VERSION)
+        docker run -d --name $(CONTAINER_NAME)-$(CONTAINER_INSTANCE) -p$(PORTS) $(NS)/$(IMAGE_NAME):$(VERSION)
+	
+stop:
+        docker stop $(CONTAINER_NAME)-$(CONTAINER_INSTANCE)
 
+kill:
+        docker kill $(CONTAINER_NAME)-$(CONTAINER_INSTANCE)
+        docker rm $(CONTAINER_NAME)-$(CONTAINER_INSTANCE)
 
-defeult: build
+default: build
