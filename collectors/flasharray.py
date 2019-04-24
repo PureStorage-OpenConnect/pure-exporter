@@ -304,8 +304,7 @@ class FlasharrayCollector:
             yield vol_wr_iops
 
     def collect(self):
-        """
-        Global collector method for all the collected metrics.
+        """ Global collector method for all the collected metrics.
         """
         yield from self.array_hw()
         yield from self.array_events()
