@@ -1,25 +1,18 @@
-NS ?= purestorage
-VERSION ?= latest
+IMAGE_NAMESPACE ?= purestorage
+IMAGE_NAME ?= pure-exporter
+IMAGE_TAG ?= latest
 
-CONTAINER_NAME = pure-prom-exp
-CONTAINER_INSTANCE ?= default
-PORTS = 9091:9091
-
-IMAGE_NAME ?= pure-prom-exporter
-
-.PHONY: build
-
-build: Dockerfile
-	docker build -t $(NS)/$(IMAGE_NAME):$(VERSION) -f Dockerfile .
-
-run:
-        docker run -d --name $(CONTAINER_NAME)-$(CONTAINER_INSTANCE) -p$(PORTS) $(NS)/$(IMAGE_NAME):$(VERSION)
-	
-stop:
-        docker stop $(CONTAINER_NAME)-$(CONTAINER_INSTANCE)
-
-kill:
-        docker kill $(CONTAINER_NAME)-$(CONTAINER_INSTANCE)
-        docker rm $(CONTAINER_NAME)-$(CONTAINER_INSTANCE)
+RUN_PORT = 9491:9491
 
 default: build
+
+.PHONY: all
+all: build test
+
+.PHONY: build
+build: Dockerfile requirements.txt .dockerignore $(wildcard *.py)
+	docker build . -f Dockerfile -t $(IMAGE_NAMESPACE)/$(IMAGE_NAME):$(IMAGE_TAG)
+
+.PHONY: test
+test:
+	docker run --rm -p $(RUN_PORT) $(IMAGE_NAMESPACE)/$(IMAGE_NAME):$(IMAGE_TAG)
