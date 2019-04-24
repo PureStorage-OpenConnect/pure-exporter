@@ -12,11 +12,11 @@ The exporter is a Python Flex application that is packaged as a Docker container
 1. Verify the actual exposed tcp port in the Dockerfile is suited for your environment (defauls is 9091) and modify it if necessary.
 2. Build the export image by running make in the project directory
 
-      pureuser@build-host08: sudo make
+       pureuser@build-host08:~/python-virtual-environments/work/Monitoring/Prometheus$ sudo make
 
 3. Run the final image
 
-      pureuser@build-host08: sudo run
+       pureuser@build-host08:~/python-virtual-environments/work/Monitoring/Prometheus$ sudo run
 
 ### Metrics URLs
 
@@ -30,8 +30,8 @@ and for a FlashBlade appliance at the URL
 
 In both the cases it is necessary to specify two additional paramethers to identify and access the target appliance: the appliance hostname/IP address and the API token for a valid account on the same appliance. Therefore, the full URL schema to be used is as follows:
 
-    FlashArray     http://\<exporter-ip\>:\<exporter-port\>/metrics/flasharray?endpoint=\<fqdn_or_ip\>&api-token=\<APItoken\>
-    FlashBlade     http://\<exporter-ip\>:\<exporter-port\>/metrics/flashblade?endpoint=\<fqdn_or_ip\>&api-token=\<APItoken\>
+    FlashArray     http://<exporter-ip>:<exporter-port>/metrics/flasharray?endpoint=<fqdn_or_ip>&api-token=<APItoken>
+    FlashBlade     http://<exporter-ip>:<exporter-port>/metrics/flashblade?endpoint=<fqdn_or_ip>&api-token=<APItoken>
 
 ### Prometheus configuration
 
