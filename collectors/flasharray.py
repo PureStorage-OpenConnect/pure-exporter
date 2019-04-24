@@ -8,7 +8,7 @@ from prometheus_client.core import GaugeMetricFamily
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-class PurestorageFACollector:
+class FlasharrayCollector:
     """ Instantiates the collector's methods and properties to retrieve metrics
     from Puretorage Flasharray.
     Provides also a 'collect' method to allow Prometheus client registry
@@ -209,7 +209,7 @@ class PurestorageFACollector:
                                         labels=labels)
         array_rd_lat.add_metric([self.name], fa_perf[0]['usec_per_read_op'])
         array_wr_lat.add_metric([self.name], fa_perf[0]['usec_per_write_op'])
-        array_queue.add_metric([self.name], fa_perf[0]['local_queue_usec_per_op'])
+        #array_queue.add_metric([self.name], fa_perf[0]['local_queue_usec_per_op'])
         array_rd_iops.add_metric([self.name], fa_perf[0]['reads_per_sec'])
         array_wr_iops.add_metric([self.name], fa_perf[0]['writes_per_sec'])
         array_rd_bw.add_metric([self.name], fa_perf[0]['output_per_sec'])
