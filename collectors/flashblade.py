@@ -144,9 +144,46 @@ class FlashbladeCollector:
             yield virt_space
             yield uniq_space
 
+    def filesystems_space(self):
+        """ Create metrics of gauge type for filesystems space indicators,
+        with filesystem name as label.
+        Metrics values can be iterated over.
+        """
+        fb_filesystems = self.fb.file_systems.list_file_systems()
+        labels = ['name']
+        data_reduct = GaugeMetricFamily('pure_fb_filesystems_data_reduction',
+                                        'FlashBlade filesystems data reduction',
+                                        labels=labels)
+        space_snap = GaugeMetricFamily('pure_fb_filesystems_snapshots_bytes',
+                                       'FlashBlade filesystems occupied snapshots space',
+                                       labels=labels)
+        tot_phy = GaugeMetricFamily('pure_fb_filesystems_total_bytes',
+                                    'FlashBlade filesystems total physical space',
+                                    labels=labels)
+        virt_space = GaugeMetricFamily('pure_fb_filesystems_virtual_bytes',
+                                       'FlashBlade filesystems virtual space',
+                                       labels=labels)
+        uniq_space = GaugeMetricFamily('pure_fb_filesystems_unique_bytes',
+                                       'FlashBlade filesystems unique space',
+                                       labels=labels)
+        for f in fb_filesystems.items:
+            if f.space.data_reduction is None:
+                f.space.data_reduction = 0
+            data_reduct.add_metric([f.name], f.space.data_reduction)
+            space_snap.add_metric([f.name], f.space.snapshots)
+            tot_phy.add_metric([f.name], f.space.total_physical)
+            virt_space.add_metric([f.name], f.space.virtual)
+            uniq_space.add_metric([f.name], f.space.unique)
+            yield data_reduct
+            yield space_snap
+            yield tot_phy
+            yield virt_space
+            yield uniq_space
+
     def collect(self):
-        """Overall collector method for all the collected metrics."""
+        """Global collector method for all the collected metrics."""
         yield from self.array_hw()
         yield from self.array_events()
         yield from self.array_space()
         yield from self.buckets_space()
+        yield from self.filesystems_space()
