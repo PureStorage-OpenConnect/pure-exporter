@@ -31,13 +31,13 @@ def route_index():
         <tbody>
             <tr>
                 <td>FlashArray</td>
-                <td><a href="/metrics/flasharray?endpoint=host&api-token=0">/metrics/flasharray</a></td>
-                <td>endpoint, api-token</td>
+                <td><a href="/metrics/flasharray?endpoint=host&apitoken=0">/metrics/flasharray</a></td>
+                <td>endpoint, apitoken</td>
             </tr>
             <tr>
                 <td>FlashBlade</td>
-                <td><a href="/metrics/flashblade?endpoint=host&api-token=0">/metrics/flashblade</a></td>
-                <td>endpoint, api-token</td>
+                <td><a href="/metrics/flashblade?endpoint=host&apitoken=0">/metrics/flashblade</a></td>
+                <td>endpoint, apitoken</td>
             </tr>
         </tbody>
     </table>
@@ -50,7 +50,7 @@ def route_metrics_flasharray():
     Produce FlashArray metrics.
     """
     endp = request.args.get('endpoint', None)
-    atok = request.args.get('api-token', None)
+    atok = request.args.get('apitoken', None)
 
     if (endp is None or atok is None):
         abort(400)
@@ -73,7 +73,7 @@ def route_metrics_flashblade():
     Produce FlashBlade metrics.
     """
     endp = request.args.get('endpoint', None)
-    atok = request.args.get('api-token', None)
+    atok = request.args.get('apitoken', None)
 
     if (endp is None or atok is None):
         abort(400)
