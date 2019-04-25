@@ -120,3 +120,12 @@ static configs.
 The actual scraping address (the one of the exporter application) is set via the
 last relabel config. It never appears anywhere in the metrics, as it is fully
 irrelevant.
+
+## Authors
+
+* **Eugenio Grosso**
+* **Philipp Mollitor** - [PhilsLab](https://github.com/PhilsLab)
+
+## License
+
+This project is licensed under the Apache 2.0 License - see the [LICENSE.md](LICENSE.md) file for details
