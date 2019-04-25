@@ -46,7 +46,7 @@ def route_index():
 
 @app.route('/metrics/flasharray', methods=['GET'])
 @app.route('/metrics/flashblade', methods=['GET'])
-def route_metrics_flasharray():
+def route_metrics():
     """
     Produce FlashArray metrics.
     """
