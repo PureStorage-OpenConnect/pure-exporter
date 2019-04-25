@@ -25,7 +25,7 @@ class FlasharrayCollector:
 
     def array_hw(self):
         """ Create metrics of gauge type for temperature, power and components
-        status, with array name and the hw component name as labels.
+        status, with hardware component name as label.
         Metrics values can be iterated over.
         """
 
@@ -109,7 +109,7 @@ class FlasharrayCollector:
 
     def array_events(self):
         """ Create a metric of gauge type for the number of open alerts:
-        critical, warning and info, with array name and the severity as labels.
+        critical, warning and info, with the severity as label.
         Metrics values can be iterated over.
         """
         fa_events = self.fa.list_messages(open=True)
@@ -134,8 +134,7 @@ class FlasharrayCollector:
         yield events
 
     def array_space(self):
-        """ Create array space metrics of gauge type,
-        with array name as label.
+        """ Create array space metrics of gauge type.
         Metrics values can be iterated over.
         """
         fa_space = self.fa.get(space=True)
@@ -171,7 +170,7 @@ class FlasharrayCollector:
         yield array_volumes
 
     def array_perf(self):
-        """ Create array performance metrics of gauge type, with array name as label.
+        """ Create array performance metrics of gauge type.
         Metrics values can be iterated over.
         """
         fa_perf = self.fa.get(action='monitor')
@@ -212,8 +211,8 @@ class FlasharrayCollector:
         yield array_wr_bw
 
     def vol_space(self):
-        """ Create volumes space metrics of gauge type, with array and
-        volume name as a labels.
+        """ Create volumes space metrics of gauge type, with the volume name
+        as a label.
         Metrics values can be iterated over.
         """
         v_space = self.fa.list_volumes(space='true')
@@ -251,8 +250,8 @@ class FlasharrayCollector:
             yield vol_vols
 
     def vol_perf(self):
-        """ Create volumes performance metrics of gauge type, with array and
-        volume name as a labels.
+        """ Create volumes performance metrics of gauge type, with
+        volume name as label.
         Metrics values can be iterated over.
         """
         v_perf = self.fa.list_volumes(action='monitor')
