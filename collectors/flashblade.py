@@ -25,20 +25,6 @@ class FlashbladeCollector:
         # self.fb = PurityFb(endpoint, conn_timeo=ctimeo, read_timeo=rtimeo, retries=retries)
         self.fb = PurityFb(host=target, api_token=api_token)
         self.fb.disable_verify_ssl()
-        self._name = None
-
-    @property
-    def name(self):
-        """ Return the FlashBlade name
-
-        :returns: The FlashBlade name.
-        :rtype: str
-
-        """
-        if self._name is None:
-            fbinfo = self.fb.arrays.list_arrays()
-            self._name = fbinfo.items[0].name
-        return self._name
 
     def array_hw(self):
         """ Create a metric of gauge type for components status,
@@ -47,14 +33,14 @@ class FlashbladeCollector:
         """
 
         fb_hw = self.fb.hardware.list_hardware().items
-        labels = ['array', 'hw_id']
+        labels = ['hw_id']
         status = GaugeMetricFamily('pure_fb_hw_status',
                                    'Hardware components status',
                                    labels=labels)
         for h in fb_hw:
             state = h.status
             name = h.name
-            labels_v = [self.name, name]
+            labels_v = [name]
             if state == 'unused' or state == 'not_installed':
                 status.add_metric(labels_v, -1)
             elif state == 'healty':
@@ -69,9 +55,10 @@ class FlashbladeCollector:
         Metrics values can be iterated over.
         """
         fb_events = self.fb.alerts.list_alerts(filter="state='open'").items
-        labels = ['array', 'severity']
+        labels = ['severity']
         events = GaugeMetricFamily('pure_fb_open_events_total',
-                                   'FlashBlade number of open events', labels=labels)
+                                   'FlashBlade number of open events',
+                                   labels=labels)
         ccounter = 0
         wcounter = 0
         icounter = 0
@@ -83,9 +70,9 @@ class FlashbladeCollector:
                 wcounter += 1
             if severity == 'info':
                 icounter += 1
-        events.add_metric([self.name, 'critical'], ccounter)
-        events.add_metric([self.name, 'warning'], wcounter)
-        events.add_metric([self.name, 'info'], icounter)
+        events.add_metric(['critical'], ccounter)
+        events.add_metric(['warning'], wcounter)
+        events.add_metric(['info'], icounter)
         yield events
 
     def array_space(self):
@@ -94,23 +81,22 @@ class FlashbladeCollector:
         Metrics values can be iterated over.
         """
         fb_space = self.fb.arrays.list_arrays_space().items[0]
-        labels = ['array']
         capacity_tot = GaugeMetricFamily('pure_fb_space_tot_capacity_bytes',
                                          'FlashBlade total space capacity',
-                                         labels=labels)
+                                         labels=[])
         data_reduction = GaugeMetricFamily('pure_fb_space_data_reduction',
                                            'FlashBlade overall data reduction',
-                                           labels=labels)
+                                           labels=[])
         tot_physical = GaugeMetricFamily('pure_fb_space_tot_physical_bytes',
                                          'FlashBlade overall occupied space',
-                                         labels=labels)
+                                         labels=[])
         tot_snapshots = GaugeMetricFamily('pure_fb_space_tot_snapshot_bytes',
                                           'FlashBlade occupied space for snapshots',
-                                          labels=labels)
-        capacity_tot.add_metric([self.name], fb_space.capacity)
-        data_reduction.add_metric([self.name], fb_space.space.data_reduction)
-        tot_physical.add_metric([self.name], fb_space.space.total_physical)
-        tot_snapshots.add_metric([self.name], fb_space.space.snapshots)
+                                          labels=[])
+        capacity_tot.add_metric([], fb_space.capacity)
+        data_reduction.add_metric([], fb_space.space.data_reduction)
+        tot_physical.add_metric([], fb_space.space.total_physical)
+        tot_snapshots.add_metric([], fb_space.space.snapshots)
         yield capacity_tot
         yield data_reduction
         yield tot_physical
@@ -122,7 +108,7 @@ class FlashbladeCollector:
         Metrics values can be iterated over.
         """
         fb_buckets = self.fb.buckets.list_buckets()
-        labels = ['array', 'account', 'name']
+        labels = ['account', 'name']
         data_reduct = GaugeMetricFamily('pure_fb_buckets_data_reduction',
                                         'FlashBlade buckets data reduction',
                                         labels=labels)
@@ -144,18 +130,14 @@ class FlashbladeCollector:
         for b in fb_buckets.items:
             if b.space.data_reduction is None:
                 b.space.data_reduction = 0
-            data_reduct.add_metric([self.name, b.account.name, b.name],
+            data_reduct.add_metric([b.account.name, b.name],
                                    b.space.data_reduction)
-            obj_cnt.add_metric([self.name, b.account.name, b.name],
-                               b.object_count)
-            space_snap.add_metric([self.name, b.account.name, b.name],
-                                  b.space.snapshots)
-            tot_phy.add_metric([self.name, b.account.name, b.name],
+            obj_cnt.add_metric([b.account.name, b.name], b.object_count)
+            space_snap.add_metric([b.account.name, b.name], b.space.snapshots)
+            tot_phy.add_metric([b.account.name, b.name],
                                b.space.total_physical)
-            virt_space.add_metric([self.name, b.account.name, b.name],
-                                  b.space.virtual)
-            uniq_space.add_metric([self.name, b.account.name, b.name],
-                                  b.space.unique)
+            virt_space.add_metric([b.account.name, b.name], b.space.virtual)
+            uniq_space.add_metric([b.account.name, b.name], b.space.unique)
             yield data_reduct
             yield obj_cnt
             yield space_snap
@@ -164,8 +146,7 @@ class FlashbladeCollector:
             yield uniq_space
 
     def collect(self):
-        """ Overall collector method for all the collected metrics.
-        """
+        """Overall collector method for all the collected metrics."""
         yield from self.array_hw()
         yield from self.array_events()
         yield from self.array_space()

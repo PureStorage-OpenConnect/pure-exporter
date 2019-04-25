@@ -22,19 +22,6 @@ class FlasharrayCollector:
     """
     def __init__(self, target, api_token):
         self.fa = purestorage.FlashArray(target, api_token=api_token)
-        self._name = self.fa.get()['array_name']
-
-    @property
-    def name(self):
-        """ Return the FlashArray name
-
-        :returns: The FlashArray name.
-        :rtype: str
-
-        """
-        if self._name is None:
-            self._name = self.fa.get()['array_name']
-        return self._name
 
     def array_hw(self):
         """ Create metrics of gauge type for temperature, power and components
@@ -94,7 +81,7 @@ class FlasharrayCollector:
             return desc
 
         fa_hw = self.fa.list_hardware()
-        labels = ['array', 'hw_id', 'hw_desc']
+        labels = ['hw_id', 'hw_desc']
         temp = GaugeMetricFamily('pure_fa_temp_celsius',
                                  'Hardware components temperature',
                                  labels=labels)
@@ -107,7 +94,7 @@ class FlasharrayCollector:
         for h in fa_hw:
             state = h['status']
             name = h['name']
-            labels_v = [self.name, name, _get_desc(h)]
+            labels_v = [name, _get_desc(h)]
             if 'TMP' in name and h['temperature']:
                 temp.add_metric(labels_v, h['temperature'])
             if 'PWR' in h['name'] and h['voltage']:
@@ -126,7 +113,7 @@ class FlasharrayCollector:
         Metrics values can be iterated over.
         """
         fa_events = self.fa.list_messages(open=True)
-        labels = ['array', 'severity']
+        labels = ['severity']
         events = GaugeMetricFamily('pure_fa_open_events_total',
                                    'Number of open events',
                                    labels=labels)
@@ -141,9 +128,9 @@ class FlasharrayCollector:
                 wcounter += 1
             if severity == 'info':
                 icounter += 1
-        events.add_metric([self.name, 'critical'], ccounter)
-        events.add_metric([self.name, 'warning'], wcounter)
-        events.add_metric([self.name, 'info'], icounter)
+        events.add_metric(['critical'], ccounter)
+        events.add_metric(['warning'], wcounter)
+        events.add_metric(['info'], icounter)
         yield events
 
     def array_space(self):
@@ -152,31 +139,30 @@ class FlasharrayCollector:
         Metrics values can be iterated over.
         """
         fa_space = self.fa.get(space=True)
-        labels = ['array']
         array_capacity = GaugeMetricFamily('pure_fa_space_capacity_bytes',
                                            'FlashArray overall space capacity',
-                                           labels=labels)
+                                           labels=[])
         array_reduction = GaugeMetricFamily('pure_fa_space_data_reduction',
                                             'FlashArray overall data reduction',
-                                            labels=labels)
+                                            labels=[])
         array_provisioned = GaugeMetricFamily('pure_fa_space_provisioned_bytes',
                                               'FlashArray overall provisioned space',
-                                              labels=labels)
+                                              labels=[])
         array_shared = GaugeMetricFamily('pure_fa_space_shared_bytes',
                                          'FlashArray overall shared space',
-                                         labels=labels)
+                                         labels=[])
         array_system = GaugeMetricFamily('pure_fa_space_system_bytes',
                                          'FlashArray overall system space',
-                                         labels=labels)
+                                         labels=[])
         array_volumes = GaugeMetricFamily('pure_fa_space_volumes_bytes',
                                           'FlashArray overall volumes space',
-                                          labels=labels)
-        array_capacity.add_metric([self.name], fa_space[0]['capacity'])
-        array_reduction.add_metric([self.name], fa_space[0]['data_reduction'])
-        array_provisioned.add_metric([self.name], fa_space[0]['provisioned'])
-        array_shared.add_metric([self.name], fa_space[0]['shared_space'])
-        array_system.add_metric([self.name], fa_space[0]['system'])
-        array_volumes.add_metric([self.name], fa_space[0]['volumes'])
+                                          labels=[])
+        array_capacity.add_metric([], fa_space[0]['capacity'])
+        array_reduction.add_metric([], fa_space[0]['data_reduction'])
+        array_provisioned.add_metric([], fa_space[0]['provisioned'])
+        array_shared.add_metric([], fa_space[0]['shared_space'])
+        array_system.add_metric([], fa_space[0]['system'])
+        array_volumes.add_metric([], fa_space[0]['volumes'])
         yield array_capacity
         yield array_reduction
         yield array_provisioned
@@ -189,35 +175,34 @@ class FlasharrayCollector:
         Metrics values can be iterated over.
         """
         fa_perf = self.fa.get(action='monitor')
-        labels = ['array']
         array_rd_lat = GaugeMetricFamily('pure_fa_perf_rd_latency_usec',
                                          'FlashArray read latency',
-                                         labels=labels)
+                                         labels=[])
         array_wr_lat = GaugeMetricFamily('pure_fa_perf_wr_latency_usec',
                                          'FlashArray write latency',
-                                         labels=labels)
+                                         labels=[])
         array_queue = GaugeMetricFamily('pure_fa_perf_qlen_usec',
                                         'FlashArray queue time',
-                                        labels=labels)
+                                        labels=[])
         array_rd_iops = GaugeMetricFamily('pure_fa_perf_rd_ops',
                                           'FlashArray read IOPS',
-                                          labels=labels)
+                                          labels=[])
         array_wr_iops = GaugeMetricFamily('pure_fa_perf_wr_ops',
                                           'FlashArray write IOPS',
-                                          labels=labels)
+                                          labels=[])
         array_rd_bw = GaugeMetricFamily('pure_fa_perf_rd_bps',
                                         'FlashArray read bandwidth',
-                                        labels=labels)
+                                        labels=[])
         array_wr_bw = GaugeMetricFamily('pure_fa_perf_wr_bps',
                                         'FlashArray write bandwidth',
-                                        labels=labels)
-        array_rd_lat.add_metric([self.name], fa_perf[0]['usec_per_read_op'])
-        array_wr_lat.add_metric([self.name], fa_perf[0]['usec_per_write_op'])
-        # array_queue.add_metric([self.name], fa_perf[0]['local_queue_usec_per_op'])
-        array_rd_iops.add_metric([self.name], fa_perf[0]['reads_per_sec'])
-        array_wr_iops.add_metric([self.name], fa_perf[0]['writes_per_sec'])
-        array_rd_bw.add_metric([self.name], fa_perf[0]['output_per_sec'])
-        array_wr_bw.add_metric([self.name], fa_perf[0]['input_per_sec'])
+                                        labels=[])
+        array_rd_lat.add_metric([], fa_perf[0]['usec_per_read_op'])
+        array_wr_lat.add_metric([], fa_perf[0]['usec_per_write_op'])
+        # array_queue.add_metric([], fa_perf[0]['local_queue_usec_per_op'])
+        array_rd_iops.add_metric([], fa_perf[0]['reads_per_sec'])
+        array_wr_iops.add_metric([], fa_perf[0]['writes_per_sec'])
+        array_rd_bw.add_metric([], fa_perf[0]['output_per_sec'])
+        array_wr_bw.add_metric([], fa_perf[0]['input_per_sec'])
         yield array_rd_lat
         yield array_wr_lat
         yield array_queue
@@ -232,7 +217,7 @@ class FlasharrayCollector:
         Metrics values can be iterated over.
         """
         v_space = self.fa.list_volumes(space='true')
-        labels = ['array', 'volume']
+        labels = ['volume']
         vol_dr = GaugeMetricFamily('pure_fa_vol_data_reduction',
                                    'FlashArray volume data reduction ratio',
                                    labels=labels)
@@ -254,11 +239,11 @@ class FlasharrayCollector:
         #      'thin_provisioning'
         #      'total_reduction'
         for v in v_space:
-            vol_dr.add_metric([self.name, v['name']], v['data_reduction'])
-            vol_size.add_metric([self.name, v['name']], v['size'])
-            vol_snap.add_metric([self.name, v['name']], v['snapshots'])
-            vol_tot.add_metric([self.name, v['name']], v['total'])
-            vol_vols.add_metric([self.name, v['name']], v['volumes'])
+            vol_dr.add_metric([v['name']], v['data_reduction'])
+            vol_size.add_metric([v['name']], v['size'])
+            vol_snap.add_metric([v['name']], v['snapshots'])
+            vol_tot.add_metric([v['name']], v['total'])
+            vol_vols.add_metric([v['name']], v['volumes'])
             yield vol_dr
             yield vol_size
             yield vol_snap
@@ -271,7 +256,7 @@ class FlasharrayCollector:
         Metrics values can be iterated over.
         """
         v_perf = self.fa.list_volumes(action='monitor')
-        labels = ['array', 'volume']
+        labels = ['volume']
         vol_rd_lat = GaugeMetricFamily('pure_fa_vol_rd_latency_usec',
                                        'FlashArray volume read latency',
                                        labels=labels)
@@ -291,18 +276,12 @@ class FlasharrayCollector:
                                         'FlashArray volume write IOPS',
                                         labels=labels)
         for v in v_perf:
-            vol_rd_lat.add_metric([self.name, v['name']],
-                                  v['usec_per_read_op'])
-            vol_wr_lat.add_metric([self.name, v['name']],
-                                  v['usec_per_write_op'])
-            vol_rd_bw.add_metric([self.name, v['name']],
-                                 v['input_per_sec'])
-            vol_wr_bw.add_metric([self.name, v['name']],
-                                 v['output_per_sec'])
-            vol_rd_iops.add_metric([self.name, v['name']],
-                                   v['reads_per_sec'])
-            vol_wr_iops.add_metric([self.name, v['name']],
-                                   v['writes_per_sec'])
+            vol_rd_lat.add_metric([v['name']], v['usec_per_read_op'])
+            vol_wr_lat.add_metric([v['name']], v['usec_per_write_op'])
+            vol_rd_bw.add_metric([v['name']], v['input_per_sec'])
+            vol_wr_bw.add_metric([v['name']], v['output_per_sec'])
+            vol_rd_iops.add_metric([v['name']], v['reads_per_sec'])
+            vol_wr_iops.add_metric([v['name']], v['writes_per_sec'])
             yield vol_rd_lat
             yield vol_wr_lat
             yield vol_rd_bw
