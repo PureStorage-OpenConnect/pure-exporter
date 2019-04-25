@@ -28,7 +28,7 @@ class FlashbladeCollector:
 
     def array_hw(self):
         """ Create a metric of gauge type for components status,
-        with array name and the hw component name as labels.
+        with the hardware component name as label.
         Metrics values can be iterated over.
         """
 
@@ -51,7 +51,7 @@ class FlashbladeCollector:
 
     def array_events(self):
         """ Create a metric of gauge type for the number of open alerts:
-        critical, warning and info, with array name and the severity as labels.
+        critical, warning and info, with the severity as label.
         Metrics values can be iterated over.
         """
         fb_events = self.fb.alerts.list_alerts(filter="state='open'").items
@@ -76,8 +76,7 @@ class FlashbladeCollector:
         yield events
 
     def array_space(self):
-        """ Create metrics of gauge type for array space indicators,
-        with array name as label.
+        """ Create metrics of gauge type for array space indicators.
         Metrics values can be iterated over.
         """
         fb_space = self.fb.arrays.list_arrays_space().items[0]
@@ -103,8 +102,8 @@ class FlashbladeCollector:
         yield tot_snapshots
 
     def buckets_space(self):
-        """ Create metrics of gauge type for buckets space indicators,
-        with array name as label.
+        """ Create metrics of gauge type for buckets space indicators, with the
+        account name and the bucket name as labels.
         Metrics values can be iterated over.
         """
         fb_buckets = self.fb.buckets.list_buckets()
