@@ -45,49 +45,38 @@ def route_index():
 
 
 @app.route('/metrics/flasharray', methods=['GET'])
+@app.route('/metrics/flashblade', methods=['GET'])
 def route_metrics_flasharray():
     """
     Produce FlashArray metrics.
     """
     endp = request.args.get('endpoint', None)
     atok = request.args.get('apitoken', None)
+    path = request.path
+
+    if (path == '/metrics/flasharray'):
+        collector = 'FlasharrayCollector'
+    elif (path == '/metrics/flashblade'):
+        collector = 'FlashbladeCollector'
+    else:
+        abort(400)
 
     if (endp is None or atok is None):
         abort(400)
 
     _reg = CollectorRegistry()
     try:
-        _reg.register(FlasharrayCollector(endp, atok))
+        if (collector == 'FlasharrayCollector'):
+            _reg.register(FlasharrayCollector(endp, atok))
+        else:
+            _reg.register(FlashbladeCollector(endp, atok))
+
     except Exception as e:
-        app.logger.warn('Flasharray Collector: %s', str(e))
+        app.logger.warn('%s: %s', collector, str(e))
         abort(500)
 
     resp = make_response(generate_latest(_reg), 200)
     resp.headers['Content-type'] = CONTENT_TYPE_LATEST
-    return resp
-
-
-@app.route('/metrics/flashblade', methods=['GET'])
-def route_metrics_flashblade():
-    """
-    Produce FlashBlade metrics.
-    """
-    endp = request.args.get('endpoint', None)
-    atok = request.args.get('apitoken', None)
-
-    if (endp is None or atok is None):
-        abort(400)
-
-    _reg = CollectorRegistry()
-    try:
-        _reg.register(FlashbladeCollector(endp, atok))
-    except Exception as e:
-        app.logger.warn('Flashblade Collector: %s', str(e))
-        abort(500)
-
-    resp = make_response(generate_latest(_reg), 200)
-    resp.headers['Content-type'] = CONTENT_TYPE_LATEST
-
     return resp
 
 
