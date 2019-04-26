@@ -44,38 +44,38 @@ def route_index():
     '''
 
 
-@app.route('/metrics/flasharray', methods=['GET'])
-@app.route('/metrics/flashblade', methods=['GET'])
-def route_metrics():
+@app.route('/metrics/<c_type>', methods=['GET'])
+def route_metrics(c_type: str):
     """
     Produce FlashArray metrics.
     """
-    endp = request.args.get('endpoint', None)
-    atok = request.args.get('apitoken', None)
-    path = request.path
+    # map collector_type string to a collector class
+    registry = CollectorRegistry()
+    c_map = {
+        'flasharray': FlasharrayCollector,
+        'flashblade': FlashbladeCollector
+    }
+    collector = c_map[c_type] if c_type in c_map else None
 
-    if (path == '/metrics/flasharray'):
-        collector = 'FlasharrayCollector'
-    elif (path == '/metrics/flashblade'):
-        collector = 'FlashbladeCollector'
-    else:
-        abort(400)
-
-    if (endp is None or atok is None):
-        abort(400)
-
-    _reg = CollectorRegistry()
     try:
-        if (collector == 'FlasharrayCollector'):
-            _reg.register(FlasharrayCollector(endp, atok))
+        if collector is FlasharrayCollector:
+            # FlashArray
+            endpoint = request.args.get('endpoint', None)
+            token = request.args.get('apitoken', None)
+            registry.register(collector(endpoint, token))
+        elif collector is FlashbladeCollector:
+            # FlashBlade
+            endpoint = request.args.get('endpoint', None)
+            token = request.args.get('apitoken', None)
+            registry.register(collector(endpoint, token))
         else:
-            _reg.register(FlashbladeCollector(endp, atok))
-
+            # collector type not found
+            abort(404)
     except Exception as e:
-        app.logger.warn('%s: %s', collector, str(e))
+        app.logger.warn('%s: %s', collector.__name__, str(e))
         abort(500)
 
-    resp = make_response(generate_latest(_reg), 200)
+    resp = make_response(generate_latest(registry), 200)
     resp.headers['Content-type'] = CONTENT_TYPE_LATEST
     return resp
 
