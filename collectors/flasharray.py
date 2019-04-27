@@ -22,6 +22,12 @@ class FlasharrayCollector:
     """
     def __init__(self, target, api_token):
         self.fa = purestorage.FlashArray(target, api_token=api_token)
+        conn = self.fa.list_array_connections()
+        self.active_cluster = False
+        for c in conn:
+            if c['type'] == 'sync-replication':
+                self.active_cluster = True
+                break
 
     def array_hw(self):
         """ Create metrics of gauge type for temperature, power and components
@@ -34,51 +40,49 @@ class FlasharrayCollector:
             hardware components
             """
             desc = ''
-            hw = cid['name'].split('.')
-            if (hw[0].find('CH', 0, 2) >= 0):
-                c = hw[0].split('CH')
-                desc = f'Chassis {c[1]}'
-                if len(hw) == 1:
-                    return desc
-
-                if (hw[1].find('BAY', 0, 3) >= 0):
-                    m = hw[1].split('BAY')
+            hw_comp = cid['name'].split('.')
+            for hw in hw_comp:
+                if (hw.find('CH', 0, 2) >= 0):
+                    c = hw.split('CH')
+                    desc = desc + f' Chassis {c[1]}'
+                elif (hw.find('BAY', 0, 3) >= 0):
+                    m = hw.split('BAY')
                     desc = desc + f' Flash module {m[1]}'
-                elif (hw[1].find('NVB', 0, 3) >= 0):
-                    m = hw[1].split('NVB')
+                elif (hw.find('SH', 0, 2) >= 0):
+                    m = hw.split('SH')
+                    desc = desc + f'Shelf {m[1]}'
+                elif (hw.find('NVB', 0, 3) >= 0):
+                    m = hw.split('NVB')
                     desc = desc + f' NVRAM module {m[1]}'
-                elif (hw[1].find('TMP', 0, 3) >= 0):
-                    m = hw[1].split('TMP')
+                elif (hw.find('TMP', 0, 3) >= 0):
+                    m = hw.split('TMP')
                     desc = desc + f' Temperature sensor {m[1]}'
-                elif (hw[1].find('FAN', 0, 3) >= 0):
-                    m = hw[1].split('FAN')
+                elif (hw.find('FAN', 0, 3) >= 0):
+                    m = hw.split('FAN')
                     desc = desc + f' Fan {m[1]}'
-                elif (hw[1].find('PWR', 0, 3) >= 0):
-                    m = hw[1].split('PWR')
+                elif (hw.find('PWR', 0, 3) >= 0):
+                    m = hw.split('PWR')
                     desc = desc + f' Power Supply {m[1]}'
-            elif (hw[0].find('CT', 0, 2) >= 0):
-                c = hw[0].split('CT')
-                desc = f'Controller {c[1]}'
-                if len(hw) == 1:
-                    return desc
+                elif (hw.find('CT', 0, 2) >= 0):
+                    c = hw.split('CT')
+                    desc = desc + f' Controller {c[1]}'
+                elif (hw.find('FC', 0, 2) >= 0):
+                    m = hw.split('FC')
+                    desc = desc + f' Fibre Channel port {m[1]}'
+                elif (hw.find('ETH', 0, 3) >= 0):
+                    m = hw.split('ETH')
+                    desc = desc + f' Ethernet Port {m[1]}'
+                elif (hw.find('SAS', 0, 3) >= 0):
+                    m = hw.split('SAS')
+                    desc = desc + f' SAS Port {m[1]}'
+                elif (hw.find('TMP', 0, 3) >= 0):
+                    m = hw.split('TMP')
+                    desc = desc + f' Temperature sensor {m[1]}'
+                elif (hw.find('FAN', 0, 3) >= 0):
+                    m = hw.split('FAN')
+                    desc = desc + f' Fan {m[1]}'
 
-            if (hw[1].find('FC', 0, 2) >= 0):
-                m = hw[1].split('FC')
-                desc = desc + f' Fibre Channel port {m[1]}'
-            elif (hw[1].find('ETH', 0, 3) >= 0):
-                m = hw[1].split('ETH')
-                desc = desc + f' Ethernet Port {m[1]}'
-            elif (hw[1].find('SAS', 0, 3) >= 0):
-                m = hw[1].split('SAS')
-                desc = desc + f' SAS Port {m[1]}'
-            elif (hw[1].find('TMP', 0, 3) >= 0):
-                m = hw[1].split('TMP')
-                desc = desc + f' Temperature sensor {m[1]}'
-            elif (hw[1].find('FAN', 0, 3) >= 0):
-                m = hw[1].split('FAN')
-                desc = desc + f' Fan {m[1]}'
-
-            return desc
+            return desc.strip()
 
         fa_hw = self.fa.list_hardware()
         labels = ['hw_id', 'hw_desc']
@@ -173,7 +177,7 @@ class FlasharrayCollector:
         """ Create array performance metrics of gauge type.
         Metrics values can be iterated over.
         """
-        fa_perf = self.fa.get(action='monitor')
+        fa_perf = self.fa.get(action='monitor', mirrored='True')
         array_rd_lat = GaugeMetricFamily('pure_fa_perf_rd_latency_usec',
                                          'FlashArray read latency',
                                          labels=[])
@@ -195,6 +199,16 @@ class FlasharrayCollector:
         array_wr_bw = GaugeMetricFamily('pure_fa_perf_wr_bps',
                                         'FlashArray write bandwidth',
                                         labels=[])
+        if self.active_cluster:
+            array_mwr_lat = GaugeMetricFamily('pure_fa_perf_mirrored_wr_latency_usec',
+                                              'FlashArray mirrored write latency',
+                                              labels=[])
+            array_mwr_iops = GaugeMetricFamily('pure_fa_perf_mirrored_wr_ops',
+                                               'FlashArray mirrored write IOPS',
+                                               labels=[])
+            array_mwr_bw = GaugeMetricFamily('pure_fa_perf_mirrored_wr_bps',
+                                             'FlashArray mirrored write bandwidth',
+                                             labels=[])
         array_rd_lat.add_metric([], fa_perf[0]['usec_per_read_op'])
         array_wr_lat.add_metric([], fa_perf[0]['usec_per_write_op'])
         # array_queue.add_metric([], fa_perf[0]['local_queue_usec_per_op'])
@@ -202,6 +216,10 @@ class FlasharrayCollector:
         array_wr_iops.add_metric([], fa_perf[0]['writes_per_sec'])
         array_rd_bw.add_metric([], fa_perf[0]['output_per_sec'])
         array_wr_bw.add_metric([], fa_perf[0]['input_per_sec'])
+        if self.active_cluster:
+            array_mwr_lat.add_metric([], fa_perf[0]['usec_per_mirrored_write_op'])
+            array_mwr_iops.add_metric([], fa_perf[0]['mirrored_writes_per_sec'])
+            array_mwr_bw.add_metric([], fa_perf[0]['mirrored_input_per_sec'])
         yield array_rd_lat
         yield array_wr_lat
         yield array_queue
@@ -209,6 +227,10 @@ class FlasharrayCollector:
         yield array_wr_iops
         yield array_rd_bw
         yield array_wr_bw
+        if self.active_cluster:
+            yield array_mwr_lat
+            yield array_mwr_iops
+            yield array_mwr_bw
 
     def vol_space(self):
         """ Create volumes space metrics of gauge type, with the volume name
