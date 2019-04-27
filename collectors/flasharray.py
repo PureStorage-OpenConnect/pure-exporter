@@ -22,6 +22,8 @@ class FlasharrayCollector:
     """
     def __init__(self, target, api_token):
         self.fa = purestorage.FlashArray(target, api_token=api_token)
+        # keep track of ActiveCluster configuration to extract mirrored
+        # write metrics
         conn = self.fa.list_array_connections()
         self.active_cluster = False
         for c in conn:
