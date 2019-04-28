@@ -1,4 +1,5 @@
 import urllib3
+import six
 from purity_fb import PurityFb
 
 # import third party modules
@@ -180,6 +181,94 @@ class FlashbladeCollector:
             yield virt_space
             yield uniq_space
 
+
+    def _array_perf(self, proto):
+        """ Create array performance metrics of gauge type.
+        Metrics values can be iterated over.
+        """
+        def _fb_perf(fb, proto):
+            if (proto is not None) and isinstance(proto, six.string_types) and \
+                ((proto == 'nfs') or (proto == 'smb') or (proto == 's3')) :
+                return fb.arrays.list_arrays_performance(protocol=proto).items[0]
+            return fb.arrays.list_arrays_performance().items[0]
+
+        fb_perf = _fb_perf(self.fb, proto)
+        if proto is None:
+            proto = ''
+            l_sep = ''
+            d_sep = ''
+        else:
+            l_sep = '_'
+            d_sep = ' '
+        _b_op = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}bytes_per_op',
+                                  f'FlashBlade {proto}{d_sep}average bytes per operation',
+                                  labels=[])
+        _b_rd = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}bytes_per_read',
+                                  f'FlashBlade {proto}{d_sep}average bytes per read',
+                                  labels=[])
+        _b_wr = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}bytes_per_write',
+                                  f'FlashBlade {proto}{d_sep}average bytes per write',
+                                  labels=[])
+        _rd_lat = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}rd_latency_usec',
+                                    f'FlashBlade {proto}{d_sep}read latency',
+                                    labels=[])
+        _wr_lat = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}wr_latency_usec',
+                                    f'FlashBlade {proto}{d_sep}write latency',
+                                    labels=[])
+        _others_lat = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}others_latency_usec',
+                                        f'FlashBlade {proto}{d_sep}other operations latency',
+                                        labels=[])
+        _rd_iops = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}rd_ops',
+                                     f'FlashBlade {proto}{d_sep}read IOPS',
+                                     labels=[])
+        _others_iops = GaugeMetricFamily(f'pure_fb_perf{proto}{l_sep}others_ops',
+                                     f'FlashBlade {proto}{d_sep}others IOPS',
+                                     labels=[])
+        _in_iops = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}output_ops',
+                                     f'FlashBlade {proto}{d_sep}input IOPS',
+                                     labels=[])
+        _out_iops = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}output_ops',
+                                      f'FlashBlade {proto}{d_sep}output IOPS',
+                                      labels=[])
+        _wr_iops = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}wr_ops',
+                                     f'FlashBlade {proto}{d_sep}write IOPS',
+                                     labels=[])
+        _rd_bw = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}rd_bps',
+                                   f'FlashBlade {proto}{d_sep}read bandwidth',
+                                   labels=[])
+        _wr_bw = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}wr_bps',
+                                   f'FlashArray {proto}{d_sep}write bandwidth',
+                                   labels=[])
+        _b_op.add_metric([], fb_perf.bytes_per_op)
+        _b_rd.add_metric([], fb_perf.bytes_per_read)
+        _b_wr.add_metric([], fb_perf.bytes_per_read)
+        _rd_lat.add_metric([], fb_perf.usec_per_read_op)
+        _wr_lat.add_metric([], fb_perf.usec_per_write_op)
+        _others_lat.add_metric([], fb_perf.usec_per_other_op)
+        _rd_iops.add_metric([], fb_perf.reads_per_sec)
+        _others_iops.add_metric([], fb_perf.others_per_sec)
+        _in_iops.add_metric([], fb_perf.input_per_sec)
+        _out_iops.add_metric([], fb_perf.output_per_sec)
+        _wr_iops.add_metric([], fb_perf.writes_per_sec)
+        _rd_bw.add_metric([], fb_perf.read_bytes_per_sec)
+        _wr_bw.add_metric([], fb_perf.write_bytes_per_sec)
+        metrics = [_b_op, _b_rd, _b_wr, _rd_lat, _wr_lat, _others_lat, _rd_iops, \
+                _others_iops, _in_iops, _out_iops, _wr_iops, _rd_bw, _wr_bw]
+        for m in metrics:
+            yield m
+
+    def array_perf(self):
+        yield from self._array_perf(proto=None)
+
+    def array_perf_nfs(self):
+        yield from self._array_perf(proto='nfs')
+
+    def array_perf_smb(self):
+        yield from self._array_perf(proto='smb')
+
+    def array_perf_s3(self):
+        yield from self._array_perf(proto='s3')
+
     def collect(self):
         """Global collector method for all the collected metrics."""
         yield from self.array_hw()
@@ -187,3 +276,7 @@ class FlashbladeCollector:
         yield from self.array_space()
         yield from self.buckets_space()
         yield from self.filesystems_space()
+        yield from self.array_perf()
+        yield from self.array_perf_nfs()
+        yield from self.array_perf_smb()
+        yield from self.array_perf_s3()
