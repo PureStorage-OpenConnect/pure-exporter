@@ -185,6 +185,8 @@ class FlashbladeCollector:
     def _array_perf(self, proto):
         """ Create array performance metrics of gauge type.
         Metrics values can be iterated over.
+        This is an internal "utility" method meant to be called by the specific method
+        for the whole array performances or for a given protocol.
         """
         def _fb_perf(fb, proto):
             protocols = ['http', 'nfs', 's3', 'smb']
