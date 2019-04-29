@@ -260,6 +260,9 @@ class FlashbladeCollector:
     def array_perf(self):
         yield from self._array_perf(proto=None)
 
+    def array_perf_http(self):
+        yield from self._array_perf(proto='http')
+        
     def array_perf_nfs(self):
         yield from self._array_perf(proto='nfs')
 
@@ -277,6 +280,7 @@ class FlashbladeCollector:
         yield from self.buckets_space()
         yield from self.filesystems_space()
         yield from self.array_perf()
+        yield from self.array_perf_http()
         yield from self.array_perf_nfs()
         yield from self.array_perf_smb()
         yield from self.array_perf_s3()
