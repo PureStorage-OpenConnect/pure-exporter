@@ -188,7 +188,7 @@ class FlashbladeCollector:
         """
         def _fb_perf(fb, proto):
             if (proto is not None) and isinstance(proto, six.string_types) and \
-                ((proto == 'nfs') or (proto == 'smb') or (proto == 's3')) :
+                ((proto == 'http') or (proto == 'nfs') or (proto == 's3') or (proto == 'smb')) :
                 return fb.arrays.list_arrays_performance(protocol=proto).items[0]
             return fb.arrays.list_arrays_performance().items[0]
 
