@@ -187,8 +187,9 @@ class FlashbladeCollector:
         Metrics values can be iterated over.
         """
         def _fb_perf(fb, proto):
+            protocols = ['http', 'nfs', 's3', 'smb']
             if (proto is not None) and isinstance(proto, six.string_types) and \
-                ((proto == 'http') or (proto == 'nfs') or (proto == 's3') or (proto == 'smb')) :
+                (proto in protocols) :
                 return fb.arrays.list_arrays_performance(protocol=proto).items[0]
             return fb.arrays.list_arrays_performance().items[0]
 
