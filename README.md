@@ -123,6 +123,8 @@ irrelevant.
 
 ## Usage example
 
+In a typical production scenario with using for example Grafana, some kind of persistent storage shuld be provided to both Prometheus and Grafana containers, like in the snippet below which uses the official images for Prometheus and Grafana from Docker Hub:
+
     pureuser@docker01:~ sudo docker run -d -p 9491:9491 --name=prom-pure-exporter purestorage/pure-exporter:latest
     pureuser@docker01:~ sudo docker run -d -p 9090:9090 --name=prometheus -v <prometheus-cfg-file>:/etc/prometheus/prometheus.yml -v <prometheus-persistent-data-volume>:/prometheus prom/prometheus
     pureuser@docker01:~ sudo docker run -d -p 3000:3000 --name=grafana -v <grafana-persistent-data-volume>:/var/lib/grafana grafana/grafana
