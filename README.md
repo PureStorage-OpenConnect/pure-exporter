@@ -121,6 +121,12 @@ The actual scraping address (the one of the exporter application) is set via the
 last relabel config. It never appears anywhere in the metrics, as it is fully
 irrelevant.
 
+## Usage example
+
+    pureuser@docker01:~ sudo docker run -d -p 9491:9491 --name=prom-pure-exporter purestorage/pure-exporter:latest
+    pureuser@docker01:~ sudo docker run -d -p 9090:9090 --name=prometheus -v <prometheus-cfg-file>:/etc/prometheus/prometheus.yml -v <prometheus-persistent-data-volume>:/prometheus prom/prometheus
+    pureuser@docker01:~ sudo docker run -d -p 3000:3000 --name=grafana -v <grafana-persistent-data-volume>:/var/lib/grafana grafana/grafana
+
 ## Authors
 
 * **Eugenio Grosso**
