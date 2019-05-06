@@ -16,7 +16,7 @@ The exporter is a Python Flex application that is packaged as a Docker container
 
 3. Run the final image
 
-       pureuser@build-host08:~/Monitoring/Prometheus$ sudo run
+       pureuser@build-host08:~/Monitoring/Prometheus$ sudo docker run --rm -p 9491:9491 purestorage/pure-exporter
 
 ### Metrics URLs
 
