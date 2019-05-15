@@ -21,7 +21,7 @@ class FlasharrayCollector:
     :type api_token: str
     """
     def __init__(self, target, api_token):
-        uagent = 'Purity_FA_Python_Client/' + purestorage.VERSION
+        uagent = 'Purity_FA_Prometheus_exporter/1.0'
         self.fa = purestorage.FlashArray(target, api_token=api_token, user_agent=uagent)
         # keep track of ActiveCluster configuration to extract mirrored
         # write metrics
