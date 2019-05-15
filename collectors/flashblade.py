@@ -26,6 +26,7 @@ class FlashbladeCollector:
         # self.fb = PurityFb(endpoint, conn_timeo=ctimeo, read_timeo=rtimeo, retries=retries)
         self.fb = PurityFb(host=target, api_token=api_token)
         self.fb.disable_verify_ssl()
+        self.fb._api_client.user_agent = 'Purity_FB_Prometheus_exporter/1.0'
 
     def array_hw(self):
         """ Create a metric of gauge type for components status,
