@@ -62,10 +62,10 @@ python pure_exporter.py
 ### Metrics URLs
 
 The exporter application uses a RESTful API schema to provide Prometheus scraping endpoints.
-| Pure Storage System | URL | required GET parameters |
-|---|---|---|
-| FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray | endpoint, apitoken |
-| FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade | endpoint, apitoken |
+Pure Storage System | URL | required GET parameters
+---|---|---
+FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray | endpoint, apitoken
+FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade | endpoint, apitoken
 
 
 ### Prometheus configuration
