@@ -16,3 +16,10 @@ build: Dockerfile requirements.txt .dockerignore $(wildcard *.py)
 .PHONY: test
 test:
 	docker run --rm -p $(RUN_PORT) $(IMAGE_NAMESPACE)/$(IMAGE_NAME):$(IMAGE_TAG)
+
+.PHONY: release
+release:
+	git tag "v$(VERSION)"
+	git tag "$(IMAGE_TAG)" --force
+	git push --force --tags
+
