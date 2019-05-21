@@ -19,9 +19,7 @@ test:
 
 .PHONY: release
 release:
-	ifndef VERSION
-	$(error $@ needs VERSION variable)
-	endif
+	@[ "$(VERSION)" ] || ( echo "$@ needs VERSION variable"; exit 1 )
 
 	git tag "v$(VERSION)"
 	git tag "$(IMAGE_TAG)" --force
