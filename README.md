@@ -59,7 +59,7 @@ python pure_exporter.py
 ```
 
 
-### Metrics URLs
+### Scraping endpoints
 
 The exporter application uses a RESTful API schema to provide Prometheus scraping endpoints.
 
