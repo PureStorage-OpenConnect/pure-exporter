@@ -18,7 +18,7 @@ The exporter is preferably built and launched via Docker. You can also scale the
 To build and deploy the application via Docker, your local linux user should be added to the `docker` group in order to be able to communicate with the Docker daemon. (If this is not possible, you can still use <kbd>sudo</kbd>)
 
 This can be done with this command in the context of your user:
-```
+```bash
 # add user to group
 sudo usermod -aG docker $(whoami)
 # apply the new group (no logout required)
