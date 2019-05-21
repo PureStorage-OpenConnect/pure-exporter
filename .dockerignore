@@ -1,6 +1,15 @@
+# Git
 .git/
-
-Makefile
 .gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Documents
 README.md
 LICENSE.md
+
+# Makefile
+Makefile
+
