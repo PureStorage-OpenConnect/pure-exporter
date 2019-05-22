@@ -103,11 +103,12 @@ scrape_configs:
   # Actual pure hosts (without a prometheus endpoint) as targets
   static_configs:
   - targets: [ mypureflasharray-01.lan ]
-    labels: [ __pure_apitoken: 00000000-0000-0000-0000-000000000000 ]
+    labels:
+      __pure_apitoken: 00000000-0000-0000-0000-000000000000
 
   - targets: [ mypureflasharray-02.lan ]
-    labels: [ __pure_apitoken: 00000000-0000-0000-0000-000000000000 ]
-
+    labels:
+      __pure_apitoken: 00000000-0000-0000-0000-000000000000
 
 # Job for all Pure Flashblades
 - job_name: 'pure_flashblade'
@@ -130,10 +131,12 @@ scrape_configs:
   # Actual pure hosts (without a prometheus endpoint) as targets
   static_configs:
   - targets: [ mypureflashblade-01.lan ]
-    labels: [ __pure_apitoken: 00000000-0000-0000-0000-000000000000 ]
+    labels:
+      __pure_apitoken: 00000000-0000-0000-0000-000000000000
 
   - targets: [ mypureflashblade-02.lan ]
-    labels: [ __pure_apitoken: 00000000-0000-0000-0000-000000000000 ]
+    labels:
+      __pure_apitoken: 00000000-0000-0000-0000-000000000000
 ```
 
 If you now check for the <kbd>up</kbd> metric in Prometheus, the result could look something like this:
