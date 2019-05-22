@@ -15,9 +15,7 @@ app.logger.setLevel(logging.INFO)
 
 @app.route('/')
 def route_index():
-    """
-    Display an overview of the exporters capabilities.
-    """
+    """Display an overview of the exporters capabilities."""
     return '''
     <h1>PureStorage Exporter</h1>
     <table>
@@ -46,9 +44,7 @@ def route_index():
 
 @app.route('/metrics/<c_type>', methods=['GET'])
 def route_metrics(c_type: str):
-    """
-    Produce FlashArray metrics.
-    """
+    """Produce FlashArray metrics."""
     # map collector_type string to a collector class
     registry = CollectorRegistry()
     c_map = {
@@ -82,25 +78,19 @@ def route_metrics(c_type: str):
 
 @app.errorhandler(400)
 def route_error_400(error):
-    """
-    Handle invalid request errors
-    """
+    """Handle invalid request errors."""
     return 'Invalid request parameters', 400
 
 
 @app.errorhandler(404)
 def route_error_404(error):
-    """
-    Handle 404 (HTTP Not Found) errors
-    """
+    """ Handle 404 (HTTP Not Found) errors."""
     return 'Not found', 404
 
 
 @app.errorhandler(500)
 def route_error_500(error):
-    """
-    Handle server-side errors
-    """
+    """Handle server-side errors."""
     return 'Internal server error', 500
 
 

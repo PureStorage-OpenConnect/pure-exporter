@@ -149,7 +149,8 @@ class FlasharrayCollector:
         yield power
 
     def array_events(self):
-        """ Create a metric of gauge type for the number of open alerts:
+        """
+        Create a metric of gauge type for the number of open alerts:
         critical, warning and info, with the severity as label.
         Metrics values can be iterated over.
         """
