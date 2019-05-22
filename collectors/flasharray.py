@@ -3,7 +3,7 @@ import urllib3
 import purestorage
 
 # import third party modules
-from prometheus_client.core import GaugeMetricFamily
+from prometheus_client.core import GaugeMetricFamily, InfoMetricFamily
 
 # disable ceritificate warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -28,6 +28,16 @@ class FlasharrayCollector:
             api_token=api_token,
             user_agent='Purity_FA_Prometheus_exporter/1.0')
 
+    def collect(self):
+        """Global collector method for all the collected metrics."""
+        yield from self.array_info()
+        yield from self.array_hw()
+        yield from self.array_events()
+        yield from self.array_space()
+        yield from self.array_perf()
+        yield from self.vol_space()
+        yield from self.vol_perf()
+
     def _is_activecluster(self):
         """
         Determine whether the FlashArray has an ActiveCluster configuration
@@ -36,6 +46,19 @@ class FlasharrayCollector:
         for connection in self.connection.list_array_connections():
             if connection['type'] == 'sync-replication':
                 return True
+
+    def array_info(self):
+        """Assemble a simple information metric defining the scraped system."""
+        data = self.connection.get()
+
+        yield InfoMetricFamily(
+            'purefa',
+            'FlashArray system information',
+            value={
+                'array_name': data['array_name'],
+                'system_id': data['id'],
+                'version': data['version']
+            })
 
     def array_hw(self):
         """Collect information about all system sensors."""
@@ -191,7 +214,7 @@ class FlasharrayCollector:
         latency = GaugeMetricFamily('purefa_performance_latency_usec',
                                     'FlashArray read latency',
                                     labels=labels)
-        iops = GaugeMetricFamily('purefa_performance_ops_iops',
+        iops = GaugeMetricFamily('purefa_performance_iops',
                                  'FlashArray read IOPS',
                                  labels=labels)
         throughput = GaugeMetricFamily('purefa_performance_throughput_bytes',
@@ -293,12 +316,3 @@ class FlasharrayCollector:
             yield latency
             yield throughput
             yield iops
-
-    def collect(self):
-        """Global collector method for all the collected metrics."""
-        yield from self.array_hw()
-        yield from self.array_events()
-        yield from self.array_space()
-        yield from self.array_perf()
-        yield from self.vol_space()
-        yield from self.vol_perf()
