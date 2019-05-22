@@ -38,15 +38,6 @@ class FlasharrayCollector:
         yield from self.vol_space()
         yield from self.vol_perf()
 
-    def _is_activecluster(self):
-        """
-        Determine whether the FlashArray has an ActiveCluster configuration
-        or not. This will add some additional cluster-level metrics.
-        """
-        for connection in self.connection.list_array_connections():
-            if connection['type'] == 'sync-replication':
-                return True
-
     def array_info(self):
         """Assemble a simple information metric defining the scraped system."""
         data = self.connection.get()
@@ -209,7 +200,7 @@ class FlasharrayCollector:
         Create array performance metrics of gauge type.
         Metrics values can be iterated over.
         """
-        data = self.connection.get(action='monitor', mirrored=True)
+        data = self.connection.get(action='monitor', mirrored=True)[0]
         labels = ['dimension']  # common labels
 
         latency = GaugeMetricFamily('purefa_performance_latency_usec',
@@ -221,40 +212,32 @@ class FlasharrayCollector:
         throughput = GaugeMetricFamily('purefa_performance_throughput_bytes',
                                        'FlashArray read throughput',
                                        labels=labels)
-        latency.add_metric(['read'], data[0]['usec_per_read_op'])
-        latency.add_metric(['write'], data[0]['usec_per_write_op'])
-        iops.add_metric(['read'], data[0]['reads_per_sec'])
-        iops.add_metric(['write'], data[0]['writes_per_sec'])
-        throughput.add_metric(['read'], data[0]['output_per_sec'])
-        throughput.add_metric(['write'], data[0]['input_per_sec'])
-
-        # Detect ActiveCluster configuration
-        # If so, add metrics for mirrored writes
-        if self._is_activecluster():
-            latency_mirror_write = GaugeMetricFamily(
-                'purefa_mirror_write_latency_usec',
-                'FlashArray mirror write latency')
-            iops_mirror_write = GaugeMetricFamily(
-                'purefa_mirror_write_iops',
-                'FlashArray mirror write IOPS')
-            throughput_mirror_write = GaugeMetricFamily(
-                'purefa_mirror_write_bytes',
-                'FlashArray mirror write bandwidth')
-
-            latency_mirror_write.add_metric(
-                [], data[0]['usec_per_mirrored_write_op'])
-            iops_mirror_write.add_metric(
-                [], data[0]['mirrored_writes_per_sec'])
-            throughput_mirror_write.add_metric(
-                [], data[0]['mirrored_input_per_sec'])
-
-            yield latency_mirror_write
-            yield iops_mirror_write
-            yield throughput_mirror_write
+        latency_mirror_write = GaugeMetricFamily(
+            'purefa_mirror_write_latency_usec',
+            'FlashArray mirror write latency')
+        iops_mirror_write = GaugeMetricFamily(
+            'purefa_mirror_write_iops',
+            'FlashArray mirror write IOPS')
+        throughput_mirror_write = GaugeMetricFamily(
+            'purefa_mirror_write_bytes',
+            'FlashArray mirror write bandwidth')
+        
+        latency.add_metric(['read'], data['usec_per_read_op'])
+        latency.add_metric(['write'], data['usec_per_write_op'])
+        iops.add_metric(['read'], data['reads_per_sec'])
+        iops.add_metric(['write'], data['writes_per_sec'])
+        throughput.add_metric(['read'], data['output_per_sec'])
+        throughput.add_metric(['write'], data['input_per_sec'])
+        latency_mirror_write.add_metric([], data['usec_per_mirrored_write_op'])
+        iops_mirror_write.add_metric([], data['mirrored_writes_per_sec'])
+        throughput_mirror_write.add_metric([], data['mirrored_input_per_sec'])
 
         yield latency
         yield iops
         yield throughput
+        yield latency_mirror_write
+        yield iops_mirror_write
+        yield throughput_mirror_write
 
     def vol_space(self):
         """
