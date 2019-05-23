@@ -171,7 +171,7 @@ class FlasharrayCollector:
         Create array space metrics of gauge type.
         Metrics values can be iterated over.
         """
-        data = self.connection.get(space=True)
+        data = self.connection.get(space=True)[0]
 
         reduction = GaugeMetricFamily('purefa_space_datareduction_ratio',
                                       'FlashArray overall data reduction')
@@ -183,12 +183,13 @@ class FlasharrayCollector:
                                  'FlashArray overall used space',
                                  labels=['dimension'])
 
-        reduction.add_metric([], data[0]['data_reduction'])
-        capacity.add_metric([], data[0]['capacity'])
-        provisioned.add_metric([], data[0]['provisioned'])
-        used.add_metric(['shared'], data[0]['shared_space'])
-        used.add_metric(['system'], data[0]['system'])
-        used.add_metric(['volumes'], data[0]['volumes'])
+        reduction.add_metric([], data['data_reduction'])
+        capacity.add_metric([], data['capacity'])
+        provisioned.add_metric([], data['provisioned'])
+        used.add_metric(['shared'], data['shared_space'])
+        used.add_metric(['system'], data['system'])
+        used.add_metric(['volumes'], data['volumes'])
+        used.add_metric(['snapshots'], data['volumes'])
 
         yield capacity
         yield reduction
