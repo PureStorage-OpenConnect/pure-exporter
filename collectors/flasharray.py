@@ -189,7 +189,7 @@ class FlasharrayCollector:
         used.add_metric(['shared'], data['shared_space'])
         used.add_metric(['system'], data['system'])
         used.add_metric(['volumes'], data['volumes'])
-        used.add_metric(['snapshots'], data['volumes'])
+        used.add_metric(['snapshots'], data['snapshots'])
 
         yield capacity
         yield reduction
