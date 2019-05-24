@@ -92,13 +92,13 @@ class FlasharrayCollector:
             # Chassis
             if re.match(r"^CH\d+$", component_name):
                 detail = re_chassis.match(component_name)
-                c_index = detail.group(0)
+                c_index = detail.group(1)
                 chassis_health.add_metric([c_index], component_state)
                 continue
             # Controller
             elif re.match(r"^CT\d+$", component_name):
                 detail = re_controller.match(component_name)
-                c_index = detail.group(0)
+                c_index = detail.group(1)
                 controller_health.add_metric([c_index], component_state)
                 continue
             # Components
