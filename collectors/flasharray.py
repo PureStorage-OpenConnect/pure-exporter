@@ -269,9 +269,9 @@ class FlasharrayCollector:
             allocated.add_metric([v['name'], 'system_space'],
                                  v['system_space'] if 'system_space' in v else 0)
 
-            yield datareduction
-            yield size
-            yield allocated
+        yield datareduction
+        yield size
+        yield allocated
 
     def vol_perf(self):
         """
@@ -298,6 +298,6 @@ class FlasharrayCollector:
             iops.add_metric([v['name'], 'read'], v['reads_per_sec'])
             iops.add_metric([v['name'], 'write'], v['writes_per_sec'])
 
-            yield latency
-            yield throughput
-            yield iops
+        yield latency
+        yield throughput
+        yield iops
