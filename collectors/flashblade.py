@@ -10,10 +10,11 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class FlashbladeCollector:
-    """ Instantiates the collector's methods and properties to retrieve metrics
+    """ 
+    Instantiates the collector's methods and properties to retrieve metrics
     from Puretorage FlasBlade.
     Provides also a 'collect' method to allow Prometheus client registry
-    to work
+    to work properly.
 
     :param target: IP address or domain name of the target array's management
                    interface.
@@ -27,16 +28,30 @@ class FlashbladeCollector:
         self.fb = PurityFb(host=target, api_token=api_token)
         self.fb.disable_verify_ssl()
         self.fb._api_client.user_agent = 'Purity_FB_Prometheus_exporter/1.0'
+        
+    def collect(self):
+        """Global collector method for all the collected metrics."""
+        yield from self.array_hw()
+        yield from self.array_events()
+        yield from self.array_space()
+        yield from self.buckets_space()
+        yield from self.filesystems_space()
+        yield from self.array_perf()
+        yield from self.array_perf_http()
+        yield from self.array_perf_nfs()
+        yield from self.array_perf_smb()
+        yield from self.array_perf_s3()
 
     def array_hw(self):
-        """ Create a metric of gauge type for components status,
+        """ 
+        Create a metric of gauge type for components status,
         with the hardware component name as label.
         Metrics values can be iterated over.
         """
 
         fb_hw = self.fb.hardware.list_hardware().items
         labels = ['hw_id']
-        status = GaugeMetricFamily('pure_fb_hw_status',
+        status = GaugeMetricFamily('purefb_hw_status',
                                    'Hardware components status',
                                    labels=labels)
         for h in fb_hw:
@@ -52,13 +67,14 @@ class FlashbladeCollector:
         yield status
 
     def array_events(self):
-        """ Create a metric of gauge type for the number of open alerts:
+        """
+        Create a metric of gauge type for the number of open alerts:
         critical, warning and info, with the severity as label.
         Metrics values can be iterated over.
         """
         fb_events = self.fb.alerts.list_alerts(filter="state='open'").items
         labels = ['severity']
-        events = GaugeMetricFamily('pure_fb_open_events_total',
+        events = GaugeMetricFamily('purefb_open_events_total',
                                    'FlashBlade number of open events',
                                    labels=labels)
         ccounter = 0
@@ -78,20 +94,21 @@ class FlashbladeCollector:
         yield events
 
     def array_space(self):
-        """ Create metrics of gauge type for array space indicators.
+        """ 
+        Create metrics of gauge type for array space indicators.
         Metrics values can be iterated over.
         """
         fb_space = self.fb.arrays.list_arrays_space().items[0]
-        capacity_tot = GaugeMetricFamily('pure_fb_space_tot_capacity_bytes',
+        capacity_tot = GaugeMetricFamily('purefb_space_tot_capacity_bytes',
                                          'FlashBlade total space capacity',
                                          labels=[])
-        data_reduction = GaugeMetricFamily('pure_fb_space_data_reduction',
+        data_reduction = GaugeMetricFamily('purefb_space_data_reduction',
                                            'FlashBlade overall data reduction',
                                            labels=[])
-        tot_physical = GaugeMetricFamily('pure_fb_space_tot_physical_bytes',
+        tot_physical = GaugeMetricFamily('purefb_space_tot_physical_bytes',
                                          'FlashBlade overall occupied space',
                                          labels=[])
-        tot_snapshots = GaugeMetricFamily('pure_fb_space_tot_snapshot_bytes',
+        tot_snapshots = GaugeMetricFamily('purefb_space_tot_snapshot_bytes',
                                           'FlashBlade occupied space for snapshots',
                                           labels=[])
         capacity_tot.add_metric([], fb_space.capacity)
@@ -104,28 +121,29 @@ class FlashbladeCollector:
         yield tot_snapshots
 
     def buckets_space(self):
-        """ Create metrics of gauge type for buckets space indicators, with the
+        """ 
+        Create metrics of gauge type for buckets space indicators, with the
         account name and the bucket name as labels.
         Metrics values can be iterated over.
         """
         fb_buckets = self.fb.buckets.list_buckets()
         labels = ['account', 'name']
-        data_reduct = GaugeMetricFamily('pure_fb_buckets_data_reduction',
+        data_reduct = GaugeMetricFamily('purefb_buckets_data_reduction',
                                         'FlashBlade buckets data reduction',
                                         labels=labels)
-        obj_cnt = GaugeMetricFamily('pure_fb_buckets_object_count',
+        obj_cnt = GaugeMetricFamily('pure_b_buckets_object_count',
                                     'FlashBlade buckets objects counter',
                                     labels=labels)
-        space_snap = GaugeMetricFamily('pure_fb_buckets_snapshots_bytes',
+        space_snap = GaugeMetricFamily('purefb_buckets_snapshots_bytes',
                                        'FlashBlade buckets occupied snapshots space',
                                        labels=labels)
-        tot_phy = GaugeMetricFamily('pure_fb_buckets_total_bytes',
+        tot_phy = GaugeMetricFamily('purefb_buckets_total_bytes',
                                     'FlashBlade buckets total physical space',
                                     labels=labels)
-        virt_space = GaugeMetricFamily('pure_fb_buckets_virtual_bytes',
+        virt_space = GaugeMetricFamily('purefb_buckets_virtual_bytes',
                                        'FlashBlade buckets virtual space',
                                        labels=labels)
-        uniq_space = GaugeMetricFamily('pure_fb_buckets_unique_bytes',
+        uniq_space = GaugeMetricFamily('purefb_buckets_unique_bytes',
                                        'FlashBlade buckets unique space',
                                        labels=labels)
         for b in fb_buckets.items:
@@ -147,25 +165,26 @@ class FlashbladeCollector:
             yield uniq_space
 
     def filesystems_space(self):
-        """ Create metrics of gauge type for filesystems space indicators,
+        """ 
+        Create metrics of gauge type for filesystems space indicators,
         with filesystem name as label.
         Metrics values can be iterated over.
         """
         fb_filesystems = self.fb.file_systems.list_file_systems()
         labels = ['name']
-        data_reduct = GaugeMetricFamily('pure_fb_filesystems_data_reduction',
+        data_reduct = GaugeMetricFamily('purefb_filesystems_data_reduction',
                                         'FlashBlade filesystems data reduction',
                                         labels=labels)
-        space_snap = GaugeMetricFamily('pure_fb_filesystems_snapshots_bytes',
+        space_snap = GaugeMetricFamily('purefb_filesystems_snapshots_bytes',
                                        'FlashBlade filesystems occupied snapshots space',
                                        labels=labels)
-        tot_phy = GaugeMetricFamily('pure_fb_filesystems_total_bytes',
+        tot_phy = GaugeMetricFamily('purefb_filesystems_total_bytes',
                                     'FlashBlade filesystems total physical space',
                                     labels=labels)
-        virt_space = GaugeMetricFamily('pure_fb_filesystems_virtual_bytes',
+        virt_space = GaugeMetricFamily('purefb_filesystems_virtual_bytes',
                                        'FlashBlade filesystems virtual space',
                                        labels=labels)
-        uniq_space = GaugeMetricFamily('pure_fb_filesystems_unique_bytes',
+        uniq_space = GaugeMetricFamily('purefb_filesystems_unique_bytes',
                                        'FlashBlade filesystems unique space',
                                        labels=labels)
         for f in fb_filesystems.items:
@@ -184,7 +203,8 @@ class FlashbladeCollector:
 
 
     def _array_perf(self, proto):
-        """ Create array performance metrics of gauge type.
+        """
+        Create array performance metrics of gauge type.
         Metrics values can be iterated over.
         This is an internal "utility" method meant to be called by the specific method
         for the whole array performances or for a given protocol.
@@ -204,43 +224,43 @@ class FlashbladeCollector:
         else:
             l_sep = '_'
             d_sep = ' '
-        _b_op = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}bytes_per_op',
+        _b_op = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}bytes_per_op',
                                   f'FlashBlade {proto}{d_sep}average bytes per operation',
                                   labels=[])
-        _b_rd = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}bytes_per_read',
+        _b_rd = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}bytes_per_read',
                                   f'FlashBlade {proto}{d_sep}average bytes per read',
                                   labels=[])
-        _b_wr = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}bytes_per_write',
+        _b_wr = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}bytes_per_write',
                                   f'FlashBlade {proto}{d_sep}average bytes per write',
                                   labels=[])
-        _rd_lat = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}rd_latency_usec',
+        _rd_lat = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}rd_latency_usec',
                                     f'FlashBlade {proto}{d_sep}read latency',
                                     labels=[])
-        _wr_lat = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}wr_latency_usec',
+        _wr_lat = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}wr_latency_usec',
                                     f'FlashBlade {proto}{d_sep}write latency',
                                     labels=[])
-        _others_lat = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}others_latency_usec',
+        _others_lat = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}others_latency_usec',
                                         f'FlashBlade {proto}{d_sep}other operations latency',
                                         labels=[])
-        _rd_iops = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}rd_ops',
+        _rd_iops = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}rd_ops',
                                      f'FlashBlade {proto}{d_sep}read IOPS',
                                      labels=[])
-        _others_iops = GaugeMetricFamily(f'pure_fb_perf{proto}{l_sep}others_ops',
+        _others_iops = GaugeMetricFamily(f'purefb_perf{proto}{l_sep}others_ops',
                                      f'FlashBlade {proto}{d_sep}others IOPS',
                                      labels=[])
-        _in_iops = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}output_ops',
+        _in_iops = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}output_ops',
                                      f'FlashBlade {proto}{d_sep}input IOPS',
                                      labels=[])
-        _out_iops = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}output_ops',
+        _out_iops = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}output_ops',
                                       f'FlashBlade {proto}{d_sep}output IOPS',
                                       labels=[])
-        _wr_iops = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}wr_ops',
+        _wr_iops = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}wr_ops',
                                      f'FlashBlade {proto}{d_sep}write IOPS',
                                      labels=[])
-        _rd_bw = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}rd_bps',
+        _rd_bw = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}rd_bps',
                                    f'FlashBlade {proto}{d_sep}read bandwidth',
                                    labels=[])
-        _wr_bw = GaugeMetricFamily(f'pure_fb_perf_{proto}{l_sep}wr_bps',
+        _wr_bw = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}wr_bps',
                                    f'FlashArray {proto}{d_sep}write bandwidth',
                                    labels=[])
         _b_op.add_metric([], fb_perf.bytes_per_op)
@@ -275,16 +295,3 @@ class FlashbladeCollector:
 
     def array_perf_s3(self):
         yield from self._array_perf(proto='s3')
-
-    def collect(self):
-        """Global collector method for all the collected metrics."""
-        yield from self.array_hw()
-        yield from self.array_events()
-        yield from self.array_space()
-        yield from self.buckets_space()
-        yield from self.filesystems_space()
-        yield from self.array_perf()
-        yield from self.array_perf_http()
-        yield from self.array_perf_nfs()
-        yield from self.array_perf_smb()
-        yield from self.array_perf_s3()
