@@ -3,14 +3,14 @@ import six
 from purity_fb import PurityFb
 
 # import third party modules
-from prometheus_client.core import GaugeMetricFamily
+from prometheus_client.core import GaugeMetricFamily, InfoMetricFamily
 
 # disable ceritificate warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class FlashbladeCollector:
-    """ 
+    """
     Instantiates the collector's methods and properties to retrieve metrics
     from Puretorage FlasBlade.
     Provides also a 'collect' method to allow Prometheus client registry
@@ -28,9 +28,24 @@ class FlashbladeCollector:
         self.fb = PurityFb(host=target, api_token=api_token)
         self.fb.disable_verify_ssl()
         self.fb._api_client.user_agent = 'Purity_FB_Prometheus_exporter/1.0'
-        
+
+    def array_info(self):
+        """Assemble a simple information metric defining the scraped system."""
+        data = self.fb.arrays.list_arrays().items[0]
+
+        yield InfoMetricFamily(
+            'purefb',
+            'FlashBlade system information',
+            value={
+                'array_name': data.name,
+                'system_id': data.id,
+                'os': data.os,
+                'version': data.version
+            })
+
     def collect(self):
         """Global collector method for all the collected metrics."""
+        yield from self.array_info()
         yield from self.array_hw()
         yield from self.array_events()
         yield from self.array_space()
@@ -43,7 +58,7 @@ class FlashbladeCollector:
         yield from self.array_perf_s3()
 
     def array_hw(self):
-        """ 
+        """
         Create a metric of gauge type for components status,
         with the hardware component name as label.
         Metrics values can be iterated over.
@@ -94,7 +109,7 @@ class FlashbladeCollector:
         yield events
 
     def array_space(self):
-        """ 
+        """
         Create metrics of gauge type for array space indicators.
         Metrics values can be iterated over.
         """
@@ -121,7 +136,7 @@ class FlashbladeCollector:
         yield tot_snapshots
 
     def buckets_space(self):
-        """ 
+        """
         Create metrics of gauge type for buckets space indicators, with the
         account name and the bucket name as labels.
         Metrics values can be iterated over.
@@ -165,7 +180,7 @@ class FlashbladeCollector:
             yield uniq_space
 
     def filesystems_space(self):
-        """ 
+        """
         Create metrics of gauge type for filesystems space indicators,
         with filesystem name as label.
         Metrics values can be iterated over.
@@ -261,7 +276,7 @@ class FlashbladeCollector:
                                    f'FlashBlade {proto}{d_sep}read bandwidth',
                                    labels=[])
         _wr_bw = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}wr_bps',
-                                   f'FlashArray {proto}{d_sep}write bandwidth',
+                                   f'FlashBlade {proto}{d_sep}write bandwidth',
                                    labels=[])
         _b_op.add_metric([], fb_perf.bytes_per_op)
         _b_rd.add_metric([], fb_perf.bytes_per_read)
@@ -286,7 +301,7 @@ class FlashbladeCollector:
 
     def array_perf_http(self):
         yield from self._array_perf(proto='http')
-        
+
     def array_perf_nfs(self):
         yield from self._array_perf(proto='nfs')
 
