@@ -37,6 +37,8 @@ class FlasharrayCollector:
         yield from self.array_perf()
         yield from self.vol_space()
         yield from self.vol_perf()
+        yield from self.host_space()
+        yield from self.host_perf()
 
     def array_info(self):
         """Assemble a simple information metric defining the scraped system."""
@@ -130,8 +132,9 @@ class FlasharrayCollector:
                             ['', c_base_index, c_index], float(comp['temperature']))
                 elif c_type.lower() == 'pwr':
                     # Additional metric for voltage level
-                    power.add_metric([c_base_index, c_index],
-                                     float(comp['voltage']))
+                    if comp['voltage'] is not None:
+                        power.add_metric([c_base_index, c_index],
+                                         float(comp['voltage']))
 
         yield chassis_health
         yield controller_health
@@ -297,6 +300,66 @@ class FlasharrayCollector:
             throughput.add_metric([v['name'], 'write'], v['input_per_sec'])
             iops.add_metric([v['name'], 'read'], v['reads_per_sec'])
             iops.add_metric([v['name'], 'write'], v['writes_per_sec'])
+
+        yield latency
+        yield throughput
+        yield iops
+
+    def host_space(self):
+        """
+        Create hosts space metrics of gauge type, with the host name
+        as a label. Metrics values can be iterated over.
+        """
+        data = self.connection.list_hosts(space=True)
+
+        datareduction = GaugeMetricFamily(
+            'purefa_host_datareduction_ratio',
+            'FlashArray host volumes data reduction ratio',
+            labels=['host'],
+            unit='ratio')
+        size = GaugeMetricFamily('purefa_host_size_bytes',
+                                 'FlashArray host volumes size',
+                                 labels=['host'])
+        allocated = GaugeMetricFamily('purefa_host_space_bytes',
+                                      'FlashArray host volumes allocated space',
+                                      labels=['host', 'dimension'])
+        for h in data:
+            datareduction.add_metric([h['name'], 'data_reduction'], h['data_reduction'])
+            datareduction.add_metric([h['name'], 'thin_provisioning'], h['thin_provisioning'])
+            datareduction.add_metric([h['name'], 'total_reduction'], h['total_reduction'])
+            size.add_metric([h['name']], h['size'])
+            allocated.add_metric([h['name'], 'volumes'], h['volumes'])
+            allocated.add_metric([h['name'], 'snapshots'], h['snapshots'])
+            allocated.add_metric([h['name'], 'total'], h['total'])
+
+        yield datareduction
+        yield size
+        yield allocated
+
+    def host_perf(self):
+        """
+        Create hosts performance metrics of gauge type, with
+        host name as label. Metrics values can be iterated over.
+        """
+        data = self.connection.list_hosts(action='monitor')
+        labels = ['host', 'dimension']  # common labels
+
+        latency = GaugeMetricFamily('purefa_host_latency_usec',
+                                    'FlashArray host IO latency',
+                                    labels=labels)
+        throughput = GaugeMetricFamily('purefa_host_throughput_bytes',
+                                       'FlashArray host throughput',
+                                       labels=labels)
+        iops = GaugeMetricFamily('purefa_host_iops',
+                                 'FlashArray host IOPS',
+                                 labels=labels)
+        for h in data:
+            latency.add_metric([h['name'], 'read'], h['usec_per_read_op'])
+            latency.add_metric([h['name'], 'write'], h['usec_per_write_op'])
+            throughput.add_metric([h['name'], 'read'], h['output_per_sec'])
+            throughput.add_metric([h['name'], 'write'], h['input_per_sec'])
+            iops.add_metric([h['name'], 'read'], h['reads_per_sec'])
+            iops.add_metric([h['name'], 'write'], h['writes_per_sec'])
 
         yield latency
         yield throughput
