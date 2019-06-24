@@ -160,10 +160,11 @@ Good examples for additional labels are:
 
 In a typical production scenario, it is recommended to use a visual frontend for your metrics, such as [Grafana](https://github.com/grafana/grafana). Grafana allows you to use your Prometheus instance as a datasource, and create Graphs and other visualizations from PromQL queries. Grafana, Prometheus, are all easy to run as docker containers.
 
+The latest built image is available on Docker Hub here https://hub.docker.com/r/genegatpure/pure-exporter.
 To spin up a very basic set of those containers, use the following commands:
 ```
 # Pure exporter
-docker run -d -p 9491:9491 --name pure-exporter purestorage/pure-exporter:latest
+docker run -d -p 9491:9491 --name pure-exporter genegatpure/pure-exporter:latest
 
 # Prometheus with config via bind-volume
 docker run -d -p 9090:9090 --name=prometheus -v /tmp/prometheus-pure.yml:/etc/prometheus/prometheus.yml -v /tmp/prometheus-data:/prometheus prom/prometheus:latest
