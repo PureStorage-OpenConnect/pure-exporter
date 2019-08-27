@@ -146,7 +146,7 @@ class FlashbladeCollector:
         data_reduct = GaugeMetricFamily('purefb_buckets_data_reduction',
                                         'FlashBlade buckets data reduction',
                                         labels=labels)
-        obj_cnt = GaugeMetricFamily('pure_b_buckets_object_count',
+        obj_cnt = GaugeMetricFamily('purefb_buckets_object_count',
                                     'FlashBlade buckets objects counter',
                                     labels=labels)
         space_snap = GaugeMetricFamily('purefb_buckets_snapshots_bytes',
