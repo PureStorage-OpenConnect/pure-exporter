@@ -172,7 +172,7 @@ docker run -d -p 9090:9090 --name=prometheus -v /tmp/prometheus-pure.yml:/etc/pr
 # Grafana
 docker run -d -p 3000:3000 --name=grafana -v /tmp/grafana-data:/var/lib/grafana grafana/grafana
 ```
-Please have a look at each the documentation of each image/application for adequate configuration examples.
+Please have a look at the documentation of each image/application for adequate configuration examples.
 
 A more robust example using docker-compose including Grafana, Prometheus and an exporter (in this case, netdata for linux) can be found [here](https://github.com/PhilsLab/gpn-docker).
 
