@@ -1,3 +1,7 @@
+![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/genegatpure/pure-exporter)
+[![](https://images.microbadger.com/badges/image/genegatpure/pure-exporter.svg)](https://hub.docker.com/r/genegatpure/pure-exporter "Docker image on Docker Hub")
+![Current version](https://img.shields.io/github/v/tag/PureStorage-OpenConnect/pure-exporter?label=current%20version)
+
 # Pure Storage Prometheus exporter
 Prometheus exporter for Pure Storage FlashArrays and FlashBlades.
 
@@ -14,6 +18,12 @@ To monitor your Pure Storage hosts, you will need to create a new dedicated user
 ### Building and Deploying
 
 The exporter is preferably built and launched via Docker. You can also scale the exporter deployment to multiple containers on Kubernetes thanks to the stateless nature of the application.
+
+---
+
+#### The official docker image is available at Docker Hub: [genegatpure/pure-exporter](https://hub.docker.com/r/genegatpure/pure-exporter)
+
+---
 
 To build and deploy the application via Docker, your local linux user should be added to the `docker` group in order to be able to communicate with the Docker daemon. (If this is not possible, you can still use <kbd>sudo</kbd>)
 
