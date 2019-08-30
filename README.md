@@ -1,3 +1,7 @@
+![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/genegatpure/pure-exporter)
+[![](https://images.microbadger.com/badges/image/genegatpure/pure-exporter.svg)](https://hub.docker.com/r/genegatpure/pure-exporter "Docker image on Docker Hub")
+![Current version](https://img.shields.io/github/v/tag/PureStorage-OpenConnect/pure-exporter?label=current%20version)
+
 # Pure Storage Prometheus exporter
 Prometheus exporter for Pure Storage FlashArrays and FlashBlades.
 
@@ -14,6 +18,12 @@ To monitor your Pure Storage hosts, you will need to create a new dedicated user
 ### Building and Deploying
 
 The exporter is preferably built and launched via Docker. You can also scale the exporter deployment to multiple containers on Kubernetes thanks to the stateless nature of the application.
+
+---
+
+#### The official docker image is available at Docker Hub: [genegatpure/pure-exporter](https://hub.docker.com/r/genegatpure/pure-exporter)
+
+---
 
 To build and deploy the application via Docker, your local linux user should be added to the `docker` group in order to be able to communicate with the Docker daemon. (If this is not possible, you can still use <kbd>sudo</kbd>)
 
@@ -160,13 +170,12 @@ Good examples for additional labels are:
 
 In a typical production scenario, it is recommended to use a visual frontend for your metrics, such as [Grafana](https://github.com/grafana/grafana). Grafana allows you to use your Prometheus instance as a datasource, and create Graphs and other visualizations from PromQL queries. Grafana, Prometheus, are all easy to run as docker containers.
 
-The latest built image is available on Docker Hub here https://hub.docker.com/r/genegatpure/pure-exporter.
 To spin up a very basic set of those containers, use the following commands:
-```
+```bash
 # Pure exporter
 docker run -d -p 9491:9491 --name pure-exporter genegatpure/pure-exporter:latest
 
-# Prometheus with config via bind-volume
+# Prometheus with config via bind-volume (create config first!)
 docker run -d -p 9090:9090 --name=prometheus -v /tmp/prometheus-pure.yml:/etc/prometheus/prometheus.yml -v /tmp/prometheus-data:/prometheus prom/prometheus:latest
 
 # Grafana
