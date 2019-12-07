@@ -49,6 +49,7 @@ class FlashbladeCollector:
         yield from self.array_hw()
         yield from self.array_events()
         yield from self.array_space()
+        yield from self.array_clientperf()
         yield from self.buckets_space()
         yield from self.filesystems_space()
         yield from self.array_perf()
@@ -134,6 +135,65 @@ class FlashbladeCollector:
         yield data_reduction
         yield tot_physical
         yield tot_snapshots
+
+
+    def array_clientperf(self):
+        """
+        Create metrics of gauge type for client performance metrics.
+        Metrics values can be iterated over.
+        """
+        fb_clientperf = self.fb.arrays.list_client_performance()
+        labels = ['name']
+        _b_op = GaugeMetricFamily('purefb_clients_bytes_per_op',
+                                  'FlashBlade clients bytes per operation',
+                                  labels=labels)
+        _b_rd = GaugeMetricFamily('purefb_clients_bytes_per_read',
+                                  'FlashBlade clients bytes per read',
+                                  labels=labels)
+        _b_wr = GaugeMetricFamily('purefb_clients_bytes_per_write',
+                                  'FlashBlade clients bytes per write',
+                                  labels=labels)
+        _others_iops = GaugeMetricFamily('purefb_clients_others_ops',
+                                  'FlashBlade clients others IOPS',
+                                  labels=labels)
+        _rd_iops = GaugeMetricFamily('purefb_clients_read_ops',
+                                  'FlashBlade clients read IOPS',
+                                  labels=labels)
+        _rd_bw = GaugeMetricFamily('purefb_clients_read_bps',
+                                  'FlashBlade clients read bandwidth',
+                                  labels=labels)
+        _others_lat = GaugeMetricFamily('purefb_clients_others_latency_usec',
+                                  'FlashBlade clients others latency',
+                                  labels=labels)
+        _rd_lat = GaugeMetricFamily('purefb_clients_read_latency_usec',
+                                  'FlashBlade clients read latency',
+                                  labels=labels)
+        _wr_lat = GaugeMetricFamily('purefb_clients_write_latency_usec',
+                                  'FlashBlade clients write latency',
+                                  labels=labels)
+        _wr_bw = GaugeMetricFamily('purefb_clients_write_bps',
+                                  'FlashBlade clients write bandwidth',
+                                  labels=labels)
+        _wr_iops = GaugeMetricFamily('purefb_clients_write_ops',
+                                  'FlashBlade clients write IOPS',
+                                  labels=labels)
+        for f in fb_clientperf.items:
+            _b_op.add_metric([f.name], fb_clientperf.bytes_per_op
+            _b_rd.add_metric([f.name], fb_clientperf.bytes_per_read
+            _b_wr.add_metric([f.name], fb_clientperf.bytes_per_write
+            _others_iops.add_metric([f.name], fb_clientperf.others_per_sec
+            _rd_iops.add_metric([f.name], fb_clientperf.read_bytes_per_sec
+            _rd_bw.add_metric([f.name], fb_clientperf.reads_per_sec
+            _others_lat.add_metric([f.name], fb_clientperf.usec_per_other_op
+            _rd_lat.add_metric([f.name], fb_clientperf.usec_per_read_op
+            _wr_lat.add_metric([f.name], fb_clientperf.usec_per_write_op
+            _wr_bw.add_metric([f.name], fb_clientperf.write_bytes_per_sec
+            _wr_iops.add_metric([f.name], fb_clientperf.writes_per_sec
+            metrics = [_b_op, _b_rd, _b_wr, _others_iops, _rd_iops, _rd_bw, _others_lat, \
+                    _rd_lat, _wr_lat, _wr_bw, _wr_iops]
+            for m in metrics:
+                yield m
+
 
     def buckets_space(self):
         """
