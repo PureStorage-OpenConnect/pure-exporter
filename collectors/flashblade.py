@@ -142,7 +142,7 @@ class FlashbladeCollector:
         Create metrics of gauge type for client performance metrics.
         Metrics values can be iterated over.
         """
-        fb_clientperf = self.fb.arrays.list_client_performance()
+        fb_clientperf = self.fb.arrays.list_clients_performance()
         labels = ['name']
         _b_op = GaugeMetricFamily('purefb_clients_bytes_per_op',
                                   'FlashBlade clients bytes per operation',
@@ -178,17 +178,17 @@ class FlashbladeCollector:
                                   'FlashBlade clients write IOPS',
                                   labels=labels)
         for f in fb_clientperf.items:
-            _b_op.add_metric([f.name], fb_clientperf.bytes_per_op
-            _b_rd.add_metric([f.name], fb_clientperf.bytes_per_read
-            _b_wr.add_metric([f.name], fb_clientperf.bytes_per_write
-            _others_iops.add_metric([f.name], fb_clientperf.others_per_sec
-            _rd_iops.add_metric([f.name], fb_clientperf.read_bytes_per_sec
-            _rd_bw.add_metric([f.name], fb_clientperf.reads_per_sec
-            _others_lat.add_metric([f.name], fb_clientperf.usec_per_other_op
-            _rd_lat.add_metric([f.name], fb_clientperf.usec_per_read_op
-            _wr_lat.add_metric([f.name], fb_clientperf.usec_per_write_op
-            _wr_bw.add_metric([f.name], fb_clientperf.write_bytes_per_sec
-            _wr_iops.add_metric([f.name], fb_clientperf.writes_per_sec
+            _b_op.add_metric([f.name], f.bytes_per_op)
+            _b_rd.add_metric([f.name], f.bytes_per_read)
+            _b_wr.add_metric([f.name], f.bytes_per_write)
+            _others_iops.add_metric([f.name], f.others_per_sec)
+            _rd_iops.add_metric([f.name], f.read_bytes_per_sec)
+            _rd_bw.add_metric([f.name], f.reads_per_sec)
+            _others_lat.add_metric([f.name], f.usec_per_other_op)
+            _rd_lat.add_metric([f.name], f.usec_per_read_op)
+            _wr_lat.add_metric([f.name], f.usec_per_write_op)
+            _wr_bw.add_metric([f.name], f.write_bytes_per_sec)
+            _wr_iops.add_metric([f.name], f.writes_per_sec)
             metrics = [_b_op, _b_rd, _b_wr, _others_iops, _rd_iops, _rd_bw, _others_lat, \
                     _rd_lat, _wr_lat, _wr_bw, _wr_iops]
             for m in metrics:
