@@ -144,53 +144,53 @@ class FlashbladeCollector:
         """
         fb_clientperf = self.fb.arrays.list_clients_performance()
         labels = ['name']
-        _b_op = GaugeMetricFamily('purefb_clients_bytes_per_op',
+        client_b_op = GaugeMetricFamily('purefb_clients_bytes_per_op',
                                   'FlashBlade clients bytes per operation',
                                   labels=labels)
-        _b_rd = GaugeMetricFamily('purefb_clients_bytes_per_read',
+        client_b_rd = GaugeMetricFamily('purefb_clients_bytes_per_read',
                                   'FlashBlade clients bytes per read',
                                   labels=labels)
-        _b_wr = GaugeMetricFamily('purefb_clients_bytes_per_write',
+        client_b_wr = GaugeMetricFamily('purefb_clients_bytes_per_write',
                                   'FlashBlade clients bytes per write',
                                   labels=labels)
-        _others_iops = GaugeMetricFamily('purefb_clients_others_ops',
+        client_others_iops = GaugeMetricFamily('purefb_clients_others_ops',
                                   'FlashBlade clients others IOPS',
                                   labels=labels)
-        _rd_iops = GaugeMetricFamily('purefb_clients_read_ops',
+        client_rd_iops = GaugeMetricFamily('purefb_clients_read_ops',
                                   'FlashBlade clients read IOPS',
                                   labels=labels)
-        _rd_bw = GaugeMetricFamily('purefb_clients_read_bps',
+        client_rd_bw = GaugeMetricFamily('purefb_clients_read_bps',
                                   'FlashBlade clients read bandwidth',
                                   labels=labels)
-        _others_lat = GaugeMetricFamily('purefb_clients_others_latency_usec',
+        client_others_lat = GaugeMetricFamily('purefb_clients_others_latency_usec',
                                   'FlashBlade clients others latency',
                                   labels=labels)
-        _rd_lat = GaugeMetricFamily('purefb_clients_read_latency_usec',
+        client_rd_lat = GaugeMetricFamily('purefb_clients_read_latency_usec',
                                   'FlashBlade clients read latency',
                                   labels=labels)
-        _wr_lat = GaugeMetricFamily('purefb_clients_write_latency_usec',
+        client_wr_lat = GaugeMetricFamily('purefb_clients_write_latency_usec',
                                   'FlashBlade clients write latency',
                                   labels=labels)
-        _wr_bw = GaugeMetricFamily('purefb_clients_write_bps',
+        client_wr_bw = GaugeMetricFamily('purefb_clients_write_bps',
                                   'FlashBlade clients write bandwidth',
                                   labels=labels)
-        _wr_iops = GaugeMetricFamily('purefb_clients_write_ops',
+        client_wr_iops = GaugeMetricFamily('purefb_clients_write_ops',
                                   'FlashBlade clients write IOPS',
                                   labels=labels)
         for f in fb_clientperf.items:
-            _b_op.add_metric([f.name], f.bytes_per_op)
-            _b_rd.add_metric([f.name], f.bytes_per_read)
-            _b_wr.add_metric([f.name], f.bytes_per_write)
-            _others_iops.add_metric([f.name], f.others_per_sec)
-            _rd_iops.add_metric([f.name], f.read_bytes_per_sec)
-            _rd_bw.add_metric([f.name], f.reads_per_sec)
-            _others_lat.add_metric([f.name], f.usec_per_other_op)
-            _rd_lat.add_metric([f.name], f.usec_per_read_op)
-            _wr_lat.add_metric([f.name], f.usec_per_write_op)
-            _wr_bw.add_metric([f.name], f.write_bytes_per_sec)
-            _wr_iops.add_metric([f.name], f.writes_per_sec)
-            metrics = [_b_op, _b_rd, _b_wr, _others_iops, _rd_iops, _rd_bw, _others_lat, \
-                    _rd_lat, _wr_lat, _wr_bw, _wr_iops]
+            client_b_op.add_metric([f.name], f.bytes_per_op)
+            client_b_rd.add_metric([f.name], f.bytes_per_read)
+            client_b_wr.add_metric([f.name], f.bytes_per_write)
+            client_others_iops.add_metric([f.name], f.others_per_sec)
+            client_rd_iops.add_metric([f.name], f.read_bytes_per_sec)
+            client_rd_bw.add_metric([f.name], f.reads_per_sec)
+            client_others_lat.add_metric([f.name], f.usec_per_other_op)
+            client_rd_lat.add_metric([f.name], f.usec_per_read_op)
+            client_wr_lat.add_metric([f.name], f.usec_per_write_op)
+            client_wr_bw.add_metric([f.name], f.write_bytes_per_sec)
+            client_wr_iops.add_metric([f.name], f.writes_per_sec)
+            metrics = [client_b_op, client_b_rd, client_b_wr, client_others_iops, client_rd_iops, client_rd_bw, client_others_lat, \
+                    client_rd_lat, _wr_lat, client_wr_bw, client_wr_iops]
             for m in metrics:
                 yield m
 
