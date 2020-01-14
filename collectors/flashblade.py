@@ -190,7 +190,7 @@ class FlashbladeCollector:
             client_wr_bw.add_metric([f.name], f.write_bytes_per_sec)
             client_wr_iops.add_metric([f.name], f.writes_per_sec)
             metrics = [client_b_op, client_b_rd, client_b_wr, client_others_iops, client_rd_iops, client_rd_bw, client_others_lat, \
-                    client_rd_lat, _wr_lat, client_wr_bw, client_wr_iops]
+                    client_rd_lat, client_wr_lat, client_wr_bw, client_wr_iops]
             for m in metrics:
                 yield m
 
