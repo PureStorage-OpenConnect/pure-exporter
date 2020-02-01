@@ -49,7 +49,7 @@ def route_volume(volume):
     try:
         endpoint = request.args.get('endpoint', None)
         token = request.args.get('apitoken', None)
-        resp = list_volume_connections(endpoint, token, volume)
+        resp = jsonify(list_volume_connections(endpoint, token, volume))
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp
     except Exception as e:
@@ -63,7 +63,7 @@ def route_host(host):
     try:
         endpoint = request.args.get('endpoint', None)
         token = request.args.get('apitoken', None)
-        resp = list_host_connections(endpoint, token, host)
+        resp = jsonify(list_host_connections(endpoint, token, host))
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp
     except Exception as e:
@@ -114,9 +114,8 @@ def list_volume_connections(target, api_token, volume):
     vol = {}
     vol['serial'] = v_info['serial']
     vol['hosts'] = hosts
+    return vol
 
-    return jsonify(vol)
-    
 def list_host_connections(target, api_token, host):
     # disable ceritificate warnings
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -135,7 +134,7 @@ def list_host_connections(target, api_token, host):
         vols.append({'volume': v['vol'], 'lun': v['lun'], 'serial': serial})
     h_info = conn.get_host(host)
     h_info['volumes'] = vols
-    return jsonify(h_info)
+    return h_info
 
 
 # Run in debug mode when not called by WSGI
