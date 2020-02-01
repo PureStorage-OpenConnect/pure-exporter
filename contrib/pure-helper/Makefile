@@ -12,7 +12,6 @@ all: build test
 .PHONY: build
 build: Dockerfile requirements.txt .dockerignore $(wildcard *.py)
 	docker build . -f Dockerfile -t $(IMAGE_NAMESPACE)/$(IMAGE_NAME):$(IMAGE_TAG)
-	docker rmi $(docker images -f "dangling=true" -q)
 
 .PHONY: test
 test:
