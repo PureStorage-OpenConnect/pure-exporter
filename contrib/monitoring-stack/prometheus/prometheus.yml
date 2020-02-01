@@ -1,0 +1,60 @@
+# my global config
+global:
+  scrape_interval:     10s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15m # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+       - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+#rule_files:
+#   - 'alert.rules'
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # Job for all Prometheus
+  - job_name: 'prometheus'
+
+    static_configs:
+    - targets: ['localhost:9090']
+
+  - job_name: node
+    static_configs:
+      - targets: ['localhost:9100']
+
+# Job for all Pure Flasharrays
+  - job_name: 'pure_flasharray'
+    metrics_path: /metrics/flasharray
+    relabel_configs:
+    # meta label of target address --> get parameter "pure_host"
+    - source_labels: [__address__]
+      target_label: __param_endpoint
+    # label of target api token --> get parameter "pure_apitoken"
+    - source_labels: [__pure_apitoken]
+      target_label: __param_apitoken
+    # display the pure host as the instance label
+    - source_labels: [__address__]
+      target_label: instance
+    # point the exporter to the scraping endpoint of the exporter
+    - target_label: __address__
+      replacement: 10.0.2.72:9491
+
+    static_configs:
+    - targets: [ 10.0.2.20 ]
+      labels:
+        __pure_apitoken: 7b712253-099a-f13e-2166-e487d63166e0
+        location: uk
+        site: London
+        is_production: 1
+    - targets: [ 10.0.2.10 ]
+      labels:
+        __pure_apitoken: 21d04c8b-aa4b-f5b2-d86f-4e9aea4e14f3
+        location: fr
+        site: Paris
+        is_production: 0
