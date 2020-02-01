@@ -28,6 +28,11 @@ class FlasharrayCollector:
             api_token=api_token,
             user_agent='Purity_FA_Prometheus_exporter/1.0')
 
+        vols = self.connection.list_volumes()
+        self.serials = {}
+        for v in vols:
+            self.serials[v['name']] = v['serial']
+        
     def collect(self):
         """Global collector method for all the collected metrics."""
         yield from self.array_info()
@@ -253,23 +258,25 @@ class FlasharrayCollector:
         datareduction = GaugeMetricFamily(
             'purefa_volume_datareduction_ratio',
             'FlashArray volume data reduction ratio',
-            labels=['volume'],
+            labels=['volume', 'serial'],
             unit='ratio')
         size = GaugeMetricFamily('purefa_volume_size_bytes',
                                  'FlashArray volume size',
-                                 labels=['volume'])
+                                 labels=['volume', 'serial'])
         allocated = GaugeMetricFamily('purefa_volume_space_bytes',
                                       'FlashArray volume allocated space',
-                                      labels=['volume', 'dimension'])
+                                      labels=['volume', 'serial', 'dimension'])
         # Temporarily left out 'thin_provisioning' and 'total_reduction'
         for v in data:
-            datareduction.add_metric([v['name']], v['data_reduction'])
-            size.add_metric([v['name']], v['size'])
-            allocated.add_metric([v['name'], 'volumes'], v['volumes'])
-            allocated.add_metric([v['name'], 'snapshots'], v['snapshots'])
-            allocated.add_metric([v['name'], 'shared'],
+            vol = v['name']
+            serial = self.serials[v['name']]
+            datareduction.add_metric([vol, serial], v['data_reduction'])
+            size.add_metric([vol, serial], v['size'])
+            allocated.add_metric([vol, serial, 'volumes'], v['volumes'])
+            allocated.add_metric([vol, serial, 'snapshots'], v['snapshots'])
+            allocated.add_metric([vol, serial, 'shared'],
                                  v['shared'] if 'shared' in v else 0)
-            allocated.add_metric([v['name'], 'system_space'],
+            allocated.add_metric([vol, serial, 'system_space'],
                                  v['system_space'] if 'system_space' in v else 0)
 
         yield datareduction
@@ -282,7 +289,7 @@ class FlasharrayCollector:
         volume name as label. Metrics values can be iterated over.
         """
         data = self.connection.list_volumes(action='monitor')
-        labels = ['volume', 'dimension']  # common labels
+        labels = ['volume', 'serial', 'dimension']  # common labels
 
         latency = GaugeMetricFamily('purefa_volume_latency_usec',
                                     'FlashArray volume IO latency',
@@ -294,12 +301,14 @@ class FlasharrayCollector:
                                  'FlashArray volume IOPS',
                                  labels=labels)
         for v in data:
-            latency.add_metric([v['name'], 'read'], v['usec_per_read_op'])
-            latency.add_metric([v['name'], 'write'], v['usec_per_write_op'])
-            throughput.add_metric([v['name'], 'read'], v['output_per_sec'])
-            throughput.add_metric([v['name'], 'write'], v['input_per_sec'])
-            iops.add_metric([v['name'], 'read'], v['reads_per_sec'])
-            iops.add_metric([v['name'], 'write'], v['writes_per_sec'])
+            vol = v['name']
+            serial = self.serials[v['name']]
+            latency.add_metric([vol, serial, 'read'], v['usec_per_read_op'])
+            latency.add_metric([vol, serial, 'write'], v['usec_per_write_op'])
+            throughput.add_metric([vol, serial, 'read'], v['output_per_sec'])
+            throughput.add_metric([vol, serial, 'write'], v['input_per_sec'])
+            iops.add_metric([vol, serial, 'read'], v['reads_per_sec'])
+            iops.add_metric([vol, serial, 'write'], v['writes_per_sec'])
 
         yield latency
         yield throughput
