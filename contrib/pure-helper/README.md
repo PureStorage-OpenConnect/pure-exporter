@@ -1,4 +1,4 @@
-# Pure Storage Helper
+# Pure Storage helper
 Basic volumes and hosts information retriever for Pure Storage FlashArrays.
 
 
@@ -62,17 +62,6 @@ Type | URL | required GET parameters
 host volumes | http://\<helper-host\>:\<port\>/flasharray/host/{host}/volume | endpoint, apitoken
 volume hosts | http://\<helper-host\>:\<port\>/flasharray/volume/{volume}/host | endpoint, apitoken
 
-
-    labels:
-      __pure_apitoken: 00000000-0000-0000-0000-000000000000
-
-  - targets: [ mypureflashblade-02.lan ]
-    labels:
-      __pure_apitoken: 00000000-0000-0000-0000-000000000000
-```
-
-
-
 ### Usage example
 
 In a typical production scenario, it is recommended to use this helper in combination with a visual frontend for your metrics, such as [Grafana](https://github.com/grafana/grafana). Grafana allows you to use your Prometheus instance as a datasource, and create Graphs and other visualizations from PromQL queries. Grafana and Prometheus, are all easy to run as docker containers.
@@ -80,7 +69,7 @@ In a typical production scenario, it is recommended to use this helper in combin
 To spin up the containers, use the following commands:
 ```bash
 docker run -d -p 9000:9000 --name pure-helper purestorage/pure-helper:latest
-
+```
 
 ### Authors
 
@@ -88,4 +77,4 @@ docker run -d -p 9000:9000 --name pure-helper purestorage/pure-helper:latest
 
 ### License
 
-This project is licensed under the Apache 2.0 License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the Apache 2.0 License - see the [LICENSE.md](../../LICENSE.md) file for details
