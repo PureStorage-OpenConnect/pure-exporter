@@ -55,6 +55,12 @@ def route_volume(volume):
     except Exception as e:
         app.logger.warn('%s: %s', 'pure_helper', str(e))
         abort(500)
+        
+@app.route('/flasharray/volume/<vgroup>/<volume>/host', methods=['GET'])
+def route_vgvolume(vgroup, volume):
+    """Produce a list of information for the volume of the given volume group ."""
+    vol = vgroup + '/' + volume
+    return(route_volume(vol))
 
 @app.route('/flasharray/host/<host>/volume', methods=['GET'])
 def route_host(host):
