@@ -32,6 +32,7 @@ class FlasharrayCollector:
         self.serials = {}
         for v in vols:
             self.serials[v['name']] = v['serial']
+        self.api_token = api_token
         
     def collect(self):
         """Global collector method for all the collected metrics."""
@@ -55,7 +56,8 @@ class FlasharrayCollector:
             value={
                 'array_name': data['array_name'],
                 'system_id': data['id'],
-                'version': data['version']
+                'version': data['version'],
+                'api_token': self.api_token
             })
 
     def array_hw(self):
