@@ -8,6 +8,8 @@ from prometheus_client.core import GaugeMetricFamily, InfoMetricFamily
 # disable ceritificate warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+PURE_NAA = 'naa.624a9370'
+
 
 class FlasharrayCollector:
     """
@@ -260,25 +262,25 @@ class FlasharrayCollector:
         datareduction = GaugeMetricFamily(
             'purefa_volume_datareduction_ratio',
             'FlashArray volume data reduction ratio',
-            labels=['volume', 'serial'],
+            labels=['volume', 'naaid'],
             unit='ratio')
         size = GaugeMetricFamily('purefa_volume_size_bytes',
                                  'FlashArray volume size',
-                                 labels=['volume', 'serial'])
+                                 labels=['volume', 'naaid'])
         allocated = GaugeMetricFamily('purefa_volume_space_bytes',
                                       'FlashArray volume allocated space',
-                                      labels=['volume', 'serial', 'dimension'])
+                                      labels=['volume', 'naaid', 'dimension'])
         # Temporarily left out 'thin_provisioning' and 'total_reduction'
         for v in data:
             vol = v['name']
-            serial = self.serials[v['name']]
-            datareduction.add_metric([vol, serial], v['data_reduction'])
-            size.add_metric([vol, serial], v['size'])
-            allocated.add_metric([vol, serial, 'volumes'], v['volumes'])
-            allocated.add_metric([vol, serial, 'snapshots'], v['snapshots'])
-            allocated.add_metric([vol, serial, 'shared'],
+            naaid = PURE_NAA + self.serials[v['name']]
+            datareduction.add_metric([vol, naaid], v['data_reduction'])
+            size.add_metric([vol, naaid], v['size'])
+            allocated.add_metric([vol, naaid, 'volumes'], v['volumes'])
+            allocated.add_metric([vol, naaid, 'snapshots'], v['snapshots'])
+            allocated.add_metric([vol, naaid, 'shared'],
                                  v['shared'] if 'shared' in v else 0)
-            allocated.add_metric([vol, serial, 'system_space'],
+            allocated.add_metric([vol, naaid, 'system_space'],
                                  v['system_space'] if 'system_space' in v else 0)
 
         yield datareduction
@@ -291,7 +293,7 @@ class FlasharrayCollector:
         volume name as label. Metrics values can be iterated over.
         """
         data = self.connection.list_volumes(action='monitor')
-        labels = ['volume', 'serial', 'dimension']  # common labels
+        labels = ['volume', 'naaid', 'dimension']  # common labels
 
         latency = GaugeMetricFamily('purefa_volume_latency_usec',
                                     'FlashArray volume IO latency',
@@ -304,13 +306,13 @@ class FlasharrayCollector:
                                  labels=labels)
         for v in data:
             vol = v['name']
-            serial = self.serials[v['name']]
-            latency.add_metric([vol, serial, 'read'], v['usec_per_read_op'])
-            latency.add_metric([vol, serial, 'write'], v['usec_per_write_op'])
-            throughput.add_metric([vol, serial, 'read'], v['output_per_sec'])
-            throughput.add_metric([vol, serial, 'write'], v['input_per_sec'])
-            iops.add_metric([vol, serial, 'read'], v['reads_per_sec'])
-            iops.add_metric([vol, serial, 'write'], v['writes_per_sec'])
+            naaid = PURE_NAA + self.serials[v['name']]
+            latency.add_metric([vol, naaid, 'read'], v['usec_per_read_op'])
+            latency.add_metric([vol, naaid, 'write'], v['usec_per_write_op'])
+            throughput.add_metric([vol, naaid, 'read'], v['output_per_sec'])
+            throughput.add_metric([vol, naaid, 'write'], v['input_per_sec'])
+            iops.add_metric([vol, naaid, 'read'], v['reads_per_sec'])
+            iops.add_metric([vol, naaid, 'write'], v['writes_per_sec'])
 
         yield latency
         yield throughput
