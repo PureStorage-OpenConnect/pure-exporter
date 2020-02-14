@@ -107,6 +107,7 @@ def list_volume_connections(target, api_token, volume):
             target,
             api_token=api_token,
             user_agent='Purity_FA_Prometheus_exporter/1.0')
+    array = conn.get()
     p_hosts = conn.list_volume_private_connections(volume)
     s_hosts = conn.list_volume_shared_connections(volume)
     v_info = conn.get_volume(volume)
@@ -120,6 +121,7 @@ def list_volume_connections(target, api_token, volume):
     vol = {}
     vol['serial'] = v_info['serial']
     vol['hosts'] = hosts
+    vol['array_name'] = array['array_name']
     return vol
 
 def list_host_connections(target, api_token, host):
@@ -129,6 +131,7 @@ def list_host_connections(target, api_token, host):
             target,
             api_token=api_token,
             user_agent='Purity_FA_Prometheus_exporter/1.0')
+    array = conn.get()
     v_list = conn.list_host_connections(host)
     vols = []
     for v in v_list:
@@ -140,6 +143,7 @@ def list_host_connections(target, api_token, host):
         vols.append({'volume': v['vol'], 'lun': v['lun'], 'serial': serial})
     h_info = conn.get_host(host)
     h_info['volumes'] = vols
+    h_info['array_name'] = array['array_name']
     return h_info
 
 
