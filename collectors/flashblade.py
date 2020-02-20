@@ -76,7 +76,7 @@ class FlashbladeCollector:
             labels_v = [name]
             if state == 'unused' or state == 'not_installed':
                 status.add_metric(labels_v, -1)
-            elif state == 'healty':
+            elif state == 'healthy':
                 status.add_metric(labels_v, 1)
             else:
                 status.add_metric(labels_v, 0)
