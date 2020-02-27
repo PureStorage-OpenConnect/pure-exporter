@@ -9,6 +9,7 @@ from prometheus_client.core import GaugeMetricFamily, InfoMetricFamily
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 PURE_NAA = 'naa.624a9370'
+EMPTY_SERIAL = '000000000000000000000000'
 
 
 class FlasharrayCollector:
@@ -35,7 +36,7 @@ class FlasharrayCollector:
         for v in vols:
             self.serials[v['name']] = v['serial']
         self.api_token = api_token
-        
+
     def collect(self):
         """Global collector method for all the collected metrics."""
         yield from self.array_info()
@@ -234,7 +235,7 @@ class FlasharrayCollector:
         throughput_mirror_write = GaugeMetricFamily(
             'purefa_mirror_write_bytes',
             'FlashArray mirror write bandwidth')
-        
+
         latency.add_metric(['read'], data['usec_per_read_op'])
         latency.add_metric(['write'], data['usec_per_write_op'])
         iops.add_metric(['read'], data['reads_per_sec'])
@@ -273,7 +274,10 @@ class FlasharrayCollector:
         # Temporarily left out 'thin_provisioning' and 'total_reduction'
         for v in data:
             vol = v['name']
-            naaid = PURE_NAA + self.serials[v['name']]
+            if vol in self.serials:
+                naaid = PURE_NAA + self.serials[vol]
+            else:
+                naaid = PURE_NAA + EMPTY_SERIAL
             datareduction.add_metric([vol, naaid], v['data_reduction'])
             size.add_metric([vol, naaid], v['size'])
             allocated.add_metric([vol, naaid, 'volumes'], v['volumes'])
@@ -306,7 +310,10 @@ class FlasharrayCollector:
                                  labels=labels)
         for v in data:
             vol = v['name']
-            naaid = PURE_NAA + self.serials[v['name']]
+            if vol in self.serials:
+                naaid = PURE_NAA + self.serials[vol]
+            else:
+                naaid = PURE_NAA + EMPTY_SERIAL
             latency.add_metric([vol, naaid, 'read'], v['usec_per_read_op'])
             latency.add_metric([vol, naaid, 'write'], v['usec_per_write_op'])
             throughput.add_metric([vol, naaid, 'read'], v['output_per_sec'])
