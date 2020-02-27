@@ -76,7 +76,7 @@ class FlashbladeCollector:
             labels_v = [name]
             if state == 'unused' or state == 'not_installed':
                 status.add_metric(labels_v, -1)
-            elif state == 'healty':
+            elif state == 'healthy':
                 status.add_metric(labels_v, 1)
             else:
                 status.add_metric(labels_v, 0)
@@ -323,7 +323,7 @@ class FlashbladeCollector:
         _others_iops = GaugeMetricFamily(f'purefb_perf{proto}{l_sep}others_ops',
                                      f'FlashBlade {proto}{d_sep}others IOPS',
                                      labels=[])
-        _in_iops = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}output_ops',
+        _in_iops = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}input_ops',
                                      f'FlashBlade {proto}{d_sep}input IOPS',
                                      labels=[])
         _out_iops = GaugeMetricFamily(f'purefb_perf_{proto}{l_sep}output_ops',
