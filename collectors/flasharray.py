@@ -48,6 +48,7 @@ class FlasharrayCollector:
         yield from self.vol_perf()
         yield from self.host_space()
         yield from self.host_perf()
+        yield from self.pod_status()
 
     def array_info(self):
         """Assemble a simple information metric defining the scraped system."""
@@ -296,7 +297,7 @@ class FlasharrayCollector:
         Create volumes performance metrics of gauge type, with
         volume name as label. Metrics values can be iterated over.
         """
-        data = self.connection.list_volumes(action='monitor')
+        data = self.connection.list_volumes(action='monitor', mirrored=True)
         labels = ['volume', 'naaid', 'dimension']  # common labels
 
         latency = GaugeMetricFamily('purefa_volume_latency_usec',
@@ -316,10 +317,13 @@ class FlasharrayCollector:
                 naaid = PURE_NAA + EMPTY_SERIAL
             latency.add_metric([vol, naaid, 'read'], v['usec_per_read_op'])
             latency.add_metric([vol, naaid, 'write'], v['usec_per_write_op'])
+            latency.add_metric([vol, naaid, 'mirrored_write'], v['usec_per_mirrored_write_op'])
             throughput.add_metric([vol, naaid, 'read'], v['output_per_sec'])
             throughput.add_metric([vol, naaid, 'write'], v['input_per_sec'])
+            throughput.add_metric([vol, naaid, 'mirrored_write'], v['mirrored_input_per_sec'])
             iops.add_metric([vol, naaid, 'read'], v['reads_per_sec'])
             iops.add_metric([vol, naaid, 'write'], v['writes_per_sec'])
+            iops.add_metric([vol, naaid, 'mirrored_write'], v['mirrored_writes_per_sec'])
 
         yield latency
         yield throughput
@@ -361,7 +365,7 @@ class FlasharrayCollector:
         Create hosts performance metrics of gauge type, with
         host name as label. Metrics values can be iterated over.
         """
-        data = self.connection.list_hosts(action='monitor')
+        data = self.connection.list_hosts(action='monitor', mirrored=True)
         labels = ['host', 'dimension']  # common labels
 
         latency = GaugeMetricFamily('purefa_host_latency_usec',
@@ -376,11 +380,37 @@ class FlasharrayCollector:
         for h in data:
             latency.add_metric([h['name'], 'read'], h['usec_per_read_op'])
             latency.add_metric([h['name'], 'write'], h['usec_per_write_op'])
+            latency.add_metric([h['name'], 'mirrored_write'], h['usec_per_mirrored_write_op'])
             throughput.add_metric([h['name'], 'read'], h['output_per_sec'])
             throughput.add_metric([h['name'], 'write'], h['input_per_sec'])
+            throughput.add_metric([h['name'], 'mirrored_write'], h['mirrored_input_per_sec'])
             iops.add_metric([h['name'], 'read'], h['reads_per_sec'])
             iops.add_metric([h['name'], 'write'], h['writes_per_sec'])
+            iops.add_metric([h['name'], 'mirrored_write'], h['mirrored_writes_per_sec'])
 
         yield latency
         yield throughput
         yield iops
+
+    def pod_status(self):
+        """Collect information about all pods."""
+        data = self.connection.list_pods()
+
+        pods_status = GaugeMetricFamily(
+            'purefa_pod_status',
+            'FlashArray pods status',
+            labels=['pod', 'array'])
+        mediator_status = GaugeMetricFamily(
+            'purefa_pod_mediator_status',
+            'FlashArray pods mediator status',
+            labels=['pod', 'array', 'mediator'])
+        for p in data:
+            pod = self.connection.get_pod(p['name'], mediator=True)
+            for a in pod['arrays']:
+                status = 1 if a['status'] == 'online' else 0
+                m_status = 1 if a['mediator_status'] == 'online' else 0
+                pods_status.add_metric([pod['name'], a['name']], status)
+                mediator_status.add_metric([pod['name'], a['name'], pod['mediator']], m_status)
+
+        yield pods_status
+        yield mediator_status
