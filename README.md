@@ -122,7 +122,35 @@ scrape_configs:
 
 # Job for all Pure Flashblades
 - job_name: 'pure_flashblade'
-  metrics_path: /metrics/flashblade
+  metrics_path: /metrics/flashblade/array
+  relabel_configs:
+  # meta label of target address --> get parameter "pure_host"
+  - source_labels: [__address__]
+    target_label: __param_endpoint
+  # label of target api token --> get parameter "pure_apitoken"
+  - source_labels: [__pure_apitoken]
+    target_label: __param_apitoken
+  # display the pure host as the instance label
+  - source_labels: [__address__]
+    target_label: instance
+  # point the exporter to the scraping endpoint of the exporter
+  - target_label: __address__
+    replacement: localhost:9491 # address of the exporter, in debug mode
+                                # THIS NEEDS TO BE CHANGED TO YOUR ENVIRONMENT
+    
+  # Actual pure hosts (without a prometheus endpoint) as targets
+  static_configs:
+  - targets: [ mypureflashblade-01.lan ]
+    labels:
+      __pure_apitoken: 00000000-0000-0000-0000-000000000000
+
+  - targets: [ mypureflashblade-02.lan ]
+    labels:
+      __pure_apitoken: 00000000-0000-0000-0000-000000000000
+
+# Job for all Pure Flashblade clients
+- job_name: 'pure_flashblade clients'
+  metrics_path: /metrics/flashblade/clients
   relabel_configs:
   # meta label of target address --> get parameter "pure_host"
   - source_labels: [__address__]
