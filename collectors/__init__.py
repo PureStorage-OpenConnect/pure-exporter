@@ -1,3 +1,3 @@
 from .flasharray import FlasharrayCollector
-from .flashblade import FlashbladeCollector
+from .flashblade import FlashbladeArrayCollector,FlashbladeClientPerfCollector
 

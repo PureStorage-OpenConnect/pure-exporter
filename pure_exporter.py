@@ -4,7 +4,8 @@ from flask import Flask, request, abort, make_response
 from prometheus_client import generate_latest, CollectorRegistry, CONTENT_TYPE_LATEST
 from prometheus_client.core import GaugeMetricFamily, CounterMetricFamily
 from collectors import FlasharrayCollector
-from collectors import FlashbladeCollector
+from collectors import FlashbladeArrayCollector
+from collectors import FlashbladeClientPerfCollector
 
 import logging
 
@@ -42,25 +43,38 @@ def route_index():
     '''
 
 
-@app.route('/metrics/<c_type>', methods=['GET'])
-def route_metrics(c_type: str):
+@app.route('/metrics/flasharray', methods=['GET'])
+def route_flasharray():
     """Produce FlashArray metrics."""
+    registry = CollectorRegistry()
+    collector = FlasharrayCollector
+    try:
+        endpoint = request.args.get('endpoint', None)
+        token = request.args.get('apitoken', None)
+        registry.register(collector(endpoint, token))
+    except Exception as e:
+        app.logger.warn('%s: %s', collector.__name__, str(e))
+        abort(500)
+
+    resp = make_response(generate_latest(registry), 200)
+    resp.headers['Content-type'] = CONTENT_TYPE_LATEST
+    return resp
+
+@app.route('/metrics/flashblade/<m_type>', methods=['GET'])
+def route_flashblade(m_type: str):
+    """Produce FlashBlade metrics."""
     # map collector_type string to a collector class
     registry = CollectorRegistry()
-    c_map = {
-        'flasharray': FlasharrayCollector,
-        'flashblade': FlashbladeCollector
+    m_map = {
+        'array': FlashbladeArrayCollector,
+        'client': FlashbladeClientPerfCollector
     }
-    collector = c_map[c_type] if c_type in c_map else None
+    collector = m_map[m_type] if m_type in m_map else None
 
     try:
-        if collector is FlasharrayCollector:
+        if ((collector is FlashbladeArrayCollector) or
+            (collector is FlashbladeClientPerfCollector)):
             # FlashArray
-            endpoint = request.args.get('endpoint', None)
-            token = request.args.get('apitoken', None)
-            registry.register(collector(endpoint, token))
-        elif collector is FlashbladeCollector:
-            # FlashBlade
             endpoint = request.args.get('endpoint', None)
             token = request.args.get('apitoken', None)
             registry.register(collector(endpoint, token))

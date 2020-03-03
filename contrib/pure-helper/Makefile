@@ -1,6 +1,6 @@
-IMAGE_NAMESPACE ?= purestorage
+IMAGE_NAMESPACE ?= genegatpure
 IMAGE_NAME ?= pure-helper
-IMAGE_TAG ?= latest
+IMAGE_TAG ?= 1.0
 
 RUN_PORT = 9000:9000
 

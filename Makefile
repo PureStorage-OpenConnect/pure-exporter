@@ -1,4 +1,4 @@
-IMAGE_NAMESPACE ?= purestorage
+IMAGE_NAMESPACE ?= genegatpure
 IMAGE_NAME ?= pure-exporter
 IMAGE_TAG ?= latest
 
