@@ -76,8 +76,8 @@ The exporter application uses a RESTful API schema to provide Prometheus scrapin
 Pure Storage System | URL | required GET parameters
 ---|---|---
 FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray | endpoint, apitoken
-FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade | endpoint, apitoken
-
+FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/array | endpoint, apitoken
+FlashBlade clients | http://\<exporter-host\>:\<port\>/metrics/flashblade/array/client | endpoint, apitoken
 
 ### Prometheus configuration
 
