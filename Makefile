@@ -16,7 +16,7 @@ build: Dockerfile requirements.txt .dockerignore $(wildcard *.py)
 
 .PHONY: test
 test:
-        GUNICORN_CMD_ARGS="--bind=0.0.0.0:$(RUN_PORT) --workers=4 --access-logfile=- \
+        GUNICORN_CMD_ARGS="--bind=0.0.0.0:$(RUN_PORT) --workers=2 --access-logfile=- \
          --error-logfile=- --access-logformat=\"%(t)s %(h)s %(U)s %(l)s %(T)s %(B)s\""; \
          docker run --rm -p $(EXT_PORT):$(RUN_PORT) $(IMAGE_NAMESPACE)/$(IMAGE_NAME):$(IMAGE_TAG)
 
