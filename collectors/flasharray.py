@@ -37,6 +37,10 @@ class FlasharrayCollector:
             self.serials[v['name']] = v['serial']
         self.api_token = api_token
 
+    def __del__(self):
+        if self.connection:
+            self.connection.invalidate_cookie()
+
     def collect(self):
         """Global collector method for all the collected metrics."""
         yield from self.array_info()
