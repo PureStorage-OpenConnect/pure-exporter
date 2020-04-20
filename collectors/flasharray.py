@@ -101,9 +101,10 @@ class FlasharrayCollector:
         re_component = re.compile(r"^(CH|CT)(\d+)\.([A-Z]+)([0-9]+)$")
 
         for comp in data:
+            if (comp['status'] == 'not_installed'):
+                continue
             component_name = comp['name']
-            component_state = 1 if (comp['status'] == 'ok' or
-                                    comp['status'] == 'not_installed') else 0
+            component_state = 1 if (comp['status'] == 'ok') else 0
 
             # Chassis
             if re.match(r"^CH\d+$", component_name):
