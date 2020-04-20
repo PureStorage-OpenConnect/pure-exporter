@@ -64,8 +64,7 @@ class FlasharrayCollector:
             value={
                 'array_name': data['array_name'],
                 'system_id': data['id'],
-                'version': data['version'],
-                'api_token': self.api_token
+                'version': data['version']
             })
 
     def array_hw(self):
@@ -164,9 +163,10 @@ class FlasharrayCollector:
         Metrics values can be iterated over.
         """
         data = self.connection.list_messages(open=True)
+        labels = ['severity']
         events = GaugeMetricFamily('purefa_alerts_total',
                                    'Number of alert events',
-                                   labels=['severity'])
+                                   labels=labels)
 
         # Inrement each counter for each type of event
         c_crit, c_warn, c_info = 0, 0, 0
@@ -190,7 +190,8 @@ class FlasharrayCollector:
         Metrics values can be iterated over.
         """
         data = self.connection.get(space=True)[0]
-
+        labels = ['severity']
+        
         reduction = GaugeMetricFamily('purefa_space_datareduction_ratio',
                                       'FlashArray overall data reduction')
         capacity = GaugeMetricFamily('purefa_space_capacity_bytes',
@@ -199,7 +200,7 @@ class FlasharrayCollector:
                                         'FlashArray overall provisioned space')
         used = GaugeMetricFamily('purefa_space_used_bytes',
                                  'FlashArray overall used space',
-                                 labels=['dimension'])
+                                 labels=labels)
 
         reduction.add_metric([], data['data_reduction'])
         capacity.add_metric([], data['capacity'])
@@ -220,7 +221,7 @@ class FlasharrayCollector:
         Metrics values can be iterated over.
         """
         data = self.connection.get(action='monitor', mirrored=True)[0]
-        labels = ['dimension']  # common labels
+        labels = ['dimension']
 
         latency = GaugeMetricFamily('purefa_performance_latency_usec',
                                     'FlashArray read latency',
@@ -264,18 +265,19 @@ class FlasharrayCollector:
         as a label. Metrics values can be iterated over.
         """
         data = self.connection.list_volumes(space=True)
+        labels=['volume', 'naaid']
 
         datareduction = GaugeMetricFamily(
             'purefa_volume_datareduction_ratio',
             'FlashArray volume data reduction ratio',
-            labels=['volume', 'naaid'],
+            labels=labels,
             unit='ratio')
         size = GaugeMetricFamily('purefa_volume_size_bytes',
                                  'FlashArray volume size',
-                                 labels=['volume', 'naaid'])
+                                 labels=labels)
         allocated = GaugeMetricFamily('purefa_volume_space_bytes',
                                       'FlashArray volume allocated space',
-                                      labels=['volume', 'naaid', 'dimension'])
+                                      labels=labels + ['dimension'])
         # Temporarily left out 'thin_provisioning' and 'total_reduction'
         for v in data:
             vol = v['name']
@@ -302,7 +304,7 @@ class FlasharrayCollector:
         volume name as label. Metrics values can be iterated over.
         """
         data = self.connection.list_volumes(action='monitor', mirrored=True)
-        labels = ['volume', 'naaid', 'dimension']  # common labels
+        labels = ['volume', 'naaid', 'dimension']
 
         latency = GaugeMetricFamily('purefa_volume_latency_usec',
                                     'FlashArray volume IO latency',
@@ -339,18 +341,19 @@ class FlasharrayCollector:
         as a label. Metrics values can be iterated over.
         """
         data = self.connection.list_hosts(space=True)
+        labels = ['host']
 
         datareduction = GaugeMetricFamily(
             'purefa_host_datareduction_ratio',
             'FlashArray host volumes data reduction ratio',
-            labels=['host'],
+            labels=labels,
             unit='ratio')
         size = GaugeMetricFamily('purefa_host_size_bytes',
                                  'FlashArray host volumes size',
-                                 labels=['host'])
+                                 labels=labels)
         allocated = GaugeMetricFamily('purefa_host_space_bytes',
                                       'FlashArray host volumes allocated space',
-                                      labels=['host', 'dimension'])
+                                      labels=labels + ['dimension'])
         for h in data:
             datareduction.add_metric([h['name'], 'data_reduction'], h['data_reduction'])
             datareduction.add_metric([h['name'], 'thin_provisioning'], h['thin_provisioning'])
@@ -370,7 +373,7 @@ class FlasharrayCollector:
         host name as label. Metrics values can be iterated over.
         """
         data = self.connection.list_hosts(action='monitor', mirrored=True)
-        labels = ['host', 'dimension']  # common labels
+        labels = ['host', 'dimension']
 
         latency = GaugeMetricFamily('purefa_host_latency_usec',
                                     'FlashArray host IO latency',
