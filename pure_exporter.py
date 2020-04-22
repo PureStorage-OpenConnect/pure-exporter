@@ -35,7 +35,12 @@ def route_index():
             </tr>
             <tr>
                 <td>FlashBlade</td>
-                <td><a href="/metrics/flashblade?endpoint=host&apitoken=0">/metrics/flashblade</a></td>
+                <td><a href="/metrics/flashblade/array?endpoint=host&apitoken=0">/metrics/flashblade</a></td>
+                <td>endpoint, apitoken</td>
+            </tr>
+            <tr>
+                <td>FlashBlade</td>
+                <td><a href="/metrics/flashblade/client?endpoint=host&apitoken=0">/metrics/flashblade</a></td>
                 <td>endpoint, apitoken</td>
             </tr>
         </tbody>
