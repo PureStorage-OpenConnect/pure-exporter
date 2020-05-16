@@ -73,11 +73,18 @@ python pure_exporter.py
 
 The exporter application uses a RESTful API schema to provide Prometheus scraping endpoints.
 
-Pure Storage System | URL | required GET parameters
+Pure Storage System | URL | required GET parameters | description
 ---|---|---
-FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray | endpoint, apitoken
-FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/array | endpoint, apitoken
-FlashBlade clients | http://\<exporter-host\>:\<port\>/metrics/flashblade/client | endpoint, apitoken
+FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray | endpoint, apitoken | Full array metrics
+FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/array | endpoint, apitoken | Array only metrics
+FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/volumes | endpoint, apitoken | Volumes only metrics
+FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/hosts | endpoint, apitoken | Hosts only metrics
+FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/pods | endpoint, apitoken | Pods only metrics
+FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade | endpoint, apitoken | Full array metrics
+FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/array | endpoint, apitoken | Array only metrics
+FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/hosts | endpoint, apitoken | Hosts only metrics
+
+Depending on the target array, scraping for the whole set of metrics could result into timeout issues, in which case it is suggested either to increase the scraping timeout or to scrape each single endpoint instead.
 
 ### Prometheus configuration
 
