@@ -4,8 +4,7 @@ from flask import Flask, request, abort, make_response
 from prometheus_client import generate_latest, CollectorRegistry, CONTENT_TYPE_LATEST
 from prometheus_client.core import GaugeMetricFamily, CounterMetricFamily
 from collectors import FlasharrayCollector
-from collectors import FlashbladeArrayCollector
-from collectors import FlashbladeClientPerfCollector
+from collectors import FlashbladeCollector
 
 import logging
 
@@ -38,25 +37,29 @@ def route_index():
                 <td><a href="/metrics/flashblade/array?endpoint=host&apitoken=0">/metrics/flashblade</a></td>
                 <td>endpoint, apitoken</td>
             </tr>
-            <tr>
-                <td>FlashBlade</td>
-                <td><a href="/metrics/flashblade/client?endpoint=host&apitoken=0">/metrics/flashblade</a></td>
-                <td>endpoint, apitoken</td>
-            </tr>
         </tbody>
     </table>
     '''
 
-
-@app.route('/metrics/flasharray', methods=['GET'])
-def route_flasharray():
+def route_array(array_type, m_type):
     """Produce FlashArray metrics."""
+    collector = None
+    if array_type == 'flasharray':
+        if not m_type in ['array', 'volumes', 'hosts', 'pods']:
+            m_type = 'all'
+        collector = FlasharrayCollector
+    elif array_type == 'flashblade':
+        if not m_type in ['array', 'hosts']:
+            m_type = 'all'
+        collector = FlashbladeCollector
+    else:
+        abort(404)
+
     registry = CollectorRegistry()
-    collector = FlasharrayCollector
     try:
         endpoint = request.args.get('endpoint', None)
         token = request.args.get('apitoken', None)
-        registry.register(collector(endpoint, token))
+        registry.register(collector(endpoint, token, m_type))
     except Exception as e:
         app.logger.warn('%s: %s', collector.__name__, str(e))
         abort(500)
@@ -64,54 +67,37 @@ def route_flasharray():
     resp = make_response(generate_latest(registry), 200)
     resp.headers['Content-type'] = CONTENT_TYPE_LATEST
     return resp
+
+@app.route('/metrics/flasharray/<m_type>', methods=['GET'])
+def route_flasharray(m_type: str):
+    return route_array('flasharray', m_type)
+
+@app.route('/metrics/flasharray', methods=['GET'])
+def route_flasharray_all():
+    return route_flasharray('all')
 
 @app.route('/metrics/flashblade/<m_type>', methods=['GET'])
 def route_flashblade(m_type: str):
-    """Produce FlashBlade metrics."""
-    # map collector_type string to a collector class
-    registry = CollectorRegistry()
-    m_map = {
-        'array': FlashbladeArrayCollector,
-        'client': FlashbladeClientPerfCollector
-    }
-    collector = m_map[m_type] if m_type in m_map else None
+    return route_array('flashblade', m_type)
 
-    try:
-        if ((collector is FlashbladeArrayCollector) or
-            (collector is FlashbladeClientPerfCollector)):
-            # FlashArray
-            endpoint = request.args.get('endpoint', None)
-            token = request.args.get('apitoken', None)
-            registry.register(collector(endpoint, token))
-        else:
-            # collector type not found
-            abort(404)
-    except Exception as e:
-        app.logger.warn('%s: %s', collector.__name__, str(e))
-        abort(500)
-
-    resp = make_response(generate_latest(registry), 200)
-    resp.headers['Content-type'] = CONTENT_TYPE_LATEST
-    return resp
-
+@app.route('/metrics/flashblade', methods=['GET'])
+def route_flashblade_all():
+    return route_flashblade('all')
 
 @app.errorhandler(400)
 def route_error_400(error):
     """Handle invalid request errors."""
     return 'Invalid request parameters', 400
 
-
 @app.errorhandler(404)
 def route_error_404(error):
     """ Handle 404 (HTTP Not Found) errors."""
     return 'Not found', 404
 
-
 @app.errorhandler(500)
 def route_error_500(error):
     """Handle server-side errors."""
     return 'Internal server error', 500
-
 
 # Run in debug mode when not called by WSGI
 if __name__ == "__main__":

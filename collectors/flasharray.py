@@ -25,7 +25,7 @@ class FlasharrayCollector:
     :type api_token: str
     """
 
-    def __init__(self, target, api_token):
+    def __init__(self, target, api_token, request = 'all'):
         self.connection = purestorage.FlashArray(
             target,
             api_token=api_token,
@@ -35,24 +35,12 @@ class FlasharrayCollector:
         self.serials = {}
         for v in vols:
             self.serials[v['name']] = v['serial']
-        self.api_token = api_token
+        self.request = request
 
     def __del__(self):
         if self.connection:
             self.connection.invalidate_cookie()
 
-    def collect(self):
-        """Global collector method for all the collected metrics."""
-        yield from self.array_info()
-        yield from self.array_hw()
-        yield from self.array_events()
-        yield from self.array_space()
-        yield from self.array_perf()
-        yield from self.vol_space()
-        yield from self.vol_perf()
-        yield from self.host_space()
-        yield from self.host_perf()
-        yield from self.pod_status()
 
     def array_info(self):
         """Assemble a simple information metric defining the scraped system."""
@@ -85,16 +73,11 @@ class FlasharrayCollector:
         temperature = GaugeMetricFamily(
             'purefa_hardware_temperature_celsius',
             'FlashArray hardware temperature sensors',
-            labels=[
-                'chassis',
-                'controller',
-                'sensor'])
+            labels=['chassis', 'controller', 'sensor'])
         power = GaugeMetricFamily(
             'purefa_hardware_power_volts',
             'FlashArray hardware power supply voltage',
-            labels=[
-                'chassis',
-                'power_supply'])
+            labels=['chassis', 'power_supply'])
 
         re_chassis = re.compile(r"^CH(\d+)$")
         re_controller = re.compile(r"^CT(\d+)$")
@@ -225,40 +208,27 @@ class FlasharrayCollector:
         labels = ['dimension']
 
         latency = GaugeMetricFamily('purefa_performance_latency_usec',
-                                    'FlashArray read latency',
+                                    'FlashArray latency',
                                     labels=labels)
         iops = GaugeMetricFamily('purefa_performance_iops',
-                                 'FlashArray read IOPS',
+                                 'FlashArray IOPS',
                                  labels=labels)
         throughput = GaugeMetricFamily('purefa_performance_throughput_bytes',
-                                       'FlashArray read throughput',
+                                       'FlashArray throughput',
                                        labels=labels)
-        latency_mirror_write = GaugeMetricFamily(
-            'purefa_mirror_write_latency_usec',
-            'FlashArray mirror write latency')
-        iops_mirror_write = GaugeMetricFamily(
-            'purefa_mirror_write_iops',
-            'FlashArray mirror write IOPS')
-        throughput_mirror_write = GaugeMetricFamily(
-            'purefa_mirror_write_bytes',
-            'FlashArray mirror write bandwidth')
-
         latency.add_metric(['read'], data['usec_per_read_op'])
         latency.add_metric(['write'], data['usec_per_write_op'])
+        latency.add_metric(['mirrored_write'], data['usec_per_mirrored_write_op'])
         iops.add_metric(['read'], data['reads_per_sec'])
         iops.add_metric(['write'], data['writes_per_sec'])
+        iops.add_metric(['mirrored_write'], data['mirrored_writes_per_sec'])
         throughput.add_metric(['read'], data['output_per_sec'])
         throughput.add_metric(['write'], data['input_per_sec'])
-        latency_mirror_write.add_metric([], data['usec_per_mirrored_write_op'])
-        iops_mirror_write.add_metric([], data['mirrored_writes_per_sec'])
-        throughput_mirror_write.add_metric([], data['mirrored_input_per_sec'])
+        throughput.add_metric(['mirrored_write'], data['mirrored_input_per_sec'])
 
         yield latency
         yield iops
         yield throughput
-        yield latency_mirror_write
-        yield iops_mirror_write
-        yield throughput_mirror_write
 
     def vol_space(self):
         """
@@ -422,3 +392,20 @@ class FlasharrayCollector:
 
         yield pods_status
         yield mediator_status
+
+    def collect(self):
+        """Global collector method for all the collected metrics."""
+        if (self.request == 'all' or self.request == 'array'):
+            yield from self.array_info()
+            yield from self.array_hw()
+            yield from self.array_events()
+            yield from self.array_space()
+            yield from self.array_perf()
+        if (self.request == 'all' or self.request == 'volumes'):
+            yield from self.vol_space()
+            yield from self.vol_perf()
+        if (self.request == 'all' or self.request == 'hosts'):
+            yield from self.host_space()
+            yield from self.host_perf()
+        if (self.request == 'all' or self.request == 'pods'):
+            yield from self.pod_status()
