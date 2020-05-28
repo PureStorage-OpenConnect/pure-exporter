@@ -29,7 +29,7 @@ class FlashbladeCollector():
         self.request = request
 
     def __del__(self):
-        if self.fb:
+        if self.fb is not None:
             self.fb.logout()
 
     def array_info(self):
