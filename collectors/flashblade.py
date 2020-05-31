@@ -131,6 +131,69 @@ class FlashbladeArrayCollector(FlashBlade):
         yield tot_snapshots
 
 
+    def bucket_replica_links(self):
+        """
+        Create metrics of gauge type for bucket replica links
+        Metrics values can be iterated over.
+        """
+        fb_bucket_replica_links = (
+            self.fb.bucket_replica_links.list_bucket_replica_links()
+        )
+        labels = ["name", "direction", "remote_bucket_name", "remote_name"]
+        replicating = GaugeMetricFamily(
+            "purefb_bucket_replica_links_replicating",
+            "FlashBlade Bucket Replica Links in replicating status",
+            labels=labels,
+        )
+        paused = GaugeMetricFamily(
+            "purefb_bucket_replica_links_paused",
+            "FlashBlade Bucket Replica Links in paused status",
+            labels=labels,
+        )
+        unhealthy = GaugeMetricFamily(
+            "purefb_bucket_replica_links_unhealthy",
+            "FlashBlade Bucket Replica Links in unhealthy status",
+            labels=labels,
+        )
+        lag = GaugeMetricFamily(
+            "purefb_bucket_replica_links_lag",
+            "FlashBlade Bucket Replica lag in milliseconds",
+            labels=labels,
+        )
+        recovery_point = GaugeMetricFamily(
+            "purefb_bucket_replica_links_recovery_point",
+            "FlashBlade Bucket Replica recovery point unix timestamp",
+            labels=labels,
+        )
+
+        for l in fb_bucket_replica_links.items:
+            labels_v = [
+                l.local_bucket.name,
+                l.direction,
+                l.remote_bucket.name,
+                l.remote.name,
+            ]
+            if l.status == "replicating":
+                replicating.add_metric(labels_v, 1)
+                paused.add_metric(labels_v, 0)
+                unhealthy.add_metric(labels_v, 0)
+            elif l.status == "paused":
+                replicating.add_metric(labels_v, 0)
+                paused.add_metric(labels_v, 1)
+                unhealthy.add_metric(labels_v, 0)
+            else:
+                replicating.add_metric(labels_v, 0)
+                paused.add_metric(labels_v, 0)
+                unhealthy.add_metric(labels_v, 1)
+            lag.add_metric(labels_v, l.lag)
+            recovery_point.add_metric(labels_v, l.recovery_point)
+
+        yield replicating
+        yield paused
+        yield unhealthy
+        yield lag
+        yield recovery_point
+
     def buckets_space(self):
         """
         Create metrics of gauge type for buckets space indicators, with the
@@ -317,6 +380,7 @@ class FlashbladeArrayCollector(FlashBlade):
         yield from self.array_hw()
         yield from self.array_events()
         yield from self.array_space()
+        yield from self.bucket_replica_links()
         yield from self.buckets_space()
         yield from self.filesystems_space()
 
