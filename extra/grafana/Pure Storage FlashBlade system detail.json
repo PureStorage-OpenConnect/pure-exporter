@@ -20,7 +20,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "6.6.2"
+      "version": "7.0.1"
     },
     {
       "type": "panel",
@@ -42,8 +42,14 @@
     },
     {
       "type": "panel",
-      "id": "table",
-      "name": "Table",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table-old",
+      "name": "Table (old)",
       "version": ""
     }
   ],
@@ -64,26 +70,38 @@
   "gnetId": null,
   "graphTooltip": 2,
   "id": null,
-  "iteration": 1589619159378,
+  "iteration": 1591097383109,
   "links": [],
   "panels": [
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "displayName": "{{array_name}}",
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "",
+              "type": 1,
+              "value": "1"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -95,43 +113,29 @@
       "interval": null,
       "links": [
         {
-          "title": "Pure Storage FlashArray system Hardware health",
-          "url": "/d/zUaJ2oVWz/pure-storage-flasharray-system-hardware-health?$__url_time_range&$__all_variables"
-        }
-      ],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
+          "title": "Pure Storage FlashBlade system Hardware health",
+          "url": "/d/zUaJ2oVWz/pure-storage-flashblade-system-hardware-health?$__url_time_range&$__all_variables"
         }
       ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "purefb_info{job=~\"$job\",instance=\"$instance\"}",
@@ -142,20 +146,10 @@
           "refId": "A"
         }
       ],
-      "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
       "title": "array name",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "name"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
@@ -167,6 +161,12 @@
         "#d44a3a"
       ],
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -198,7 +198,6 @@
       "maxDataPoints": 100,
       "nullPointMode": "connected",
       "nullText": null,
-      "options": {},
       "postfix": "",
       "postfixFontSize": "50%",
       "prefix": "",
@@ -216,7 +215,7 @@
         "lineColor": "rgb(31, 120, 193)",
         "show": false
       },
-      "tableColumn": "",
+      "tableColumn": "3.0.3",
       "targets": [
         {
           "expr": "purefb_info{job=~\"$job\",instance=\"$instance\"}",
@@ -245,11 +244,18 @@
     {
       "columns": [
         {
+          "$$hashKey": "object:1612",
           "text": "Current",
           "value": "current"
         }
       ],
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 5,
@@ -259,7 +265,6 @@
       },
       "id": 40,
       "links": [],
-      "options": {},
       "pageSize": null,
       "scroll": true,
       "showHeader": true,
@@ -269,6 +274,7 @@
       },
       "styles": [
         {
+          "$$hashKey": "object:1614",
           "alias": "events",
           "align": "auto",
           "colorMode": "cell",
@@ -289,6 +295,7 @@
           "unit": "short"
         },
         {
+          "$$hashKey": "object:1615",
           "alias": "severity",
           "align": "auto",
           "colorMode": null,
@@ -319,26 +326,46 @@
       "timeShift": null,
       "title": "system events",
       "transform": "timeseries_aggregations",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorPostfix": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "percentunit",
-      "gauge": {
-        "maxValue": 1,
-        "minValue": 0,
-        "show": true,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "max": 1,
+          "min": 0,
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 0.8
+              },
+              {
+                "color": "#d44a3a",
+                "value": 0.9
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 5,
@@ -349,64 +376,70 @@
       "id": 23,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
+      "options": {
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "sum(purefb_space_tot_physical_bytes{job=~\"$job\",instance=\"$instance\"})\n/\nsum(purefb_space_tot_capacity_bytes{job=~\"$job\",instance=\"$instance\"})",
+          "expr": "sum(purefb_array_space_bytes{job=~\"$job\",instance=\"$instance\",dimension=\"total_physical\"})\n/\nsum(purefb_array_space_bytes{job=~\"$job\",instance=\"$instance\",dimension=\"capacity\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
         }
       ],
-      "thresholds": "0.8,0.9",
       "timeFrom": null,
       "timeShift": null,
       "title": "array capacity usage",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
+      "type": "gauge"
     },
     {
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "decimals": null,
+          "mappings": [],
+          "max": "100000",
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 50000
+              },
+              {
+                "color": "red",
+                "value": 80000
+              }
+            ]
+          },
+          "unit": "iops"
+        },
+        "overrides": []
+      },
       "gridPos": {
         "h": 4,
         "w": 3,
@@ -416,52 +449,24 @@
       "id": 6,
       "links": [],
       "options": {
-        "fieldOptions": {
+        "orientation": "auto",
+        "reduceOptions": {
           "calcs": [
             "mean"
           ],
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "decimals": null,
-            "mappings": [],
-            "max": "100000",
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "#EAB839",
-                  "value": 50000
-                },
-                {
-                  "color": "red",
-                  "value": 80000
-                }
-              ]
-            },
-            "unit": "iops"
-          },
-          "overrides": [],
           "values": false
         },
-        "orientation": "auto",
         "showThresholdLabels": false,
         "showThresholdMarkers": false
       },
-      "pluginVersion": "6.6.2",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "sum(purefb_perf_rd_ops{job=~\"$job\",instance=\"$instance\"} + purefb_perf_wr_ops{job=~\"$job\",instance=\"$instance\"})",
+          "expr": "sum(purefb_array_performance_iops{job=~\"$job\",instance=\"$instance\"})",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
-          "legendFormat": "",
+          "legendFormat": "{{ dimension }}",
           "refId": "A"
         }
       ],
@@ -472,6 +477,36 @@
     },
     {
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "decimals": 2,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.8
+              },
+              {
+                "color": "red",
+                "value": 1.5
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
       "gridPos": {
         "h": 4,
         "w": 3,
@@ -481,48 +516,20 @@
       "id": 8,
       "links": [],
       "options": {
-        "fieldOptions": {
+        "orientation": "auto",
+        "reduceOptions": {
           "calcs": [
             "mean"
           ],
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "decimals": 2,
-            "mappings": [],
-            "max": "2",
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "#EAB839",
-                  "value": 0.8
-                },
-                {
-                  "color": "red",
-                  "value": 1.5
-                }
-              ]
-            },
-            "unit": "ms"
-          },
-          "overrides": [],
           "values": false
         },
-        "orientation": "auto",
         "showThresholdLabels": false,
         "showThresholdMarkers": false
       },
-      "pluginVersion": "6.6.2",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "sum(purefb_perf_wr_latency_usec{job=~\"$job\",instance=\"$instance\"} + purefb_perf_rd_latency_usec{job=~\"$job\",instance=\"$instance\"}) / 1000",
+          "expr": "sum(purefb_array_performance_latency_usec{job=~\"$job\",instance=\"$instance\",protocol=\"all\"}) / 1000",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -537,6 +544,37 @@
     },
     {
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "decimals": 2,
+          "mappings": [],
+          "max": "6000000000",
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 2000000000
+              },
+              {
+                "color": "red",
+                "value": 4000000000
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
       "gridPos": {
         "h": 4,
         "w": 3,
@@ -546,48 +584,20 @@
       "id": 15,
       "links": [],
       "options": {
-        "fieldOptions": {
+        "orientation": "auto",
+        "reduceOptions": {
           "calcs": [
             "mean"
           ],
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "decimals": 2,
-            "mappings": [],
-            "max": "6000000000",
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "#EAB839",
-                  "value": 2000000000
-                },
-                {
-                  "color": "red",
-                  "value": 4000000000
-                }
-              ]
-            },
-            "unit": "Bps"
-          },
-          "overrides": [],
           "values": false
         },
-        "orientation": "auto",
         "showThresholdLabels": false,
         "showThresholdMarkers": false
       },
-      "pluginVersion": "6.6.2",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "sum(purefb_perf_wr_bps{job=~\"$job\",instance=\"$instance\"} + purefb_perf_rd_bps{job=~\"$job\",instance=\"$instance\"})",
+          "expr": "sum(purefb_array_performance_throughput_bytes{job=~\"$job\",instance=\"$instance\"})",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -602,21 +612,33 @@
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "displayName": "{{location}}",
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "",
+              "type": 1,
+              "value": "1"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 3,
@@ -627,81 +649,82 @@
       "id": 38,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "purefb_info{job=~\"$job\",instance=\"$instance\"}",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 1,
-          "legendFormat": "{{ site}}",
+          "legendFormat": "{{site}}",
           "refId": "A"
         }
       ],
-      "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
       "title": "location",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "name"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "#C4162A",
-        "#C4162A"
-      ],
       "datasource": "$datasource",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "null",
+              "id": 0,
+              "text": "OK",
+              "to": "null",
+              "type": 2
+            },
+            {
+              "from": "1",
+              "id": 1,
+              "text": "FAILURE",
+              "to": "1000",
+              "type": 2
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#C4162A",
+                "value": 1
+              },
+              {
+                "color": "#C4162A"
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 3,
@@ -712,44 +735,25 @@
       "id": 42,
       "interval": null,
       "links": [],
-      "mappingType": 2,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "OK",
-          "to": "null"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
         },
-        {
-          "from": "1",
-          "text": "FAILURE",
-          "to": "100"
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "count(purefb_hw_status{job=~\"$job\",instance=~\"$instance\"} == 0)",
@@ -758,50 +762,10 @@
           "refId": "A"
         }
       ],
-      "thresholds": "1",
       "timeFrom": null,
       "timeShift": null,
       "title": "hardware health",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        },
-        {
-          "op": "=",
-          "text": "Bays OK",
-          "value": "0"
-        },
-        {
-          "op": "=",
-          "text": "1 Bay Failed",
-          "value": "1"
-        },
-        {
-          "op": "=",
-          "text": "2 Bays Failed",
-          "value": "2"
-        },
-        {
-          "op": "=",
-          "text": "3 Bays Failed",
-          "value": "3"
-        },
-        {
-          "op": "=",
-          "text": "4 Bays Failed",
-          "value": "4"
-        },
-        {
-          "op": "=",
-          "text": "5 Bays Failed",
-          "value": "5"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "aliasColors": {},
@@ -809,6 +773,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 3,
       "fillGradient": 0,
       "gridPos": {
@@ -879,8 +849,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(\n  purefa_space_used_bytes{job=~\"$job\",instance=\"$instance\"}\n) by (dimension)",
+          "expr": "sum(\n  purefb_array_space_bytes{job=~\"$job\",instance=\"$instance\"}\n) by (dimension)",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{ dimension }}",
           "refId": "A"
@@ -937,23 +908,41 @@
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorPostfix": false,
-      "colorValue": false,
-      "colors": [
-        "#d44a3a",
-        "#FF9830",
-        "#299c46"
-      ],
       "datasource": "$datasource",
-      "decimals": 2,
-      "format": "none",
-      "gauge": {
-        "maxValue": 1,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 2,
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d44a3a",
+                "value": null
+              },
+              {
+                "color": "#FF9830",
+                "value": 1.1
+              },
+              {
+                "color": "#299c46",
+                "value": 2
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -964,80 +953,70 @@
       "id": 24,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "pluginVersion": "6.2.0",
-      "postfix": " : 1",
-      "postfixFontSize": "80%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "sum(purefb_space_data_reduction{job=~\"$job\",instance=\"$instance\"})",
+          "expr": "sum(purefb_array_space_data_reduction{job=~\"$job\",instance=\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
         }
       ],
-      "thresholds": "1.1,2.0",
       "timeFrom": null,
       "timeShift": null,
       "title": "data reduction ratio",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "bytes",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -1048,65 +1027,80 @@
       "id": 57,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "sum(\n  delta(\n    purefb_space_tot_physical_bytes{job=~\"$job\",instance=\"$instance\"}[4w]\n  )\n)",
+          "expr": "sum(\n  delta(\n    purefb_array_space_bytes{job=~\"$job\",instance=\"$instance\",dimension=\"total_physical\"}[4w]\n  )\n)",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
         }
       ],
-      "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
       "title": "4 week capacity delta",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "displayName": "",
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#ef843c",
+                "value": 0.2
+              },
+              {
+                "color": "green",
+                "value": 0.3
+              },
+              {
+                "color": "#EF843C",
+                "value": 0.7
+              },
+              {
+                "color": "red",
+                "value": 0.8
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
       "gridPos": {
         "h": 4,
         "w": 6,
@@ -1116,67 +1110,39 @@
       "id": 58,
       "links": [],
       "options": {
-        "fieldOptions": {
+        "orientation": "auto",
+        "reduceOptions": {
           "calcs": [
             "mean"
           ],
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "mappings": [],
-            "max": 1,
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "red",
-                  "value": null
-                },
-                {
-                  "color": "#ef843c",
-                  "value": 0.2
-                },
-                {
-                  "color": "green",
-                  "value": 0.3
-                },
-                {
-                  "color": "#EF843C",
-                  "value": 0.7
-                },
-                {
-                  "color": "red",
-                  "value": 0.8
-                }
-              ]
-            },
-            "title": "",
-            "unit": "percentunit"
-          },
-          "overrides": [],
           "values": false
         },
-        "orientation": "auto",
         "showThresholdLabels": false,
         "showThresholdMarkers": false
       },
-      "pluginVersion": "6.6.2",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "sum(purefb_perf_wr_ops{job=~\"$job\",instance=~\"$instance\"})\n/\nsum(purefb_perf_wr_ops{job=~\"$job\",instance=~\"$instance\"} + purefb_perf_rd_ops{job=~\"$job\",instance=~\"$instance\"})",
+          "expr": "sum(purefb_array_performance_iops{job=~\"$job\",instance=~\"$instance\",dimension=\"write\"})\n/\nsum(purefb_array_performance_iops{job=~\"$job\",instance=~\"$instance\"})",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "write",
           "refId": "A"
         },
         {
-          "expr": "sum(purefb_perf_rd_ops{job=~\"$job\",instance=~\"$instance\"})\n/\nsum(purefb_perf_wr_ops{job=~\"$job\",instance=~\"$instance\"} + purefb_perf_rd_ops{job=~\"$job\",instance=~\"$instance\"})",
+          "expr": "sum(purefb_array_performance_iops{job=~\"$job\",instance=~\"$instance\",dimension=\"read\"})\n/\nsum(purefb_array_performance_iops{job=~\"$job\",instance=~\"$instance\"})",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "read",
           "refId": "B"
+        },
+        {
+          "expr": "sum(purefb_array_performance_iops{job=~\"$job\",instance=~\"$instance\",dimension=\"other\"})\n/\nsum(purefb_array_performance_iops{job=~\"$job\",instance=~\"$instance\"})",
+          "interval": "",
+          "legendFormat": "other",
+          "refId": "C"
         }
       ],
       "timeFrom": null,
@@ -1204,6 +1170,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1240,8 +1212,8 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
-          "alias": "/.*write.*/",
-          "transform": "negative-Y"
+          "$$hashKey": "object:798",
+          "alias": "/.*write.*/"
         }
       ],
       "spaceLength": 10,
@@ -1249,18 +1221,26 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(\n  purefb_perf_rd_ops{job=~\"$job\",instance=\"$instance\"}\n)",
+          "expr": "sum(purefb_array_performance_iops{job=~\"$job\",instance=\"$instance\",dimension=\"read\"})",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "read ",
           "refId": "A"
         },
         {
-          "expr": "sum(\n  purefb_perf_wr_ops{job=~\"$job\",instance=\"$instance\"}\n)",
+          "expr": "sum(purefb_array_performance_iops{job=~\"$job\",instance=\"$instance\",dimension=\"write\"})",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "write ",
           "refId": "B"
+        },
+        {
+          "expr": "sum(purefb_array_performance_iops{job=~\"$job\",instance=\"$instance\",dimension=\"other\"})",
+          "interval": "",
+          "legendFormat": "other",
+          "refId": "C"
         }
       ],
       "thresholds": [],
@@ -1310,6 +1290,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1346,8 +1332,8 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
-          "alias": "/.*write.*/",
-          "transform": "negative-Y"
+          "$$hashKey": "object:720",
+          "alias": "/.*write.*/"
         }
       ],
       "spaceLength": 10,
@@ -1355,18 +1341,26 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(\n  purefb_perf_rd_latency_usec{job=~\"$job\",instance=\"$instance\"}\n) / 1000",
+          "expr": "sum(purefb_array_performance_latency_usec{job=~\"$job\",instance=\"$instance\",dimension=\"read\"}) / 1000",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "read ",
           "refId": "A"
         },
         {
-          "expr": "sum(\n  purefb_perf_wr_latency_usec{job=~\"$job\",instance=\"$instance\"}\n) / 1000",
+          "expr": "sum(purefb_array_performance_latency_usec{job=~\"$job\",instance=\"$instance\",dimension=\"write\"}) / 1000",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "write ",
           "refId": "B"
+        },
+        {
+          "expr": "sum(purefb_array_performance_latency_usec{job=~\"$job\",instance=\"$instance\",dimension=\"other\"}) / 1000",
+          "interval": "",
+          "legendFormat": "other",
+          "refId": "C"
         }
       ],
       "thresholds": [],
@@ -1417,6 +1411,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1453,8 +1453,8 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
-          "alias": "/.*write.*/",
-          "transform": "negative-Y"
+          "$$hashKey": "object:859",
+          "alias": "/.*write.*/"
         }
       ],
       "spaceLength": 10,
@@ -1462,15 +1462,17 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(\n  purefb_perf_rd_bps{job=~\"$job\",instance=\"$instance\"}\n)",
+          "expr": "sum(purefb_array_performance_throughput_bytes{job=~\"$job\",instance=\"$instance\",dimension=\"read\"})",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "read ",
           "refId": "A"
         },
         {
-          "expr": "sum(\n  purefb_perf_wr_bps{job=~\"$job\",instance=\"$instance\"}\n)",
+          "expr": "sum(purefb_array_performance_throughput_bytes{job=~\"$job\",instance=\"$instance\",dimension=\"write\"})",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "write ",
           "refId": "B"
@@ -1534,11 +1536,18 @@
     {
       "columns": [
         {
+          "$$hashKey": "object:876",
           "text": "Avg",
           "value": "avg"
         }
       ],
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 15,
@@ -1548,7 +1557,6 @@
       },
       "id": 18,
       "links": [],
-      "options": {},
       "pageSize": 15,
       "scroll": false,
       "showHeader": true,
@@ -1558,7 +1566,8 @@
       },
       "styles": [
         {
-          "alias": "Volume",
+          "$$hashKey": "object:916",
+          "alias": "File System",
           "align": "auto",
           "colorMode": null,
           "colors": [
@@ -1569,14 +1578,15 @@
           "decimals": 2,
           "link": true,
           "linkTargetBlank": false,
-          "linkTooltip": "volume detail",
-          "linkUrl": "/d/8DbshcVZk/pure-storage-flasharray-volume-detail?orgId=1&var-datasource=$datasource&var-job=$job&var-instance=$instance&var-volume=$__cell",
+          "linkTooltip": "file system detail",
+          "linkUrl": "/d/n0zbxlzGk/pure-storage-flashblade-filesystem-detail?orgId=1&var-datasource=$datasource&var-job=$job&var-instance=$instance&var-filesystem=$__cell",
           "pattern": "Metric",
           "thresholds": [],
           "type": "string",
           "unit": "short"
         },
         {
+          "$$hashKey": "object:917",
           "alias": "Average",
           "align": "auto",
           "colorMode": "row",
@@ -1599,28 +1609,36 @@
       ],
       "targets": [
         {
-          "expr": "sum(\n  purefa_volume_iops{job=~\"$job\",instance=\"$instance\",volume!~\"CV_.*\"}\n) by (volume)",
+          "expr": "sum(\n  purefb_filesystem_performance_iops{job=~\"$job\",instance=\"$instance\"}\n) by (name)",
           "format": "time_series",
           "instant": false,
+          "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{ volume }}",
+          "legendFormat": "{{ name}}",
           "refId": "A"
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "top talker volumes by iops",
+      "title": "top talker file systems by iops",
       "transform": "timeseries_aggregations",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "columns": [
         {
+          "$$hashKey": "object:1856",
           "text": "Avg",
           "value": "avg"
         }
       ],
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 15,
@@ -1630,7 +1648,6 @@
       },
       "id": 21,
       "links": [],
-      "options": {},
       "pageSize": 15,
       "scroll": false,
       "showHeader": true,
@@ -1640,6 +1657,7 @@
       },
       "styles": [
         {
+          "$$hashKey": "object:1858",
           "alias": "Volume",
           "align": "auto",
           "colorMode": null,
@@ -1652,13 +1670,14 @@
           "link": true,
           "linkTargetBlank": false,
           "linkTooltip": "volume detail",
-          "linkUrl": "https://vs-monitoring.int.kn/d/8DbshcVZk/pure-storage-flasharray-volume-detail?orgId=1&var-datasource=$datasource&var-job=$job&var-instance=$instance&var-volume=$__cell",
+          "linkUrl": "/d/n0zbxlzGk/pure-storage-flashblade-filesystem-detail?orgId=1&var-datasource=$datasource&var-job=$job&var-instance=$instance&var-filesystem=$__cell",
           "pattern": "Metric",
           "thresholds": [],
           "type": "string",
           "unit": "short"
         },
         {
+          "$$hashKey": "object:1859",
           "alias": "Average",
           "align": "auto",
           "colorMode": "row",
@@ -1672,8 +1691,8 @@
           "mappingType": 1,
           "pattern": "Avg",
           "thresholds": [
-            "0.8",
-            "1.5"
+            "3",
+            "7"
           ],
           "type": "number",
           "unit": "ms"
@@ -1681,9 +1700,10 @@
       ],
       "targets": [
         {
-          "expr": "avg(\n  purefa_volume_latency_usec{job=~\"$job\",instance=\"$instance\",volume!~\"CV_.*\"}\n) by (volume) / 1000",
+          "expr": "avg(\n  purefb_filesystem_performance_latency_usec{job=~\"$job\",instance=\"$instance\"}\n) by (name) / 1000",
           "format": "time_series",
           "instant": false,
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{ volume }}",
           "refId": "A"
@@ -1691,18 +1711,25 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "top talker volumes by latency",
+      "title": "top talker filesystems by latency",
       "transform": "timeseries_aggregations",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "columns": [
         {
+          "$$hashKey": "object:1958",
           "text": "Avg",
           "value": "avg"
         }
       ],
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 15,
@@ -1712,7 +1739,6 @@
       },
       "id": 19,
       "links": [],
-      "options": {},
       "pageSize": 15,
       "scroll": false,
       "showHeader": true,
@@ -1722,6 +1748,7 @@
       },
       "styles": [
         {
+          "$$hashKey": "object:1960",
           "alias": "Volume",
           "align": "auto",
           "colorMode": null,
@@ -1734,13 +1761,14 @@
           "link": true,
           "linkTargetBlank": false,
           "linkTooltip": "volume detail",
-          "linkUrl": "https://vs-monitoring.int.kn/d/8DbshcVZk/pure-storage-flasharray-volume-detail?orgId=1&var-datasource=$datasource&var-job=$job&var-instance=$instance&var-volume=$__cell",
+          "linkUrl": "/d/n0zbxlzGk/pure-storage-flashblade-filesystem-detail?orgId=1&var-datasource=$datasource&var-job=$job&var-instance=$instance&var-filesystem=$__cell",
           "pattern": "Metric",
           "thresholds": [],
           "type": "string",
           "unit": "short"
         },
         {
+          "$$hashKey": "object:1961",
           "alias": "Average",
           "align": "auto",
           "colorMode": "row",
@@ -1763,9 +1791,10 @@
       ],
       "targets": [
         {
-          "expr": "sum(\n  purefa_volume_throughput_bytes{job=~\"$job\",instance=\"$instance\",volume!~\"CV_.*\"}\n) by (volume)",
+          "expr": "sum(\n  purefb_filesystem_performance_throughput_bytes{job=~\"$job\",instance=\"$instance\"}\n) by (name)",
           "format": "time_series",
           "instant": false,
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{ volume }}",
           "refId": "A"
@@ -1773,19 +1802,20 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "top talker volumes by throughput",
+      "title": "top talker file systems by throughput",
       "transform": "timeseries_aggregations",
-      "type": "table"
+      "type": "table-old"
     }
   ],
-  "refresh": false,
-  "schemaVersion": 22,
+  "refresh": "30s",
+  "schemaVersion": 25,
   "style": "dark",
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {
+          "selected": false,
           "text": "default",
           "value": "default"
         },
@@ -1807,9 +1837,9 @@
         "datasource": "$datasource",
         "definition": "label_values(purefb_info, job)",
         "hide": 0,
-        "includeAll": true,
+        "includeAll": false,
         "label": "Job",
-        "multi": true,
+        "multi": false,
         "name": "job",
         "options": [],
         "query": "label_values(purefb_info, job)",
@@ -1873,5 +1903,5 @@
   "timezone": "",
   "title": "Pure Storage FlashBlade system detail",
   "uid": "wL9CHflWk",
-  "version": 1
+  "version": 30
 }
