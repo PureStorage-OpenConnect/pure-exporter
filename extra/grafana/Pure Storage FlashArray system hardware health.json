@@ -11,10 +11,16 @@
   ],
   "__requires": [
     {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "6.6.2"
+      "version": "7.0.1"
     },
     {
       "type": "datasource",
@@ -30,8 +36,14 @@
     },
     {
       "type": "panel",
-      "id": "table",
-      "name": "Table",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table-old",
+      "name": "Table (old)",
       "version": ""
     }
   ],
@@ -52,26 +64,38 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1589619119582,
+  "iteration": 1591091478638,
   "links": [],
   "panels": [
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "displayName": "$array_name ",
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "",
+              "type": 1,
+              "value": "1"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 3,
@@ -87,81 +111,70 @@
           "url": "/d/yle1zbWWz/pure-storage-flasharray-system-detail?$__url_time_range&$__all_variables"
         }
       ],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "purefa_info{job=~\"$job\",instance=\"$instance\"}",
+          "expr": "purefa_info{job=~\"$job\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": true,
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{ array_name }}",
           "refId": "A"
         }
       ],
-      "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
       "title": "array name",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "name"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "displayName": "version",
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "",
+              "type": 1,
+              "value": "1"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 3,
@@ -172,63 +185,40 @@
       "id": 4,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "purefa_info{job=~\"$job\",instance=\"$instance\"}",
           "format": "time_series",
           "instant": true,
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{ version }}",
           "refId": "A"
         }
       ],
-      "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
       "title": "firmware version",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "name"
+      "type": "stat"
     },
     {
       "columns": [
@@ -238,6 +228,12 @@
         }
       ],
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 6,
@@ -247,7 +243,6 @@
       },
       "id": 9,
       "links": [],
-      "options": {},
       "pageSize": null,
       "scroll": true,
       "showHeader": true,
@@ -308,25 +303,44 @@
       "timeShift": null,
       "title": "system events",
       "transform": "timeseries_aggregations",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "celsius",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 40
+              },
+              {
+                "color": "#d44a3a",
+                "value": 50
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 3,
@@ -337,39 +351,25 @@
       "id": 11,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": true
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "avg(purefa_hardware_temperature_celsius{job=~\"$job\",instance=~\"$instance\"})",
@@ -378,40 +378,49 @@
           "refId": "A"
         }
       ],
-      "thresholds": "40,50",
       "timeFrom": null,
       "timeShift": null,
       "title": "average temperature",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorPostfix": false,
-      "colorPrefix": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "percentunit",
-      "gauge": {
-        "maxValue": 1,
-        "minValue": 0,
-        "show": true,
-        "thresholdLabels": false,
-        "thresholdMarkers": false
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "max": 1,
+          "min": 0,
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 0.8
+              },
+              {
+                "color": "#d44a3a",
+                "value": 0.9
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 4,
@@ -422,79 +431,73 @@
       "id": 15,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
+      "options": {
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "sum(purefa_space_used_bytes{job=~\"$job\",instance=~\"$instance\"})\n/\nsum(purefa_space_capacity_bytes{job=~\"$job\",instance=~\"$instance\"})",
+          "expr": "sum(purefa_array_space_used_bytes{job=~\"$job\",instance=~\"$instance\"})\n/\nsum(purefa_array_space_capacity_bytes{job=~\"$job\",instance=~\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
         }
       ],
-      "thresholds": "0.8,0.9",
       "timeFrom": null,
       "timeShift": null,
       "title": "capacity usage",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
+      "type": "gauge"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "iops",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 50000
+              },
+              {
+                "color": "#d44a3a",
+                "value": 80000
+              }
+            ]
+          },
+          "unit": "iops"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -505,43 +508,28 @@
       "id": 19,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "pluginVersion": "6.2.2",
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "sum(purefa_performance_iops{job=~\"$job\",instance=~\"$instance\"})",
+          "expr": "sum(purefa_array_performance_iops{job=~\"$job\",instance=~\"$instance\"})",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -549,38 +537,47 @@
           "refId": "A"
         }
       ],
-      "thresholds": "50000,80000",
       "timeFrom": null,
       "timeShift": null,
       "title": "average iops",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "avg"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "ms",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 0.8
+              },
+              {
+                "color": "#d44a3a",
+                "value": 1.5
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -591,79 +588,67 @@
       "id": 23,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "avg(purefa_performance_latency_usec{job=~\"$job\",instance=~\"$instance\"}) / 1000",
+          "expr": "avg(purefa_array_performance_latency_usec{job=~\"$job\",instance=~\"$instance\"}) / 1000",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
         }
       ],
-      "thresholds": "0.8,1.5",
       "timeFrom": null,
       "timeShift": null,
       "title": "average IO latency",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "avg"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "displayName": "site",
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "",
+              "type": 1,
+              "value": "1"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 3,
@@ -674,39 +659,25 @@
       "id": 5,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "purefa_info{job=~\"$job\",instance=\"$instance\"}",
@@ -717,38 +688,47 @@
           "refId": "A"
         }
       ],
-      "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
       "title": "location",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "name"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#F2495C",
-        "#56A64B",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "volt",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#F2495C",
+                "value": null
+              },
+              {
+                "color": "#56A64B",
+                "value": 215
+              },
+              {
+                "color": "#d44a3a",
+                "value": 235
+              }
+            ]
+          },
+          "unit": "volt"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 3,
@@ -759,39 +739,25 @@
       "id": 13,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "avg(purefa_hardware_power_volts{job=~\"$job\",instance=~\"$instance\"})",
@@ -800,20 +766,10 @@
           "refId": "A"
         }
       ],
-      "thresholds": "215,235",
       "timeFrom": null,
       "timeShift": null,
       "title": "average power voltage",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
@@ -826,6 +782,12 @@
       ],
       "datasource": "$datasource",
       "decimals": 2,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -857,7 +819,6 @@
       "maxDataPoints": 100,
       "nullPointMode": "connected",
       "nullText": null,
-      "options": {},
       "postfix": " : 1",
       "postfixFontSize": "80%",
       "prefix": "",
@@ -878,7 +839,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(purefa_space_datareduction_ratio{job=~\"$job\",instance=~\"$instance\"})",
+          "expr": "sum(purefa_array_space_datareduction_ratio{job=~\"$job\",instance=~\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -901,21 +862,40 @@
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "Bps",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 2000000000
+              },
+              {
+                "color": "#d44a3a",
+                "value": 4000000000
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -926,80 +906,81 @@
       "id": 21,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "sum(purefa_performance_throughput_bytes{job=~\"$job\",instance=~\"$instance\"})",
+          "expr": "sum(purefa_array_performance_throughput_bytes{job=~\"$job\",instance=~\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
         }
       ],
-      "thresholds": "2000000000,4000000000",
       "timeFrom": null,
       "timeShift": null,
       "title": "average throughput",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "avg"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#d44a3a",
-        "rgba(237, 129, 40, 0.89)",
-        "#299c46"
-      ],
       "datasource": "$datasource",
-      "decimals": null,
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "0",
+              "id": 0,
+              "text": "FAILURE",
+              "to": "0.99",
+              "type": 2
+            },
+            {
+              "from": "1",
+              "id": 1,
+              "text": "OK",
+              "to": "100",
+              "type": 2
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d44a3a",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 0.99
+              },
+              {
+                "color": "#299c46",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 6,
@@ -1010,45 +991,25 @@
       "id": 7,
       "interval": null,
       "links": [],
-      "mappingType": 2,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "pluginVersion": "6.2.2",
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "0",
-          "text": "FAILURE",
-          "to": "0.99"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
         },
-        {
-          "from": "1",
-          "text": "OK",
-          "to": "100"
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "purefa_hardware_chassis_health{job=\"$job\",instance=\"$instance\"}",
@@ -1058,38 +1019,53 @@
           "refId": "A"
         }
       ],
-      "thresholds": "0.99,1",
       "timeFrom": null,
       "timeShift": null,
       "title": "chassis health",
-      "type": "singlestat",
-      "valueFontSize": "150%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "#C4162A",
-        "#C4162A"
-      ],
       "datasource": "$datasource",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "0",
+              "id": 0,
+              "text": "OK",
+              "to": "0",
+              "type": 2
+            },
+            {
+              "from": "1",
+              "id": 1,
+              "text": "FAILURE",
+              "to": "100",
+              "type": 2
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#C4162A",
+                "value": 1
+              },
+              {
+                "color": "#C4162A"
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -1100,44 +1076,25 @@
       "id": 48,
       "interval": null,
       "links": [],
-      "mappingType": 2,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "0",
-          "text": "OK",
-          "to": "0"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
         },
-        {
-          "from": "1",
-          "text": "FAILURE",
-          "to": "100"
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "count(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",component=\"BAY\"})\n-\nsum(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",component=\"BAY\"})",
@@ -1146,59 +1103,26 @@
           "refId": "A"
         }
       ],
-      "thresholds": "1",
       "timeFrom": null,
       "timeShift": null,
       "title": "disk bays",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        },
-        {
-          "op": "=",
-          "text": "Bays OK",
-          "value": "0"
-        },
-        {
-          "op": "=",
-          "text": "1 Bay Failed",
-          "value": "1"
-        },
-        {
-          "op": "=",
-          "text": "2 Bays Failed",
-          "value": "2"
-        },
-        {
-          "op": "=",
-          "text": "3 Bays Failed",
-          "value": "3"
-        },
-        {
-          "op": "=",
-          "text": "4 Bays Failed",
-          "value": "4"
-        },
-        {
-          "op": "=",
-          "text": "5 Bays Failed",
-          "value": "5"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "columns": [
         {
+          "$$hashKey": "object:262",
           "text": "Current",
           "value": "current"
         }
       ],
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 6,
@@ -1208,7 +1132,6 @@
       },
       "id": 35,
       "links": [],
-      "options": {},
       "pageSize": 5,
       "scroll": false,
       "showHeader": true,
@@ -1218,6 +1141,7 @@
       },
       "styles": [
         {
+          "$$hashKey": "object:264",
           "alias": "",
           "align": "auto",
           "colorMode": "cell",
@@ -1236,10 +1160,12 @@
           "unit": "short",
           "valueMaps": [
             {
+              "$$hashKey": "object:290",
               "text": "OK",
               "value": "1"
             },
             {
+              "$$hashKey": "object:291",
               "text": "FAIL",
               "value": "0"
             }
@@ -1250,6 +1176,7 @@
         {
           "expr": "purefa_hardware_component_health{job=~\"$job\",instance=~\"$instance\",component=\"BAY\"} != 1",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "disk bay {{ index }}",
           "refId": "A"
@@ -1257,18 +1184,25 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "failed disks",
+      "title": "failed SSDs",
       "transform": "timeseries_aggregations",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "columns": [
         {
+          "$$hashKey": "object:459",
           "text": "Current",
           "value": "current"
         }
       ],
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 6,
@@ -1278,7 +1212,6 @@
       },
       "id": 36,
       "links": [],
-      "options": {},
       "pageSize": 5,
       "scroll": false,
       "showHeader": true,
@@ -1288,6 +1221,7 @@
       },
       "styles": [
         {
+          "$$hashKey": "object:461",
           "alias": "",
           "align": "auto",
           "colorMode": "cell",
@@ -1306,10 +1240,12 @@
           "unit": "short",
           "valueMaps": [
             {
+              "$$hashKey": "object:487",
               "text": "OK",
               "value": "1"
             },
             {
+              "$$hashKey": "object:488",
               "text": "FAIL",
               "value": "0"
             }
@@ -1329,16 +1265,23 @@
       "timeShift": null,
       "title": "failed NVRAM modules",
       "transform": "timeseries_aggregations",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "columns": [
         {
+          "$$hashKey": "object:206",
           "text": "Current",
           "value": "current"
         }
       ],
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 6,
@@ -1348,7 +1291,6 @@
       },
       "id": 37,
       "links": [],
-      "options": {},
       "pageSize": 5,
       "scroll": false,
       "showHeader": true,
@@ -1358,6 +1300,7 @@
       },
       "styles": [
         {
+          "$$hashKey": "object:208",
           "alias": "",
           "align": "auto",
           "colorMode": "cell",
@@ -1376,10 +1319,12 @@
           "unit": "short",
           "valueMaps": [
             {
+              "$$hashKey": "object:234",
               "text": "OK",
               "value": "1"
             },
             {
+              "$$hashKey": "object:235",
               "text": "FAIL",
               "value": "0"
             }
@@ -1399,25 +1344,50 @@
       "timeShift": null,
       "title": "failed power supplies",
       "transform": "timeseries_aggregations",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "#C4162A",
-        "#C4162A"
-      ],
       "datasource": "$datasource",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "0",
+              "id": 0,
+              "text": "OK",
+              "to": "0",
+              "type": 2
+            },
+            {
+              "from": "1",
+              "id": 1,
+              "text": "FAILURE",
+              "to": "1",
+              "type": 2
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#C4162A",
+                "value": 1
+              },
+              {
+                "color": "#C4162A"
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -1428,44 +1398,25 @@
       "id": 54,
       "interval": null,
       "links": [],
-      "mappingType": 2,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "0",
-          "text": "OK",
-          "to": "0"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
         },
-        {
-          "from": "1",
-          "text": "FAILURE",
-          "to": "1"
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "count(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",component=\"NVB\"})\n-\nsum(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",component=\"NVB\"})",
@@ -1474,68 +1425,53 @@
           "refId": "A"
         }
       ],
-      "thresholds": "1",
       "timeFrom": null,
       "timeShift": null,
       "title": "NVRAM",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        },
-        {
-          "op": "=",
-          "text": "NVBs OK",
-          "value": "0"
-        },
-        {
-          "op": "=",
-          "text": "1 NVB Failed",
-          "value": "1"
-        },
-        {
-          "op": "=",
-          "text": "2 NVBs Failed",
-          "value": "2"
-        },
-        {
-          "op": "=",
-          "text": "3 NVBs Failed",
-          "value": "3"
-        },
-        {
-          "op": "=",
-          "text": "4 NVBs Failed",
-          "value": "4"
-        },
-        {
-          "op": "=",
-          "text": "5 NVBs Failed",
-          "value": "5"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "#C4162A",
-        "#C4162A"
-      ],
       "datasource": "$datasource",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "0",
+              "id": 0,
+              "text": "OK",
+              "to": "0",
+              "type": 2
+            },
+            {
+              "from": "1",
+              "id": 1,
+              "text": "FAILURE",
+              "to": "100",
+              "type": 2
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#C4162A",
+                "value": 1
+              },
+              {
+                "color": "#C4162A"
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -1546,44 +1482,25 @@
       "id": 60,
       "interval": null,
       "links": [],
-      "mappingType": 2,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "0",
-          "text": "OK",
-          "to": "0"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
         },
-        {
-          "from": "1",
-          "text": "FAILURE",
-          "to": "100"
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "count(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",component=\"PWR\"})\n-\nsum(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",component=\"PWR\"})",
@@ -1592,50 +1509,10 @@
           "refId": "A"
         }
       ],
-      "thresholds": "1",
       "timeFrom": null,
       "timeShift": null,
       "title": "power supply",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        },
-        {
-          "op": "=",
-          "text": "PWRs OK",
-          "value": "0"
-        },
-        {
-          "op": "=",
-          "text": "1 PWR Failed",
-          "value": "1"
-        },
-        {
-          "op": "=",
-          "text": "2 PWRs Failed",
-          "value": "2"
-        },
-        {
-          "op": "=",
-          "text": "3 PWRs Failed",
-          "value": "3"
-        },
-        {
-          "op": "=",
-          "text": "4 PWRs Failed",
-          "value": "4"
-        },
-        {
-          "op": "=",
-          "text": "5 PWRs Failed",
-          "value": "5"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "collapsed": false,
@@ -1654,22 +1531,47 @@
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#d44a3a",
-        "rgba(237, 129, 40, 0.89)",
-        "#299c46"
-      ],
       "datasource": "$datasource",
-      "decimals": null,
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "0",
+              "id": 0,
+              "text": "FAILURE",
+              "to": "0.99",
+              "type": 2
+            },
+            {
+              "from": "1",
+              "id": 1,
+              "text": "OK",
+              "to": "100",
+              "type": 2
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d44a3a",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 0.99
+              },
+              {
+                "color": "#299c46",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 5,
@@ -1680,45 +1582,25 @@
       "id": 27,
       "interval": null,
       "links": [],
-      "mappingType": 2,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "pluginVersion": "6.2.2",
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "0",
-          "text": "FAILURE",
-          "to": "0.99"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
         },
-        {
-          "from": "1",
-          "text": "OK",
-          "to": "100"
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "purefa_hardware_controller_health{job=\"$job\",instance=\"$instance\",controller=~\"$controller\"}",
@@ -1728,38 +1610,53 @@
           "refId": "A"
         }
       ],
-      "thresholds": "0.99,1",
       "timeFrom": null,
       "timeShift": null,
       "title": "controller health",
-      "type": "singlestat",
-      "valueFontSize": "150%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "#C4162A",
-        "#C4162A"
-      ],
       "datasource": "$datasource",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "0",
+              "id": 0,
+              "text": "OK",
+              "to": "0",
+              "type": 2
+            },
+            {
+              "from": "1",
+              "id": 1,
+              "text": "FAILURE",
+              "to": "100",
+              "type": 2
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#C4162A",
+                "value": 1
+              },
+              {
+                "color": "#C4162A"
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -1770,44 +1667,25 @@
       "id": 67,
       "interval": null,
       "links": [],
-      "mappingType": 2,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "0",
-          "text": "OK",
-          "to": "0"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
         },
-        {
-          "from": "1",
-          "text": "FAILURE",
-          "to": "100"
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "count(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",controller=~\"$controller\",component=\"ETH\"})\n-\nsum(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",controller=~\"$controller\",component=\"ETH\"})",
@@ -1816,59 +1694,26 @@
           "refId": "A"
         }
       ],
-      "thresholds": "1",
       "timeFrom": null,
       "timeShift": null,
       "title": "ethernet ports",
-      "type": "singlestat",
-      "valueFontSize": "50%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        },
-        {
-          "op": "=",
-          "text": "Bays OK",
-          "value": "0"
-        },
-        {
-          "op": "=",
-          "text": "1 Bay Failed",
-          "value": "1"
-        },
-        {
-          "op": "=",
-          "text": "2 Bays Failed",
-          "value": "2"
-        },
-        {
-          "op": "=",
-          "text": "3 Bays Failed",
-          "value": "3"
-        },
-        {
-          "op": "=",
-          "text": "4 Bays Failed",
-          "value": "4"
-        },
-        {
-          "op": "=",
-          "text": "5 Bays Failed",
-          "value": "5"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "columns": [
         {
+          "$$hashKey": "object:806",
           "text": "Current",
           "value": "current"
         }
       ],
       "datasource": "${DS_PROMETHEUS}",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 8,
@@ -1878,7 +1723,6 @@
       },
       "id": 38,
       "links": [],
-      "options": {},
       "pageSize": 5,
       "scroll": false,
       "showHeader": true,
@@ -1888,6 +1732,7 @@
       },
       "styles": [
         {
+          "$$hashKey": "object:808",
           "alias": "",
           "align": "auto",
           "colorMode": "cell",
@@ -1906,10 +1751,12 @@
           "unit": "short",
           "valueMaps": [
             {
+              "$$hashKey": "object:834",
               "text": "OK",
               "value": "1"
             },
             {
+              "$$hashKey": "object:835",
               "text": "FAIL",
               "value": "0"
             }
@@ -1929,7 +1776,7 @@
       "timeShift": null,
       "title": "failed ethernet ports",
       "transform": "timeseries_aggregations",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "columns": [
@@ -1939,6 +1786,12 @@
         }
       ],
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 8,
@@ -1948,7 +1801,6 @@
       },
       "id": 39,
       "links": [],
-      "options": {},
       "pageSize": 5,
       "scroll": false,
       "showHeader": true,
@@ -1999,7 +1851,7 @@
       "timeShift": null,
       "title": "failed fibre channel ports",
       "transform": "timeseries_aggregations",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "columns": [
@@ -2009,6 +1861,12 @@
         }
       ],
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 8,
@@ -2018,7 +1876,6 @@
       },
       "id": 40,
       "links": [],
-      "options": {},
       "pageSize": 5,
       "scroll": false,
       "showHeader": true,
@@ -2069,7 +1926,7 @@
       "timeShift": null,
       "title": "failed fans",
       "transform": "timeseries_aggregations",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "columns": [
@@ -2079,6 +1936,12 @@
         }
       ],
       "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 8,
@@ -2088,7 +1951,6 @@
       },
       "id": 98,
       "links": [],
-      "options": {},
       "pageSize": 5,
       "scroll": false,
       "showHeader": true,
@@ -2139,25 +2001,50 @@
       "timeShift": null,
       "title": "failed temperature sensors",
       "transform": "timeseries_aggregations",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "#C4162A",
-        "#C4162A"
-      ],
       "datasource": "$datasource",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "0",
+              "id": 0,
+              "text": "OK",
+              "to": "0",
+              "type": 2
+            },
+            {
+              "from": "1",
+              "id": 1,
+              "text": "FAILURE",
+              "to": "100",
+              "type": 2
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#C4162A",
+                "value": 1
+              },
+              {
+                "color": "#C4162A"
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -2168,44 +2055,25 @@
       "id": 68,
       "interval": null,
       "links": [],
-      "mappingType": 2,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "0",
-          "text": "OK",
-          "to": "0"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
         },
-        {
-          "from": "1",
-          "text": "FAILURE",
-          "to": "100"
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "count(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",controller=~\"$controller\",component=\"FC\"})\n-\nsum(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",controller=~\"$controller\",component=\"FC\"})",
@@ -2214,68 +2082,53 @@
           "refId": "A"
         }
       ],
-      "thresholds": "1",
       "timeFrom": null,
       "timeShift": null,
       "title": "fibre channel ports",
-      "type": "singlestat",
-      "valueFontSize": "50%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        },
-        {
-          "op": "=",
-          "text": "Bays OK",
-          "value": "0"
-        },
-        {
-          "op": "=",
-          "text": "1 Bay Failed",
-          "value": "1"
-        },
-        {
-          "op": "=",
-          "text": "2 Bays Failed",
-          "value": "2"
-        },
-        {
-          "op": "=",
-          "text": "3 Bays Failed",
-          "value": "3"
-        },
-        {
-          "op": "=",
-          "text": "4 Bays Failed",
-          "value": "4"
-        },
-        {
-          "op": "=",
-          "text": "5 Bays Failed",
-          "value": "5"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "#C4162A",
-        "#C4162A"
-      ],
       "datasource": "$datasource",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "0",
+              "id": 0,
+              "text": "OK",
+              "to": "0",
+              "type": 2
+            },
+            {
+              "from": "1",
+              "id": 1,
+              "text": "FAILURE",
+              "to": "100",
+              "type": 2
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#C4162A",
+                "value": 1
+              },
+              {
+                "color": "#C4162A"
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -2286,44 +2139,25 @@
       "id": 77,
       "interval": null,
       "links": [],
-      "mappingType": 2,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "0",
-          "text": "OK",
-          "to": "0"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
         },
-        {
-          "from": "1",
-          "text": "FAILURE",
-          "to": "100"
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "count(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",controller=~\"$controller\",component=\"FAN\"})\n-\nsum(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",controller=~\"$controller\",component=\"FAN\"})",
@@ -2332,68 +2166,47 @@
           "refId": "A"
         }
       ],
-      "thresholds": "1",
       "timeFrom": null,
       "timeShift": null,
       "title": "fans",
-      "type": "singlestat",
-      "valueFontSize": "50%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        },
-        {
-          "op": "=",
-          "text": "Bays OK",
-          "value": "0"
-        },
-        {
-          "op": "=",
-          "text": "1 Bay Failed",
-          "value": "1"
-        },
-        {
-          "op": "=",
-          "text": "2 Bays Failed",
-          "value": "2"
-        },
-        {
-          "op": "=",
-          "text": "3 Bays Failed",
-          "value": "3"
-        },
-        {
-          "op": "=",
-          "text": "4 Bays Failed",
-          "value": "4"
-        },
-        {
-          "op": "=",
-          "text": "5 Bays Failed",
-          "value": "5"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$datasource",
-      "format": "celsius",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 40
+              },
+              {
+                "color": "#d44a3a",
+                "value": 50
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 3,
@@ -2404,39 +2217,25 @@
       "id": 30,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "avg(purefa_hardware_temperature_celsius{job=~\"$job\",instance=~\"$instance\",controller=~\"$controller\"})",
@@ -2445,38 +2244,53 @@
           "refId": "A"
         }
       ],
-      "thresholds": "40,50",
       "timeFrom": null,
       "timeShift": null,
       "title": "average temperature",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "#C4162A",
-        "#C4162A"
-      ],
       "datasource": "$datasource",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "0",
+              "id": 0,
+              "text": "OK",
+              "to": "0",
+              "type": 2
+            },
+            {
+              "from": "1",
+              "id": 1,
+              "text": "FAILURE",
+              "to": "100",
+              "type": 2
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#C4162A",
+                "value": 1
+              },
+              {
+                "color": "#C4162A"
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 2,
@@ -2487,44 +2301,25 @@
       "id": 87,
       "interval": null,
       "links": [],
-      "mappingType": 2,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "0",
-          "text": "OK",
-          "to": "0"
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
         },
-        {
-          "from": "1",
-          "text": "FAILURE",
-          "to": "100"
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
       },
-      "tableColumn": "",
+      "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "count(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",controller=~\"$controller\",component=\"TMP\"})\n-\nsum(purefa_hardware_component_health{job=\"$job\",instance=\"$instance\",controller=~\"$controller\",component=\"TMP\"})",
@@ -2533,60 +2328,21 @@
           "refId": "A"
         }
       ],
-      "thresholds": "1",
       "timeFrom": null,
       "timeShift": null,
       "title": "temperature sensors",
-      "type": "singlestat",
-      "valueFontSize": "50%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        },
-        {
-          "op": "=",
-          "text": "Bays OK",
-          "value": "0"
-        },
-        {
-          "op": "=",
-          "text": "1 Bay Failed",
-          "value": "1"
-        },
-        {
-          "op": "=",
-          "text": "2 Bays Failed",
-          "value": "2"
-        },
-        {
-          "op": "=",
-          "text": "3 Bays Failed",
-          "value": "3"
-        },
-        {
-          "op": "=",
-          "text": "4 Bays Failed",
-          "value": "4"
-        },
-        {
-          "op": "=",
-          "text": "5 Bays Failed",
-          "value": "5"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     }
   ],
   "refresh": "5m",
-  "schemaVersion": 22,
+  "schemaVersion": 25,
   "style": "dark",
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {
+          "selected": false,
           "text": "default",
           "value": "default"
         },
@@ -2696,5 +2452,5 @@
   "timezone": "",
   "title": "Pure Storage FlashArray system hardware health",
   "uid": "zUaJ2oVWz",
-  "version": 1
+  "version": 11
 }
