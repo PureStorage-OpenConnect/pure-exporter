@@ -174,19 +174,19 @@ class FlasharrayCollector:
         Metrics values can be iterated over.
         """
         data = self.connection.get(space=True)[0]
-        labels = ['severity']
         
-        reduction = GaugeMetricFamily('purefa_space_datareduction_ratio',
-                                      'FlashArray overall data reduction')
-        capacity = GaugeMetricFamily('purefa_space_capacity_bytes',
+        datareduction = GaugeMetricFamily('purefa_array_space_datareduction_ratio',
+                                          'FlashArray overall data reduction',
+                                          unit='ratio')
+        capacity = GaugeMetricFamily('purefa_array_space_capacity_bytes',
                                      'FlashArray overall space capacity')
-        provisioned = GaugeMetricFamily('purefa_space_provisioned_bytes',
+        provisioned = GaugeMetricFamily('purefa_array_space_provisioned_bytes',
                                         'FlashArray overall provisioned space')
-        used = GaugeMetricFamily('purefa_space_used_bytes',
+        used = GaugeMetricFamily('purefa_array_space_used_bytes',
                                  'FlashArray overall used space',
-                                 labels=labels)
+                                 labels=['dimension'])
 
-        reduction.add_metric([], data['data_reduction'])
+        datareduction.add_metric([], data['data_reduction'])
         capacity.add_metric([], data['capacity'])
         provisioned.add_metric([], data['provisioned'])
         used.add_metric(['shared'], data['shared_space'])
@@ -195,7 +195,7 @@ class FlasharrayCollector:
         used.add_metric(['snapshots'], data['snapshots'])
 
         yield capacity
-        yield reduction
+        yield datareduction
         yield provisioned
         yield used
 
@@ -205,17 +205,16 @@ class FlasharrayCollector:
         Metrics values can be iterated over.
         """
         data = self.connection.get(action='monitor', mirrored=True)[0]
-        labels = ['dimension']
 
-        latency = GaugeMetricFamily('purefa_performance_latency_usec',
+        latency = GaugeMetricFamily('purefa_array_performance_latency_usec',
                                     'FlashArray latency',
-                                    labels=labels)
-        iops = GaugeMetricFamily('purefa_performance_iops',
+                                    labels=['dimension'])
+        iops = GaugeMetricFamily('purefa_array_performance_iops',
                                  'FlashArray IOPS',
-                                 labels=labels)
-        throughput = GaugeMetricFamily('purefa_performance_throughput_bytes',
+                                 labels=['dimension'])
+        throughput = GaugeMetricFamily('purefa_array_performance_throughput_bytes',
                                        'FlashArray throughput',
-                                       labels=labels)
+                                       labels=['dimension'])
         latency.add_metric(['read'], data['usec_per_read_op'])
         latency.add_metric(['write'], data['usec_per_write_op'])
         latency.add_metric(['mirrored_write'], data['usec_per_mirrored_write_op'])
@@ -236,19 +235,17 @@ class FlasharrayCollector:
         as a label. Metrics values can be iterated over.
         """
         data = self.connection.list_volumes(space=True)
-        labels=['volume', 'naaid']
 
-        datareduction = GaugeMetricFamily(
-            'purefa_volume_datareduction_ratio',
-            'FlashArray volume data reduction ratio',
-            labels=labels,
-            unit='ratio')
-        size = GaugeMetricFamily('purefa_volume_size_bytes',
+        datareduction = GaugeMetricFamily('purefa_volume_space_datareduction_ratio',
+                                          'FlashArray volume data reduction ratio',
+                                          labels=['volume', 'naaid'],
+                                          unit='ratio')
+        size = GaugeMetricFamily('purefa_volume_space_size_bytes',
                                  'FlashArray volume size',
-                                 labels=labels)
+                                 labels=['volume', 'naaid'])
         allocated = GaugeMetricFamily('purefa_volume_space_bytes',
                                       'FlashArray volume allocated space',
-                                      labels=labels + ['dimension'])
+                                      labels=['volume', 'naaid', 'dimension'])
         # Temporarily left out 'thin_provisioning' and 'total_reduction'
         for v in data:
             vol = v['name']
@@ -277,13 +274,13 @@ class FlasharrayCollector:
         data = self.connection.list_volumes(action='monitor', mirrored=True)
         labels = ['volume', 'naaid', 'dimension']
 
-        latency = GaugeMetricFamily('purefa_volume_latency_usec',
+        latency = GaugeMetricFamily('purefa_volume_performance_latency_usec',
                                     'FlashArray volume IO latency',
                                     labels=labels)
-        throughput = GaugeMetricFamily('purefa_volume_throughput_bytes',
+        throughput = GaugeMetricFamily('purefa_volume_performance_throughput_bytes',
                                        'FlashArray volume throughput',
                                        labels=labels)
-        iops = GaugeMetricFamily('purefa_volume_iops',
+        iops = GaugeMetricFamily('purefa_volume_performance_iops',
                                  'FlashArray volume IOPS',
                                  labels=labels)
         for v in data:
@@ -312,19 +309,18 @@ class FlasharrayCollector:
         as a label. Metrics values can be iterated over.
         """
         data = self.connection.list_hosts(space=True)
-        labels = ['host']
 
         datareduction = GaugeMetricFamily(
-            'purefa_host_datareduction_ratio',
+            'purefa_host_space_datareduction_ratio',
             'FlashArray host volumes data reduction ratio',
-            labels=labels,
+            labels=['host'],
             unit='ratio')
-        size = GaugeMetricFamily('purefa_host_size_bytes',
+        size = GaugeMetricFamily('purefa_host_space_size_bytes',
                                  'FlashArray host volumes size',
-                                 labels=labels)
+                                 labels=['host'])
         allocated = GaugeMetricFamily('purefa_host_space_bytes',
                                       'FlashArray host volumes allocated space',
-                                      labels=labels + ['dimension'])
+                                      labels=['host', 'dimension'])
         for h in data:
             datareduction.add_metric([h['name'], 'data_reduction'], h['data_reduction'])
             datareduction.add_metric([h['name'], 'thin_provisioning'], h['thin_provisioning'])
@@ -344,17 +340,16 @@ class FlasharrayCollector:
         host name as label. Metrics values can be iterated over.
         """
         data = self.connection.list_hosts(action='monitor', mirrored=True)
-        labels = ['host', 'dimension']
 
-        latency = GaugeMetricFamily('purefa_host_latency_usec',
+        latency = GaugeMetricFamily('purefa_host_performance_latency_usec',
                                     'FlashArray host IO latency',
-                                    labels=labels)
-        throughput = GaugeMetricFamily('purefa_host_throughput_bytes',
+                                    labels=['host', 'dimension'])
+        throughput = GaugeMetricFamily('purefa_host_performance_throughput_bytes',
                                        'FlashArray host throughput',
-                                       labels=labels)
-        iops = GaugeMetricFamily('purefa_host_iops',
+                                       labels=['host', 'dimension'])
+        iops = GaugeMetricFamily('purefa_host_performance_iops',
                                  'FlashArray host IOPS',
-                                 labels=labels)
+                                 labels=['host', 'dimension'])
         for h in data:
             latency.add_metric([h['name'], 'read'], h['usec_per_read_op'])
             latency.add_metric([h['name'], 'write'], h['usec_per_write_op'])
