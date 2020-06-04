@@ -1,5 +1,5 @@
 Flask>=1.1.2
 prometheus-client>=0.7.1
 purestorage>=1.18.1
-purity-fb>=1.9.1
+purity-fb>=1.8
 urllib3>=1.25.9
