@@ -49,7 +49,7 @@ def route_array(array_type, m_type):
             m_type = 'all'
         collector = FlasharrayCollector
     elif array_type == 'flashblade':
-        if not m_type in ['array', 'hosts']:
+        if not m_type in ['array', 'clients']:
             m_type = 'all'
         collector = FlashbladeCollector
     else:
