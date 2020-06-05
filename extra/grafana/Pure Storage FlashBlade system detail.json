@@ -20,7 +20,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "7.0.1"
+      "version": "7.0.3"
     },
     {
       "type": "panel",
@@ -70,7 +70,7 @@
   "gnetId": null,
   "graphTooltip": 2,
   "id": null,
-  "iteration": 1591097383109,
+  "iteration": 1591313079059,
   "links": [],
   "panels": [
     {
@@ -132,10 +132,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "purefb_info{job=~\"$job\",instance=\"$instance\"}",
@@ -388,12 +389,13 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_space_bytes{job=~\"$job\",instance=\"$instance\",dimension=\"total_physical\"})\n/\nsum(purefb_array_space_bytes{job=~\"$job\",instance=\"$instance\",dimension=\"capacity\"})",
@@ -454,12 +456,13 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": false
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_performance_iops{job=~\"$job\",instance=\"$instance\"})",
@@ -521,12 +524,13 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": false
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_performance_latency_usec{job=~\"$job\",instance=\"$instance\",protocol=\"all\"}) / 1000",
@@ -589,12 +593,13 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": false
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_performance_throughput_bytes{job=~\"$job\",instance=\"$instance\"})",
@@ -664,10 +669,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "purefb_info{job=~\"$job\",instance=\"$instance\"}",
@@ -750,10 +756,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "count(purefb_hw_status{job=~\"$job\",instance=~\"$instance\"} == 0)",
@@ -968,10 +975,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_space_data_reduction{job=~\"$job\",instance=\"$instance\"})",
@@ -1042,10 +1050,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(\n  delta(\n    purefb_array_space_bytes{job=~\"$job\",instance=\"$instance\",dimension=\"total_physical\"}[4w]\n  )\n)",
@@ -1115,12 +1124,13 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": false
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_performance_iops{job=~\"$job\",instance=~\"$instance\",dimension=\"write\"})\n/\nsum(purefb_array_performance_iops{job=~\"$job\",instance=~\"$instance\"})",

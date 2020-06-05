@@ -14,7 +14,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "7.0.1"
+      "version": "7.0.3"
     },
     {
       "type": "datasource",
@@ -52,7 +52,7 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1591097013267,
+  "iteration": 1591312651649,
   "links": [],
   "panels": [
     {
@@ -156,10 +156,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_open_events_total{job=~\"$job\",instance=~\"$instance\",severity=\"info\"})",
@@ -234,10 +235,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_open_events_total{job=~\"$job\",instance=~\"$instance\",severity=\"warning\"})",
@@ -312,10 +314,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_open_events_total{job=~\"$job\",instance=~\"$instance\",severity=\"critical\"})",
@@ -403,10 +406,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "(count(purefb_hw_status{job=~\"$job\",instance=~\"$instance\"})-sum(purefb_hw_status{job=~\"$job\",instance=~\"$instance\"}))",
@@ -481,10 +485,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})\n/\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"capacity\"})",
@@ -560,10 +565,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_space_data_reduction{job=~\"$job\",instance=~\"$instance\"})",
@@ -638,10 +644,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_performance_iops{job=~\"$job\",instance=~\"$instance\"})",
@@ -718,10 +725,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_performance_throughput_bytes{job=~\"$job\",instance=~\"$instance\"})",
@@ -796,10 +804,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "avg(purefb_array_performance_latency_usec{job=~\"$job\",instance=~\"$instance\"}) / 1000",

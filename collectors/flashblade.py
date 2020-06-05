@@ -166,6 +166,7 @@ class FlashbladeCollector():
             if f.space.data_reduction is None:
                 f.space.data_reduction = 0
             datareduction.add_metric([f.name], f.space.data_reduction)
+            space.add_metric([f.name, 'provisioned'], f.provisioned)
             space.add_metric([f.name, 'snapshots'], f.space.snapshots)
             space.add_metric([f.name, 'total_physical'], f.space.total_physical)
             space.add_metric([f.name, 'virtual'], f.space.virtual)

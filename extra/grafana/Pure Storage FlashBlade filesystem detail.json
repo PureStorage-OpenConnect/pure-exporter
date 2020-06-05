@@ -14,7 +14,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "7.0.1"
+      "version": "7.0.3"
     },
     {
       "type": "panel",
@@ -58,7 +58,7 @@
   "gnetId": null,
   "graphTooltip": 2,
   "id": null,
-  "iteration": 1591096983208,
+  "iteration": 1591312625651,
   "links": [],
   "panels": [
     {
@@ -125,10 +125,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "purefb_info{job=~\"$job\",instance=\"$instance\"}",
@@ -157,7 +158,7 @@
         },
         "overrides": []
       },
-      "fill": 3,
+      "fill": 2,
       "fillGradient": 0,
       "gridPos": {
         "h": 6,
@@ -187,12 +188,13 @@
       "options": {
         "dataLinks": []
       },
-      "percentage": true,
+      "percentage": false,
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:574",
           "alias": "free",
           "color": "#96D98D",
           "dashes": true,
@@ -200,41 +202,60 @@
           "linewidth": 2
         },
         {
+          "$$hashKey": "object:575",
           "alias": "snapshots",
           "color": "#B877D9"
         },
         {
+          "$$hashKey": "object:576",
           "alias": "shared",
           "color": "#FADE2A"
         },
         {
+          "$$hashKey": "object:577",
           "alias": "volumes",
           "color": "#5794F2"
         },
         {
+          "$$hashKey": "object:578",
           "alias": "system",
           "color": "#E02F44",
           "fill": 10
         }
       ],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(purefb_filesystems_space_bytes{job=~\"$job\",instance=~\"$instance\",name=\"$filesystem\"}\n) by (dimension)",
+          "expr": "purefb_filesystems_space_bytes{job=~\"$job\",instance=~\"$instance\",name=\"$filesystem\",dimension=\"virtual\"}\n",
           "format": "time_series",
+          "hide": false,
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{ dimension }}",
           "refId": "A"
         },
         {
-          "expr": "sum(purefa_volume_size_bytes{job=~\"$job\",instance=~\"$instance\",volume=\"$volume\"})\n-\nsum(purefa_volume_space_bytes{job=~\"$job\",instance=~\"$instance\",volume=\"$volume\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "free",
+          "expr": "purefb_filesystems_space_bytes{job=~\"$job\",instance=~\"$instance\",name=\"$filesystem\",dimension=\"total_physical\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ dimension }}",
           "refId": "B"
+        },
+        {
+          "expr": "purefb_filesystems_space_bytes{job=~\"$job\",instance=~\"$instance\",name=\"$filesystem\",dimension=\"unique\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ dimension }}",
+          "refId": "D"
+        },
+        {
+          "expr": "purefb_filesystems_space_bytes{job=~\"$job\",instance=~\"$instance\",name=\"$filesystem\",dimension=\"snapshots\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ dimension }}",
+          "refId": "C"
         }
       ],
       "thresholds": [],
@@ -257,15 +278,17 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:648",
           "decimals": 2,
-          "format": "bytes",
+          "format": "decbytes",
           "label": "",
           "logBase": 1,
-          "max": "101",
+          "max": null,
           "min": "0",
           "show": true
         },
         {
+          "$$hashKey": "object:649",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -336,10 +359,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_filesystem_performance_iops{job=~\"$job\",instance=\"$instance\",name=\"$filesystem\"})",
@@ -417,10 +441,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_filesystems_data_reduction{job=~\"$job\",instance=\"$instance\",name=\"$filesystem\"})",
@@ -498,10 +523,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_filesystems_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\",name=\"$filesystem\"})\n/\nsum(purefb_filesystems_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"virtual\",name=\"$filesystem\"})",
@@ -579,10 +605,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "avg(purefb_filesystem_performance_latency_usec{job=~\"$job\",instance=\"$instance\",name=\"$filesystem\"}) / 1000",
@@ -834,10 +861,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "purefb_filesystems_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"virtual\",name=\"$filesystem\"}",
@@ -911,10 +939,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_filesystem_performance_throughput_bytes{instance=\"$instance\",job=\"$job\",name=\"$filesystem\"})",
@@ -1395,5 +1424,5 @@
   "timezone": "",
   "title": "Pure Storage FlashBlade filesystem detail",
   "uid": "n0zbxlzGk",
-  "version": 16
+  "version": 20
 }

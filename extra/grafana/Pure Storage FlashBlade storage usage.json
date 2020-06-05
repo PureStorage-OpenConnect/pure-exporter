@@ -20,7 +20,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "7.0.1"
+      "version": "7.0.3"
     },
     {
       "type": "panel",
@@ -64,7 +64,7 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1591097451308,
+  "iteration": 1591312665746,
   "links": [],
   "panels": [
     {
@@ -152,12 +152,13 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})\n/\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"capacity\"})",
@@ -230,10 +231,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"capacity\"})\n-\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})",
@@ -401,10 +403,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "(sum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"capacity\"}) * $norm_percent /100)\n-\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})",
@@ -470,10 +473,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(\n  delta(\n    purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"}[4w]\n  )\n)",
@@ -550,10 +554,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "avg(purefb_array_space_data_reduction{job=~\"$job\",instance=~\"$instance\"})",
@@ -621,10 +626,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_space_bytes{job=\"$job\", instance=~\"$instance\", dimension=\"total_physical\"})",
@@ -695,10 +701,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "((sum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"capacity\"}) * $norm_percent /100)\n-\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})) \n* \navg(purefb_array_space_data_reduction{job=~\"$job\",instance=~\"$instance\"})",
@@ -765,10 +772,11 @@
           "calcs": [
             "mean"
           ],
+          "fields": "",
           "values": false
         }
       },
-      "pluginVersion": "7.0.1",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sum(purefb_array_space_bytes{job=~\"$job\", instance=~\"$instance\", dimension=\"capacity\"})",
