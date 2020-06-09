@@ -82,7 +82,7 @@ FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/hosts | endpoi
 FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/pods | endpoint, apitoken | Pods only metrics
 FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade | endpoint, apitoken | Full array metrics
 FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/array | endpoint, apitoken | Array only metrics
-FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/hosts | endpoint, apitoken | Hosts only metrics
+FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/clients | endpoint, apitoken | Clients only metrics
 
 Depending on the target array, scraping for the whole set of metrics could result into timeout issues, in which case it is suggested either to increase the scraping timeout or to scrape each single endpoint instead.
 
