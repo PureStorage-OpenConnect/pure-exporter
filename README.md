@@ -158,7 +158,7 @@ scrape_configs:
 # Job for all Pure Flashblade clients
 - job_name: 'pure_flashblade clients'
   scrape_timeout: 20s
-  metrics_path: /metrics/flashblade/clients
+  metrics_path: /metrics/flashblade/client
   relabel_configs:
   # meta label of target address --> get parameter "pure_host"
   - source_labels: [__address__]
