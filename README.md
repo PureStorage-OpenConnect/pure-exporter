@@ -21,8 +21,11 @@ The exporter is preferably built and launched via Docker. You can also scale the
 
 ---
 
-#### The official docker image is available at Docker Hub: [genegatpure/pure-exporter](https://hub.docker.com/r/genegatpure/pure-exporter)
+#### The official docker image is available at Quay.io
 
+```shell
+docker pull quay.io/purestorage/pure-exporter:1.1.0
+```
 ---
 
 To build and deploy the application via Docker, your local linux user should be added to the `docker` group in order to be able to communicate with the Docker daemon. (If this is not possible, you can still use <kbd>sudo</kbd>)
