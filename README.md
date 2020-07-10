@@ -212,7 +212,7 @@ In a typical production scenario, it is recommended to use a visual frontend for
 To spin up a very basic set of those containers, use the following commands:
 ```bash
 # Pure exporter
-docker run -d -p 9491:9491 --name pure-exporter genegatpure/pure-exporter:latest
+docker run -d -p 9491:9491 --name pure-exporter quay.io/purestorage/pure-exporter:<version>
 
 # Prometheus with config via bind-volume (create config first!)
 docker run -d -p 9090:9090 --name=prometheus -v /tmp/prometheus-pure.yml:/etc/prometheus/prometheus.yml -v /tmp/prometheus-data:/prometheus prom/prometheus:latest
