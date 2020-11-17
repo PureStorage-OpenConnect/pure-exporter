@@ -133,7 +133,8 @@ Depending on the target array, scraping for the whole set of metrics could resul
 To make full use of the statelessness of the exporter, it is required to use some tricky relabeling rules.
 The API key is given as a *meta label*, and will then be placed into the request as a GET parameter before the actual metrics scraping from the exporter happens. Afterwards, the label will be dropped for security reasons so it does not appear in the actual Prometheus database.
 
-Take this full Prometheus configuration as a reference:
+Take this full Prometheus configuration as a reference, but consider that, depending on the FlashArray and FlashBlade APIs response time you might have to adapt the configuration to your own environment, pherhaps splitting the job in a multitude of single jobs:
+
 ```yaml
 global:
   # How often should Prometheus fetch metrics?
