@@ -12,7 +12,12 @@ This applications aims to help monitor Pure Storage FlashArrays and FlashBlades 
 
 The stateless design of the exporter allows for easy configuration management as well as scalability for a whole fleet of Pure Storage systems. Each time Prometheus scrapes metrics for a specific system, it should provide the hostname and the readonly API token via GET parameters to this exporter.
 
-To monitor your Pure Storage hosts, you will need to create a new dedicated user on your array, and assign read-only permissions to it. Afterwards, you also have to create a new API key.
+To monitor your Pure Storage appliances, you will need to create a new dedicated user on your array, and assign read-only permissions to it. Afterwards, you also have to create a new API key.
+The exporter is provided as three different options:
+
+- pure-exporter. Full exporter for both FlashArray and FlashBlade in a single bundle
+- pure-fa-exporter.  FlashArray exporter
+- pure-fb-exporter.  FlashBlade exporter
 
 
 ### Building and Deploying
@@ -24,7 +29,7 @@ The exporter is preferably built and launched via Docker. You can also scale the
 #### The official docker image is available at Quay.io
 
 ```shell
-docker pull quay.io/purestorage/pure-exporter:1.1.0
+docker pull quay.io/purestorage/pure-exporter:1.2.0
 ```
 ---
 
@@ -76,6 +81,8 @@ python pure_exporter.py
 
 The exporter application uses a RESTful API schema to provide Prometheus scraping endpoints.
 
+The full exporter understands the following requests:
+
 System | URL | required GET parameters | description
 ---|---|---|---
 FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray | endpoint, apitoken | Full array metrics
@@ -86,6 +93,27 @@ FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/pods | endpoin
 FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade | endpoint, apitoken | Full array metrics
 FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/array | endpoint, apitoken | Array only metrics
 FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/clients | endpoint, apitoken | Clients only metrics
+FlashBlade | http://\<exporter-host\>:\<port\>/metrics/lashblade/quotas | endpoint, apitoken | Quotas only metrics
+
+The FlashArray-only and FlashBlade only exporters use a slightly different schema, which consists of the removal of the flasharray|flashblade string from the path.
+
+FlashBlade
+
+URL | required GET parameters | description
+---|---|---|---
+http://\<exporter-host\>:\<port\>/metrics | endpoint, apitoken | Full array metrics
+http://\<exporter-host\>:\<port\>/metrics/array | endpoint, apitoken | Array only metrics
+http://\<exporter-host\>:\<port\>/metrics/volumes | endpoint, apitoken | Volumes only metrics
+http://\<exporter-host\>:\<port\>/metrics/hosts | endpoint, apitoken | Hosts only metrics
+http://\<exporter-host\>:\<port\>/metrics/pods | endpoint, apitoken | Pods only metrics
+
+FlashBlade
+
+http://\<exporter-host\>:\<port\>/metrics | endpoint, apitoken | Full array metrics
+http://\<exporter-host\>:\<port\>/metrics/array | endpoint, apitoken | Array only metrics
+http://\<exporter-host\>:\<port\>/metrics/clients | endpoint, apitoken | Clients only metrics
+http://\<exporter-host\>:\<port\>/metrics/quotas | endpoint, apitoken | Quotas only metrics
+
 
 Depending on the target array, scraping for the whole set of metrics could result into timeout issues, in which case it is suggested either to increase the scraping timeout or to scrape each single endpoint instead.
 
