@@ -1,5 +1,3 @@
-![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/genegatpure/pure-exporter)
-[![](https://images.microbadger.com/badges/image/genegatpure/pure-exporter.svg)](https://hub.docker.com/r/genegatpure/pure-exporter "Docker image on Docker Hub")
 ![Current version](https://img.shields.io/github/v/tag/PureStorage-OpenConnect/pure-exporter?label=current%20version)
 
 # Pure Storage Prometheus exporter
