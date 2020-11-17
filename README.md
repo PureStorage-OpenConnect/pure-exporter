@@ -95,7 +95,7 @@ FlashBlade | http://\<exporter-host\>:\<port\>/metrics/lashblade/quotas | endpoi
 
 The FlashArray-only and FlashBlade only exporters use a slightly different schema, which consists of the removal of the flasharray|flashblade string from the path.
 
-**FlashArray
+**FlashArray**
 
 URL | required GET parameters | description
 ---|---|---
@@ -105,7 +105,7 @@ http://\<exporter-host\>:\<port\>/metrics/volumes | endpoint, apitoken | Volumes
 http://\<exporter-host\>:\<port\>/metrics/hosts | endpoint, apitoken | Hosts only metrics
 http://\<exporter-host\>:\<port\>/metrics/pods | endpoint, apitoken | Pods only metrics
 
-**FlashBlade
+**FlashBlade**
 
 URL | required GET parameters | description
 ---|---|---
