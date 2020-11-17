@@ -2,7 +2,6 @@
 
 from flask import Flask, request, abort, make_response
 from prometheus_client import generate_latest, CollectorRegistry, CONTENT_TYPE_LATEST
-from flasharray_collector import FlasharrayCollector
 from flashblade_collector import FlashbladeCollector
 
 import logging
@@ -27,29 +26,6 @@ def route_index():
         </thead>
         <tbody>
             <tr>
-                <td>FlashArray</td>
-                <td><a href="/metrics/flasharray?endpoint=host&apitoken=0">/metrics/flasharray</a></td>
-                <td>endpoint, apitoken</td>
-            </tr>
-            <tr>
-                <td>FlashArray hosts</td>
-                <td><a href="/metrics/flasharray/hosts?endpoint=host&apitoken=0">/metrics/flasharray</a></td>
-                <td>endpoint, apitoken</td>
-                <td>Retrieves only host related metrics</td>
-            </tr>
-            <tr>
-                <td>FlashArray volumes</td>
-                <td><a href="/metrics/flasharray/volumes?endpoint=host&apitoken=0">/metrics/flasharray</a></td>
-                <td>endpoint, apitoken</td>
-                <td>Retrieves only volume related metrics</td>
-            </tr>
-            <tr>
-                <td>FlashArray pods</td>
-                <td><a href="/metrics/flasharray/pods?endpoint=host&apitoken=0">/metrics/flasharray</a></td>
-                <td>endpoint, apitoken</td>
-                <td>Retrieves only pod related metrics</td>
-            </tr>
-                        <tr>
                 <td>FlashBlade</td>
                 <td><a href="/metrics/flashblade?endpoint=host&apitoken=0">/metrics/flashblade</a></td>
                 <td>endpoint, apitoken</td>
@@ -71,25 +47,18 @@ def route_index():
                 <td><a href="/metrics/flashblade/quotas?endpoint=host&apitoken=0">/metrics/flashblade</a></td>
                 <td>endpoint, apitoken</td>
                 <td>Provides only quota related metrics.</td>
-            </tr>`
+            </tr>
         </tbody>
     </table>
     '''
 
-def route_array(array_type, m_type):
-    """Produce FlashArray and FlashBlade metrics."""
-    collector = None
-    if array_type == 'flasharray':
-        if not m_type in ['array', 'volumes', 'hosts', 'pods']:
-            m_type = 'all'
-        collector = FlasharrayCollector
-    elif array_type == 'flashblade':
-        if not m_type in ['array', 'clients', 'usage']:
-            m_type = 'all'
-        collector = FlashbladeCollector
-    else:
-        abort(404)
-
+@app.route('/metrics/<m_type>', methods=['GET'])
+def route_flashblade(m_type: str):
+    """Produce FlashBlade metrics."""
+    collector = FlashbladeCollector
+    if not m_type in ['array', 'clients', 'usage']:
+        m_type = 'all'
+    collector = FlashbladeCollector
     registry = CollectorRegistry()
     try:
         endpoint = request.args.get('endpoint', None)
@@ -103,19 +72,7 @@ def route_array(array_type, m_type):
     resp.headers['Content-type'] = CONTENT_TYPE_LATEST
     return resp
 
-@app.route('/metrics/flasharray/<m_type>', methods=['GET'])
-def route_flasharray(m_type: str):
-    return route_array('flasharray', m_type)
-
-@app.route('/metrics/flasharray', methods=['GET'])
-def route_flasharray_all():
-    return route_flasharray('all')
-
-@app.route('/metrics/flashblade/<m_type>', methods=['GET'])
-def route_flashblade(m_type: str):
-    return route_array('flashblade', m_type)
-
-@app.route('/metrics/flashblade', methods=['GET'])
+@app.route('/metrics', methods=['GET'])
 def route_flashblade_all():
     return route_flashblade('all')
 

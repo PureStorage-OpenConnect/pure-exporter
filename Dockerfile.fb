@@ -2,14 +2,13 @@ FROM python:3.6-alpine
 
 # Application directory
 WORKDIR /app
-COPY pure_exporter.py /app
-COPY requirements.txt /app
-COPY flasharray_collector /app/flasharray_collector
+COPY pure_fb_exporter.py /app
+COPY requirements.fb.txt /app
 COPY flashblade_collector /app/flashblade_collector
 
 # Install dependencies and WSGI server
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir -r requirements.fb.txt && \
     pip install --no-cache-dir gunicorn
 
 # Run as non-root user
@@ -26,4 +25,4 @@ ENV GUNICORN_CMD_ARGS="--bind=0.0.0.0:9491 \
     --error-logfile=- \
     --access-logformat=\"%(t)s %(h)s %(U)s %(l)s %(T)s %(B)s\""
 EXPOSE 9491
-ENTRYPOINT ["gunicorn", "pure_exporter:app"]
+ENTRYPOINT ["gunicorn", "pure_fb_exporter:app"]
