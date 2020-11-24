@@ -21,7 +21,7 @@ class ArraySpaceMetrics():
                                       'purefa_array_space_datareduction_ratio',
                                       'FlashArray overall data reduction',
                                       unit='ratio')
-        self.data_reduction.add_metric([], self.fa.get_array_elem('data_reduction'))
+        self.data_reduction.add_metric([], self.fa.get_array_elem('data_reduction') if self.fa.get_array_elem('data_reduction') is not None else 0)
 
     def _capacity(self):
         """
@@ -30,7 +30,7 @@ class ArraySpaceMetrics():
         """
         self.capacity = GaugeMetricFamily('purefa_array_space_capacity_bytes',
                                      'FlashArray overall space capacity')
-        self.capacity.add_metric([], self.fa.get_array_elem('capacity'))
+        self.capacity.add_metric([], self.fa.get_array_elem('capacity') if self.fa.get_array_elem('capacity') is not None else 0)
 
     def _provisioned(self):
         """
@@ -40,7 +40,7 @@ class ArraySpaceMetrics():
         self.provisioned = GaugeMetricFamily(
                                         'purefa_array_space_provisioned_bytes',
                                         'FlashArray overall provisioned space')
-        self.provisioned.add_metric([], self.fa.get_array_elem('provisioned'))
+        self.provisioned.add_metric([], self.fa.get_array_elem('provisioned') if self.fa.get_array_elem('provisioned') is not None else 0)
 
     def _used(self):
         """
@@ -50,12 +50,11 @@ class ArraySpaceMetrics():
         self.used = GaugeMetricFamily('purefa_array_space_used_bytes',
                                       'FlashArray overall used space',
                                       labels=['dimension'])
-        self.used.add_metric(['shared'], self.fa.get_array_elem('shared_space'))
-        self.used.add_metric(['system'], self.fa.get_array_elem('system'))
-        self.used.add_metric(['volumes'], self.fa.get_array_elem('volumes'))
-        self.used.add_metric(['snapshots'], self.fa.get_array_elem('snapshots'))
-        if self.fa.get_array_elem('replication') is not None:
-            self.used.add_metric(['replication'], self.fa.get_array_elem('replication'))
+        self.used.add_metric(['shared'], self.fa.get_array_elem('shared_space') if self.fa.get_array_elem('shared_space') is not None else 0)
+        self.used.add_metric(['system'], self.fa.get_array_elem('system') if self.fa.get_array_elem('system') is not None else 0)
+        self.used.add_metric(['volumes'], self.fa.get_array_elem('volumes') if self.fa.get_array_elem('volumes') is not None else 0)
+        self.used.add_metric(['snapshots'], self.fa.get_array_elem('snapshots') if self.fa.get_array_elem('snapshots') is not None else 0)
+        self.used.add_metric(['replication'], self.fa.get_array_elem('replication') if self.fa.get_array_elem('replication') is not None else 0)
 
     def get_metrics(self):
         self._data_reduction()
