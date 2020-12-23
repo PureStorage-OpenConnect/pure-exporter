@@ -12,13 +12,13 @@ class ArrayInfoMetrics():
     def _info(self):
         """Assemble a simple information metric defining the scraped system."""
         array = self.fa.get_array()
-
+        v = {'array_name': array['array_name'],
+             'system_id': array['id'],
+             'version': array['version']}
+        if 'hostname' in array:
+            v['hostname'] = array['hostname']
         self.info = InfoMetricFamily('purefa', 'FlashArray system information',
-                                     value={
-                                         'array_name': array['array_name'],
-                                         'system_id': array['id'],
-                                         'version': array['version'],
-                                         'hostname': array['hostname']})
+                                     value = v)
 
     def get_metrics(self):
         self._info()

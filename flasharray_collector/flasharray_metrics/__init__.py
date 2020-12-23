@@ -1,4 +1,5 @@
 __all__ = ["flasharray", 
+           "mappings",
            "array_info_metrics",
            "array_hardware_metrics",
            "array_events_metrics",

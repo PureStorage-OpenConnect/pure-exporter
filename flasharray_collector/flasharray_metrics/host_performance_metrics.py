@@ -1,4 +1,5 @@
 from prometheus_client.core import GaugeMetricFamily
+from . import mappings
 
 
 class HostPerformanceMetrics():
@@ -8,63 +9,50 @@ class HostPerformanceMetrics():
 
     def __init__(self, fa):
         self.fa = fa
-        self.latency = None
-        self.bandwidth = None
-        self.iops = None
-
-    def _latency(self):
-        """
-        Create hosts latency metrics of gauge type, with host name and
-        dimension as label.
-        Metrics values can be iterated over.
-        """
-
-        self.latency = GaugeMetricFamily(
-                                        'purefa_host_performance_latency_usec',
-                                        'FlashArray host IO latency',
-                                        labels=['host', 'dimension'])
-        for h in self.fa.get_hosts():
-            self.latency.add_metric([h['name'], 'read'], h['usec_per_read_op'])
-            self.latency.add_metric([h['name'], 'write'], h['usec_per_write_op'])
-            self.latency.add_metric([h['name'], 'mirrored_write'], h['usec_per_mirrored_write_op'])
-            self.latency.add_metric([h['name'], 'san_read'], h['san_usec_per_read_op'])
-            self.latency.add_metric([h['name'], 'san_write'], h['san_usec_per_write_op'])
-            self.latency.add_metric([h['name'], 'san_mirrored_write'], h['san_usec_per_mirrored_write_op'])
-            self.latency.add_metric([h['name'], 'queue_read'], h['queue_usec_per_read_op'])
-            self.latency.add_metric([h['name'], 'queue_write'], h['queue_usec_per_write_op'])
-            self.latency.add_metric([h['name'], 'queue_mirrored_write'], h['queue_usec_per_mirrored_write_op'])
-            self.latency.add_metric([h['name'], 'qos_read'], h['qos_rate_limit_usec_per_read_op'])
-            self.latency.add_metric([h['name'], 'qos_write'], h['qos_rate_limit_usec_per_write_op'])
-            self.latency.add_metric([h['name'], 'qos_mirrored'], h['qos_rate_limit_usec_per_mirrored_write_op'])
-
-    def _bandwidth(self):
-        """
-        Create hosts bandwidth metrics of gauge type, with host name and
-        dimension as label.
-        Metrics values can be iterated over.
-        """
-        self.bandwidth = GaugeMetricFamily(
-                                    'purefa_host_performance_bandwidth_bytes',
-                                    'FlashArray host bandwidth',
-                                    labels=['host', 'dimension'])
-        for h in self.fa.get_hosts():
-            self.bandwidth.add_metric([h['name'], 'read'], h['output_per_sec'])
-            self.bandwidth.add_metric([h['name'], 'write'], h['input_per_sec'])
-            self.bandwidth.add_metric([h['name'], 'mirrored_write'], h['mirrored_input_per_sec'])
-
-    def _iops(self):
-        """
-        Create hosts IOPS metrics of gauge type, with host name and
-        dimension as label.
-        Metrics values can be iterated over.
-        """
+        self.latency = GaugeMetricFamily('purefa_host_performance_latency_usec',
+                                         'FlashArray host IO latency',
+                                         labels=['host', 'dimension'])
+        self.bandwidth = GaugeMetricFamily('purefa_host_performance_bandwidth_bytes',
+                                           'FlashArray host bandwidth',
+                                           labels=['host', 'dimension'])
         self.iops = GaugeMetricFamily('purefa_host_performance_iops',
                                       'FlashArray host IOPS',
                                       labels=['host', 'dimension'])
-        for h in self.fa.get_hosts():
-            self.iops.add_metric([h['name'], 'read'], h['reads_per_sec'])
-            self.iops.add_metric([h['name'], 'write'], h['writes_per_sec'])
-            self.iops.add_metric([h['name'], 'mirrored_write'], h['mirrored_writes_per_sec'])
+
+    def _mk_metric(self, metric, entity_list, mapping):
+        """
+        Create metrics of gauge type, with given name 'name' and
+        dimension as label.
+        Metrics values can be iterated over.
+        """
+        for e in entity_list:
+            for k in mapping:
+                if k in e:
+                    metric.add_metric([e['name'], mapping[k]], e[k])
+
+    def _latency(self):
+        """
+        Create hosts latency metrics of gauge type.
+        """
+        self._mk_metric(self.latency,
+                        self.fa.get_hosts(),
+                        mappings.host_latency_mapping)
+
+    def _bandwidth(self):
+        """
+        Create hosts bandwidth metrics of gauge type.
+        """
+        self._mk_metric(self.bandwidth,
+                        self.fa.get_hosts(),
+                        mappings.host_bandwidth_mapping)
+
+    def _iops(self):
+        """
+        Create hosts IOPS metrics of gauge type.
+        """
+        self._mk_metric(self.iops,
+                        self.fa.get_hosts(),
+                        mappings.host_iops_mapping)
 
     def get_metrics(self):
         self._latency()

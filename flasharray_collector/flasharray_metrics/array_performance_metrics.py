@@ -1,4 +1,5 @@
 from prometheus_client.core import GaugeMetricFamily
+from . import mappings
 
 
 class ArrayPerformanceMetrics():
@@ -8,86 +9,76 @@ class ArrayPerformanceMetrics():
 
     def __init__(self, fa):
         self.fa = fa
-        self.latency = None
-        self.bandwidth = None
-        self.iops = None
-        self.avg_bsz = None
-        self.qdepth = None
+
+        self.latency = GaugeMetricFamily('purefa_array_performance_latency_usec',
+                                         'FlashArray latency',
+                                         labels=['dimension'])
+        self.bandwidth = GaugeMetricFamily('purefa_array_performance_bandwidth_bytes',
+                                           'FlashArray bandwidth',
+                                           labels=['dimension'])
+        self.iops = GaugeMetricFamily('purefa_array_performance_iops',
+                                      'FlashArray IOPS',
+                                      labels=['dimension'])
+        self.avg_bsz = GaugeMetricFamily('purefa_array_performance_avg_block_bytes',
+                                         'FlashArray avg block size',
+                                         labels=['dimension'])
+        self.qdepth = GaugeMetricFamily('purefa_array_performance_qdepth',
+                                        'FlashArray queue depth',
+                                        labels=['dimension'])
+
+    def _mk_metric(self, metric, entity_list, mapping):
+        """
+        Create metrics of gauge type, with dimension as label.
+        Metrics values can be iterated over.
+        """
+        for k in mapping:
+            if k in entity_list:
+                metric.add_metric(mapping[k], entity_list[k] if entity_list[k] is not None else 0)
 
     def _latency(self):
         """
         Create array latency performance metrics of gauge type.
         Metrics values can be iterated over.
         """
-
-        array = self.fa.get_array() 
-        self.latency = GaugeMetricFamily('purefa_array_performance_latency_usec',
-                                         'FlashArray latency',
-                                         labels=['dimension'])
-        self.latency.add_metric(['read'], array['usec_per_read_op'])
-        self.latency.add_metric(['write'], array['usec_per_write_op'])
-        self.latency.add_metric(['mirrored_write'], array['usec_per_mirrored_write_op'])
-        self.latency.add_metric(['local_queue'], array['local_queue_usec_per_op'])
-        self.latency.add_metric(['san_read'], array['san_usec_per_read_op'])
-        self.latency.add_metric(['san_write'], array['san_usec_per_write_op'])
-        self.latency.add_metric(['san_mirrored_write'], array['san_usec_per_mirrored_write_op'])
-        self.latency.add_metric(['queue_read'], array['queue_usec_per_read_op'])
-        self.latency.add_metric(['queue_write'], array['queue_usec_per_write_op'])
-        self.latency.add_metric(['queue_mirrored_write'], array['queue_usec_per_mirrored_write_op'])
-        self.latency.add_metric(['qos_read'], array['qos_rate_limit_usec_per_read_op'])
-        self.latency.add_metric(['qos_write'], array['qos_rate_limit_usec_per_write_op'])
-        self.latency.add_metric(['qos_mirrored'], array['qos_rate_limit_usec_per_mirrored_write_op'])
+        self._mk_metric(self.latency,
+                        self.fa.get_array(), 
+                        mappings.array_latency_mapping)
 
     def _bandwidth(self):
         """
         Create array bandwidth performance metrics of gauge type.
         Metrics values can be iterated over.
         """
-        array = self.fa.get_array() 
-        self.bandwidth = GaugeMetricFamily('purefa_array_performance_bandwidth_bytes',
-                                           'FlashArray bandwidth',
-                                           labels=['dimension'])
-        self.bandwidth.add_metric(['read'], array['output_per_sec'])
-        self.bandwidth.add_metric(['write'], array['input_per_sec'])
-        self.bandwidth.add_metric(['mirrored_write'], array['mirrored_input_per_sec'])
+        self._mk_metric(self.bandwidth,
+                        self.fa.get_array(), 
+                        mappings.array_bandwidth_mapping)
 
     def _iops(self):
         """
         Create array iops performance metrics of gauge type.
         Metrics values can be iterated over.
         """
-        array = self.fa.get_array() 
-        self.iops = GaugeMetricFamily('purefa_array_performance_iops',
-                                      'FlashArray IOPS',
-                                      labels=['dimension'])
-        self.iops.add_metric(['read'], array['reads_per_sec'])
-        self.iops.add_metric(['write'], array['writes_per_sec'])
-        self.iops.add_metric(['mirrored_write'], array['mirrored_writes_per_sec'])
+        self._mk_metric(self.iops,
+                        self.fa.get_array(), 
+                        mappings.array_iops_mapping)
 
     def _avg_block_size(self):
         """
         Create array average block size performance metrics of gauge type.
         Metrics values can be iterated over.
         """
-        array = self.fa.get_array() 
-        self.avg_bsz = GaugeMetricFamily('purefa_array_performance_avg_block_bytes',
-                                         'FlashArray avg block size',
-                                         labels=['dimension'])
-        self.avg_bsz.add_metric(['read'], array['bytes_per_read'])
-        self.avg_bsz.add_metric(['write'], array['bytes_per_write'])
-        self.avg_bsz.add_metric(['mirrored_write'], array['bytes_per_mirrored_write'])
+        self._mk_metric(self.avg_bsz,
+                        self.fa.get_array(), 
+                        mappings.array_bsize_mapping)
 
     def _qdepth(self):
         """
         Create array queue depth performance metric of gauge type.
         Metrics values can be iterated over.
         """
-        array = self.fa.get_array() 
-        self.qdepth = GaugeMetricFamily('purefa_array_performance_qdepth',
-                                        'FlashArray queue depth',
-                                        labels=[])
-        self.qdepth.add_metric([], array['queue_depth'] if array['queue_depth'] is not None else 0)
-
+        self._mk_metric(self.qdepth,
+                        self.fa.get_array(), 
+                        mappings.array_qdepth_mapping)
 
     def get_metrics(self):
         self._latency()

@@ -8,6 +8,13 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 PURE_NAA = 'naa.624a9370'
 
+kpi_params = [{'action': 'monitor'},
+              {'action': 'monitor', 'mirrored': True},
+              {'action': 'monitor', 'latency': True},
+              {'action': 'monitor', 'latency': True, 'mirrored': True},
+              {'action': 'monitor', 'size': True},
+              {'action': 'monitor', 'size': True, 'mirrored': True},
+              {'space': True}]
 
 class FlashArray:
     """
@@ -32,21 +39,15 @@ class FlashArray:
         if self.array is not None:
             return self.array
         self.array = self.flasharray.get()
-        a = self.flasharray.get(action='monitor')[0]
-        self.array.update(a)
-        a = self.flasharray.get(action='monitor', mirrored=True)[0]
-        self.array.update(a)
-        a = self.flasharray.get(action='monitor', latency=True)[0]
-        self.array.update(a)
-        a = self.flasharray.get(action='monitor', latency=True, mirrored=True)[0]
-        self.array.update(a)
-        a = self.flasharray.get(action='monitor', size=True)[0]
-        self.array.update(a)
-        a = self.flasharray.get(action='monitor', size=True, mirrored=True)[0]
-        self.array.update(a)
-        a = self.flasharray.get(space=True)[0]
-        self.array.update(a)
+
+        for params in kpi_params:
+            try:
+                a = self.flasharray.get(**params)[0]
+                self.array.update(a)
+            except purestorage.PureError:
+                pass
         return self.array
+
 
     def get_array_elem(self, elem):
         array = self.get_array()
@@ -67,29 +68,25 @@ class FlashArray:
         for v in self.flasharray.list_volumes():
             v['naaid'] = PURE_NAA + v['serial']
             vdict[v['name']] = v
-        for v in self.flasharray.list_volumes(protocol_endpoint=True):
-            # PE do not have these metrics, so it is necessasy to poulate with fake values
-            v['naaid'] = PURE_NAA + v['serial']
-            v['size'] = 0
-            v['volumes'] = 0
-            v['snapshots'] = 0
-            v['total'] = 0
-            v['data_reduction'] = 0
-            vdict[v['name']] = v
-        for v in self.flasharray.list_volumes(action='monitor'):
-            vdict[v['name']].update(v)
-        for v in self.flasharray.list_volumes(action='monitor', mirrored='true'):
-            vdict[v['name']].update(v)
-        for v in self.flasharray.list_volumes(action='monitor', latency='true'):
-            vdict[v['name']].update(v)
-        for v in self.flasharray.list_volumes(action='monitor', latency='true', mirrored='true'):
-            vdict[v['name']].update(v)
-        for v in self.flasharray.list_volumes(action='monitor', size='true'):
-            vdict[v['name']].update(v)
-        for v in self.flasharray.list_volumes(action='monitor', size='true', mirrored='true'):
-            vdict[v['name']].update(v)
-        for v in self.flasharray.list_volumes(space='true'):
-            vdict[v['name']].update(v)
+        try:
+            for v in self.flasharray.list_volumes(protocol_endpoint=True):
+                # PE do not have these metrics, so it is necessasy to poulate with fake values
+                v['naaid'] = PURE_NAA + v['serial']
+                v['size'] = 0
+                v['volumes'] = 0
+                v['snapshots'] = 0
+                v['total'] = 0
+                v['data_reduction'] = 0
+                vdict[v['name']] = v
+        except purestorage.PureError:
+            pass
+
+        for params in kpi_params:
+            try:
+                for v in self.flasharray.list_volumes(**params):
+                    vdict[v['name']].update(v)
+            except purestorage.PureError:
+                pass
         self.volumes = list(vdict.values())
         return self.volumes
 
@@ -97,22 +94,18 @@ class FlashArray:
         if self.hosts is not None:
             return self.hosts
         hdict = {}
-        for h in self.flasharray.list_hosts():
-            hdict[h['name']] = h
-        for h in self.flasharray.list_hosts(action='monitor'):
-            hdict[h['name']].update(h)
-        for h in self.flasharray.list_hosts(action='monitor', mirrored='true'):
-            hdict[h['name']].update(h)
-        for h in self.flasharray.list_hosts(action='monitor', latency='true'):
-            hdict[h['name']].update(h)
-        for h in self.flasharray.list_hosts(action='monitor', latency='true', mirrored='true'):
-            hdict[h['name']].update(h)
-        for h in self.flasharray.list_hosts(action='monitor', size='true'):
-            hdict[h['name']].update(h)
-        for h in self.flasharray.list_hosts(action='monitor', size='true', mirrored='true'):
-            hdict[h['name']].update(h)
-        for h in self.flasharray.list_hosts(space='true'):
-            hdict[h['name']].update(h)
+        try:
+            for h in self.flasharray.list_hosts():
+                hdict[h['name']] = h
+        except purestorage.PureError:
+            pass
+
+        for params in kpi_params:
+            try:
+                for h in self.flasharray.list_hosts(**params):
+                    hdict[h['name']].update(h)
+            except purestorage.PureError:
+                pass
         self.hosts = list(hdict.values())
         return self.hosts
 
@@ -120,21 +113,17 @@ class FlashArray:
         if self.pods is not None:
             return self.pods
         pdict = {}
-        for p in self.flasharray.list_pods():
-            pdict[p['name']] = p
-        for p in self.flasharray.list_pods(action='monitor'):
-            pdict[p['name']].update(p)
-        for p in self.flasharray.list_pods(action='monitor', mirrored='true'):
-            pdict[p['name']].update(p)
-        for p in self.flasharray.list_pods(action='monitor', latency='true'):
-            pdict[p['name']].update(p)
-        for p in self.flasharray.list_pods(action='monitor', latency='true', mirrored='true'):
-            pdict[p['name']].update(p)
-        for p in self.flasharray.list_pods(action='monitor', size='true'):
-            pdict[p['name']].update(p)
-        for p in self.flasharray.list_pods(action='monitor', size='true', mirrored='true'):
-            pdict[p['name']].update(p)
-        for p in self.flasharray.list_pods(space='true'):
-            pdict[p['name']].update(p)
+        try:
+            for p in self.flasharray.list_pods():
+                pdict[p['name']] = p
+        except purestorage.PureError:
+            pass
+
+        for params in kpi_params:
+            try:
+                for p in self.flasharray.list_pods(**params):
+                    pdict[p['name']].update(p)
+            except purestorage.PureError:
+                pass
         self.pods = list(pdict.values())
         return self.pods

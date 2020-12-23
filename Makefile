@@ -35,6 +35,12 @@ test:
          --error-logfile=- --access-logformat=\"%(t)s %(h)s %(U)s %(l)s %(T)s %(B)s\"" \
          gunicorn pure_exporter:app)
 
+.PHONY: test-fa
+test-fa:
+	(GUNICORN_CMD_ARGS="--bind=0.0.0.0:$(TEST_PORT) --workers=2 --access-logfile=- \
+         --error-logfile=- --access-logformat=\"%(t)s %(h)s %(U)s %(l)s %(T)s %(B)s\"" \
+         gunicorn pure_fa_exporter:app)
+
 .PHONY: test-docker
 test-docker:
 	(GUNICORN_CMD_ARGS="--bind=0.0.0.0:$(RUN_PORT) --workers=2 --access-logfile=- \
