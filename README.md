@@ -264,6 +264,9 @@ Please have a look at the documentation of each image/application for adequate c
 
 A more robust example using docker-compose including Grafana, Prometheus and an exporter (in this case, netdata for linux) can be found [here](https://github.com/PhilsLab/gpn-docker).
 
+### Bugs and Limitations
+
+* Pure FlashBlade REST APIs are not designed for efficiently reporting on full clients and objects quitas KPIs, therefrore it is suggested to scrape the /metrics/flasblade/array preferrably and use the /metrics/flasblade/clients and /metrics/flasblade/quotas individually and with a lower frequency that the other. In any case, as a general rule, it is advisable to do not lower the scraping interval down to less than 30 sec. In case you experience timeout issues, you may want to increase the internal Gunicorn timeout by specifically setting the `--timeout` variable and appropriately reduce the scraping intervall as well. 
 
 ### Authors
 
