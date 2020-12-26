@@ -11,6 +11,7 @@ FB_IMAGE_TAG ?= latest
 
 RUN_PORT = 9491
 TEST_PORT = 8123
+TIMEO ?= 30
 
 default: build
 
@@ -32,30 +33,42 @@ build_fb: Dockerfile.fb requirements.fb.txt .dockerignore $(wildcard *.py)
 .PHONY: test
 test:
 	(GUNICORN_CMD_ARGS="--bind=0.0.0.0:$(TEST_PORT) --workers=2 --access-logfile=- \
+         --timeout $(TIMEO) \
          --error-logfile=- --access-logformat=\"%(t)s %(h)s %(U)s %(l)s %(T)s %(B)s\"" \
          gunicorn pure_exporter:app)
 
 .PHONY: test-fa
 test-fa:
 	(GUNICORN_CMD_ARGS="--bind=0.0.0.0:$(TEST_PORT) --workers=2 --access-logfile=- \
+         --timeout $(TIMEO) \
          --error-logfile=- --access-logformat=\"%(t)s %(h)s %(U)s %(l)s %(T)s %(B)s\"" \
          gunicorn pure_fa_exporter:app)
+
+.PHONY: test-fb
+test-fb:
+	(GUNICORN_CMD_ARGS="--bind=0.0.0.0:$(TEST_PORT) --workers=2 --access-logfile=- \
+         --timeout $(TIMEO) \
+         --error-logfile=- --access-logformat=\"%(t)s %(h)s %(U)s %(l)s %(T)s %(B)s\"" \
+         gunicorn pure_fb_exporter:app)
 
 .PHONY: test-docker
 test-docker:
 	(GUNICORN_CMD_ARGS="--bind=0.0.0.0:$(RUN_PORT) --workers=2 --access-logfile=- \
+         --timeout $(TIMEO) \
          --error-logfile=- --access-logformat=\"%(t)s %(h)s %(U)s %(l)s %(T)s %(B)s\"" \
         docker run --rm -p $(TEST_PORT):$(RUN_PORT) $(IMAGE_NAMESPACE)/$(IMAGE_NAME):$(IMAGE_TAG))
 
 .PHONY: test-fa-docker
 test-fa-docker:
 	(GUNICORN_CMD_ARGS="--bind=0.0.0.0:$(RUN_PORT) --workers=2 --access-logfile=- \
+         --timeout $(TIMEO) \
          --error-logfile=- --access-logformat=\"%(t)s %(h)s %(U)s %(l)s %(T)s %(B)s\"" \
         docker run --rm -p $(TEST_PORT):$(RUN_PORT) $(IMAGE_NAMESPACE)/$(FA_IMAGE_NAME):$(FA_IMAGE_TAG))
 
 .PHONY: test-fb-docker
 test-fb-docker:
 	(GUNICORN_CMD_ARGS="--bind=0.0.0.0:$(RUN_PORT) --workers=2 --access-logfile=- \
+         --timeout $(TIMEO) \
          --error-logfile=- --access-logformat=\"%(t)s %(h)s %(U)s %(l)s %(T)s %(B)s\"" \
         docker run --rm -p $(TEST_PORT):$(RUN_PORT) $(IMAGE_NAMESPACE)/$(FB_IMAGE_NAME):$(FB_IMAGE_TAG))
 

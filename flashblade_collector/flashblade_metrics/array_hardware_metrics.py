@@ -7,18 +7,17 @@ class ArrayHardwareMetrics():
     """
     def __init__(self, fb):
         self.fb = fb
-        self.hardware_status = None
+        self.hardware_status = GaugeMetricFamily('purefb_hw_status',
+                                                 'Hardware components status',
+                                                 labels=['hw_id'])
+        self.fb_hardware_status = self.fb.get_hardware_status()
 
     def _hardware_status(self):
         """
         Create a metric of gauge type for components status,
         with the hardware component name as label.
         """
-        fb_hw = self.fb.get_hardware_status()
-        self.hardware_status = GaugeMetricFamily('purefb_hw_status',
-                                                 'Hardware components status',
-                                                 labels=['hw_id'])
-        for h in fb_hw:
+        for h in self.fb_hardware_status:
             name = h.name
             labels_v = [name]
             if h.status in ['unused', 'not_installed']:

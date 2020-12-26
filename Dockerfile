@@ -9,6 +9,7 @@ COPY flashblade_collector /app/flashblade_collector
 
 # Install dependencies and WSGI server
 RUN pip install --upgrade pip && \
+    pip install --no-cache-dir --upgrade requests && \
     pip install --no-cache-dir -r requirements.txt && \
     pip install --no-cache-dir gunicorn
 

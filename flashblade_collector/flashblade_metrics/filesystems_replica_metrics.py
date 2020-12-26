@@ -7,7 +7,10 @@ class FilesystemsReplicaMetrics():
     """
     def __init__(self, fb):
         self.fb = fb
-        self.replica_links_lag = None
+        self.replica_links_lag = GaugeMetricFamily('purefb_bucket_filesystems_links_lag_msec',
+                                                   'FlashBlade bucket filesystem links lag',
+                                                   labels=['name', 'direction', 'remote_name',
+                                                           'remote_filesystem_name', 'status'])
 
     def _replica_links_lag(self):
         """
@@ -15,11 +18,6 @@ class FilesystemsReplicaMetrics():
         local filesystem name, replication direction, remote array name,
         remote filesystem name and replication status  as labels.
         """
-        self.replica_links_lag = GaugeMetricFamily(
-                                   'purefb_bucket_filesystems_links_lag_msec',
-                                   'FlashBlade bucket filesystem links lag',
-                                   labels=['name', 'direction', 'remote_name',
-                                           'remote_filesystem_name', 'status'])
         for f in self.fb.get_filesystem_replica_links():
             self.replica_links_lag.add_metric([f.local_file_system.name,
                                                f.direction,

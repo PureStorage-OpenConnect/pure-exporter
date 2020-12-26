@@ -1,7 +1,6 @@
 from prometheus_client.core import GaugeMetricFamily
 from . import mappings
 
-
 class HostPerformanceMetrics():
     """
     Base class for FlashArray Prometheus host performance metrics

@@ -7,21 +7,19 @@ class ArrayEventsMetrics():
     """
     def __init__(self, fb):
         self.fb = fb
-        self.events = None
+        self.events = GaugeMetricFamily('purefb_open_events_total',
+                                        'FlashBlade number of open events',
+                                        labels=['severity'])
+        self.fb_events = fb.get_open_alerts()
 
     def _open_events(self):
         """
         Create a metric of gauge type for the number of open alerts:
         critical, warning and info, with the severity as label.
         """
-        fb_events = self.fb.get_open_alerts()
-        self.events = GaugeMetricFamily('purefb_open_events_total',
-                                        'FlashBlade number of open events',
-                                        labels=['severity'])
-
         # Inrement each counter for each type of event
         c_crit, c_warn, c_info = 0, 0, 0
-        for msg in fb_events:
+        for msg in self.fb_events:
             if msg.severity == 'critical':
                 c_crit += 1
             if msg.severity == 'warning':

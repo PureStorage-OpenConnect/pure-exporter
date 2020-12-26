@@ -9,22 +9,27 @@ class ArrayPerformanceMetrics():
     def __init__(self, fb):
         self.fb = fb
         self.protocols = ['http', 'nfs', 's3', 'smb']
-        self.latency = None
-        self.iops = None
-        self.ops_size = None
-        self.throughput = None
+        self.latency = GaugeMetricFamily('purefb_array_performance_latency_usec',
+                                         'FlashBlade array latency',
+                                         labels=['protocol', 'dimension'])
+        self.iops = GaugeMetricFamily('purefb_array_performance_iops',
+                                      'FlashBlade array IOPS',
+                                      labels=['protocol', 'dimension'])
+        self.ops_size = GaugeMetricFamily('purefb_array_performance_opns_bytes',
+                                          'FlashBlade array average bytes per operations',
+                                          labels=['protocol', 'dimension'])
+        self.throughput = GaugeMetricFamily('purefb_array_performance_throughput_bytes',
+                                            'FlashBlade array throughput',
+                                            labels=['protocol', 'dimension'])
 
     def _latency(self):
         """
         Create array latency performance metrics of gauge type.
         """
-        self.latency = GaugeMetricFamily(
-                                       'purefb_array_performance_latency_usec',
-                                       'FlashBlade array latency',
-                                       labels=['protocol', 'dimension'])
-
         for p in self.protocols:
             m = self.fb.get_array_performance(p)
+            if m is None:
+                continue
             self.latency.add_metric([p, 'read'], m.usec_per_read_op)
             self.latency.add_metric([p, 'write'], m.usec_per_write_op)
             self.latency.add_metric([p, 'other'], m.usec_per_other_op)
@@ -33,12 +38,10 @@ class ArrayPerformanceMetrics():
         """
         Create array iops performance metrics of gauge type.
         """
-        self.iops = GaugeMetricFamily('purefb_array_performance_iops',
-                                      'FlashBlade array IOPS',
-                                      labels=['protocol', 'dimension'])
-
         for p in self.protocols:
             m = self.fb.get_array_performance(p)
+            if m is None:
+                continue
             self.iops.add_metric([p, 'read'], m.reads_per_sec)
             self.iops.add_metric([p, 'write'], m.writes_per_sec)
             self.iops.add_metric([p, 'other'], m.others_per_sec)
@@ -49,13 +52,10 @@ class ArrayPerformanceMetrics():
         """
         Create array operation size performance metrics of gauge type.
         """
-        self.ops_size = GaugeMetricFamily(
-                               'purefb_array_performance_opns_bytes',
-                               'FlashBlade array average bytes per operations',
-                               labels=['protocol', 'dimension'])
-
         for p in self.protocols:
             m = self.fb.get_array_performance(p)
+            if m is None:
+                continue
             self.ops_size.add_metric([p, 'per_op'], m.bytes_per_op)
             self.ops_size.add_metric([p, 'read'], m.bytes_per_read)
             self.ops_size.add_metric([p, 'write'], m.bytes_per_write)
@@ -64,13 +64,10 @@ class ArrayPerformanceMetrics():
         """
         Create array throughput performance metrics of gauge type.
         """
-        self.throughput = GaugeMetricFamily(
-                                   'purefb_array_performance_throughput_bytes',
-                                   'FlashBlade array throughput',
-                                   labels=['protocol', 'dimension'])
-
         for p in self.protocols:
             m = self.fb.get_array_performance(p)
+            if m is None:
+                continue
             self.throughput.add_metric([p, 'read'], m.read_bytes_per_sec)
             self.throughput.add_metric([p, 'write'], m.write_bytes_per_sec)
 

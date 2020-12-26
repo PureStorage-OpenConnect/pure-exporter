@@ -7,30 +7,32 @@ class ArraySpaceMetrics():
     """
     def __init__(self, fb):
         self.fb = fb
-        space = None
-        reduction = None
+        self.space = GaugeMetricFamily('purefb_array_space_bytes',
+                                       'FlashBlade total space capacity',
+                                       labels=['dimension'])
+        self.reduction = GaugeMetricFamily('purefb_array_space_data_reduction',
+                                           'FlashBlade overall data reduction',
+                                           labels=[])
+        self.array_space = fb.get_array_space().space
 
     def _space(self):
         """
         Create metrics of gauge type for array space indicators.
         """
-        fbspace = self.fb.get_array_space()
-        self.space = GaugeMetricFamily('purefb_array_space_bytes',
-                                       'FlashBlade total space capacity',
-                                       labels=['dimension'])
-        self.space.add_metric(['capacity'], fbspace.capacity)
-        self.space.add_metric(['total_physical'], fbspace.space.total_physical)
-        self.space.add_metric(['snapshots'], fbspace.space.snapshots)
+        if self.array_space is  None:
+            return
+        self.space.add_metric(['unique'], self.array_space.unique)
+        self.space.add_metric(['virtual'], self.array_space.virtual)
+        self.space.add_metric(['total_physical'], self.array_space.total_physical)
+        self.space.add_metric(['snapshots'], self.array_space.snapshots)
 
     def _reduction(self):
         """
         Create metrics of gauge type for array data redution indicator.
         """
-        fbspace = self.fb.get_array_space()
-        self.reduction = GaugeMetricFamily('purefb_array_space_data_reduction',
-                                           'FlashBlade overall data reduction',
-                                           labels=[])
-        self.reduction.add_metric([], fbspace.space.data_reduction)
+        if self.array_space is  None:
+            return
+        self.reduction.add_metric([], self.array_space.data_reduction)
 
     def get_metrics(self):
         self._space()

@@ -23,7 +23,7 @@ class UsageUsersMetrics():
             self.usage.add_metric(
                     [uu.file_system.name, uname, uid, 'quota'], uu.quota if uu.quota is not None else 0)
             self.usage.add_metric(
-                    [uu.file_system.name, uname, uid, 'usage'], uu.usage)
+                    [uu.file_system.name, uname, uid, 'usage'], uu.usage if uu.usage is not None else 0)
 
     def get_metrics(self):
         self._usage()
