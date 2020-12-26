@@ -27,18 +27,18 @@ The exporter is preferably built and launched via Docker. You can also scale the
 #### The official docker images are available at Quay.io
 
 ```shell
-docker pull quay.io/purestorage/pure-exporter:1.2.2
+docker pull quay.io/purestorage/pure-exporter:1.2.0
 ```
 
 or
 
 ```shell
-docker pull quay.io/purestorage/pure-fa-exporter:1.2.2
+docker pull quay.io/purestorage/pure-fa-exporter:1.2.0
 ```
 or
 
 ```shell
-docker pull quay.io/purestorage/pure-fb-exporter:1.2.2
+docker pull quay.io/purestorage/pure-fb-exporter:1.2.0
 ```
 ---
 
@@ -52,20 +52,21 @@ sudo usermod -aG docker $(whoami)
 newgrp docker
 ```
 
-An included Makefile takes care of the necessary build steps:
+The included Makefile's takes care of the necessary build steps:
 ```bash
 make
 ```
 
 To run a simple instance of the exporter, run:
 ```bash
-make test
+make -f Makefile.fa test-fa
+make -f Makefile.fb test-fb
+make -f Makefile.mk test
 ```
 
 The Makefile currently features these targets:
 - **build** - builds the docker image with preconfigured tags.
 - **test** - spins up a new docker container with all required parameters.
-- **all** - runs _build_ and then _test_
 
 
 ### Local development
@@ -266,7 +267,7 @@ A more robust example using docker-compose including Grafana, Prometheus and an 
 
 ### Bugs and Limitations
 
-* Pure FlashBlade REST APIs are not designed for efficiently reporting on full clients and objects quitas KPIs, therefrore it is suggested to scrape the /metrics/flasblade/array preferrably and use the /metrics/flasblade/clients and /metrics/flasblade/quotas individually and with a lower frequency that the other. In any case, as a general rule, it is advisable to do not lower the scraping interval down to less than 30 sec. In case you experience timeout issues, you may want to increase the internal Gunicorn timeout by specifically setting the `--timeout` variable and appropriately reduce the scraping intervall as well. 
+* Pure FlashBlade REST APIs are not designed for efficiently reporting on full clients and objects quitas KPIs, therefrore it is suggested to scrape the /metrics/flasblade/array preferrably and use the /metrics/flasblade/clients and /metrics/flasblade/quotas individually and with a lower frequency that the other. In any case, as a general rule, it is advisable to do not lower the scraping interval down to less than 30 sec. In case you experience timeout issues, you may want to increase the internal Gunicorn timeout by specifically setting the `--timeout` variable and appropriately reduce the scraping intervall as well.
 
 ### Authors
 

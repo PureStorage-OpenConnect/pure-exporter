@@ -1,0 +1,28 @@
+IMAGE_NAMESPACE = quay.io/purestorage
+IMAGE_NAME = pure-fa-exporter
+IMAGE_TAG ?= latest
+REQUIREMENTS = requirements.fa.txt
+DOCKERFILE ?= Dockerfile.fa
+RUN_PORT ?= 9491
+TEST_PORT ?= 8123
+TIMEO ?= 30
+
+default: build-fa
+
+.PHONY: build-fa
+build-fa: 
+	make IMAGE_NAMESPACE=$(IMAGE_NAMESPACE) IMAGE_NAME=$(IMAGE_NAME) \
+		IMAGE_TAG=$(IMAGE_TAG) REQUIREMENTS=$(REQUIREMENTS) DOCKERFILE=$(DOCKERFILE) \
+	       	RUN_PORT=$(RUN_PORT) TIMEO=$(TIMEO) -f Makefile.mk 
+
+.PHONY: test-fa
+test-fa: build-fa
+	make IMAGE_NAMESPACE=$(IMAGE_NAMESPACE) IMAGE_NAME=$(IMAGE_NAME) \
+		IMAGE_TAG=$(IMAGE_TAG) REQUIREMENTS=$(REQUIREMENTS) DOCKERFILE=$(DOCKERFILE) \
+	       	RUN_PORT=$(RUN_PORT) TIMEO=$(TIMEO) -f Makefile.mk test
+
+.PHONY: test-fa-docker
+test-fa-docker: build-fa
+	make IMAGE_NAMESPACE=$(IMAGE_NAMESPACE) IMAGE_NAME=$(IMAGE_NAME) \
+		IMAGE_TAG=$(IMAGE_TAG) REQUIREMENTS=$(REQUIREMENTS) DOCKERFILE=$(DOCKERFILE) \
+	       	RUN_PORT=$(RUN_PORT) TIMEO=$(TIMEO) -f Makefile.mk test-docker

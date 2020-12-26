@@ -1,0 +1,28 @@
+IMAGE_NAMESPACE = quay.io/purestorage
+IMAGE_NAME = pure-fb-exporter
+IMAGE_TAG ?= latest
+REQUIREMENTS = requirements.fb.txt
+DOCKERFILE ?= Dockerfile.fb
+RUN_PORT ?= 9491
+TEST_PORT ?= 8123
+TIMEO ?= 30
+
+default: build-fb
+
+.PHONY: build-fb
+build-fb: 
+	make IMAGE_NAMESPACE=$(IMAGE_NAMESPACE) IMAGE_NAME=$(IMAGE_NAME) \
+		IMAGE_TAG=$(IMAGE_TAG) REQUIREMENTS=$(REQUIREMENTS) DOCKERFILE=$(DOCKERFILE) \
+	       	RUN_PORT=$(RUN_PORT) TIMEO=$(TIMEO) -f Makefile.mk 
+
+.PHONY: test-fb
+test-fb: build-fb
+	make IMAGE_NAMESPACE=$(IMAGE_NAMESPACE) IMAGE_NAME=$(IMAGE_NAME) \
+		IMAGE_TAG=$(IMAGE_TAG) REQUIREMENTS=$(REQUIREMENTS) DOCKERFILE=$(DOCKERFILE) \
+	       	RUN_PORT=$(RUN_PORT) TIMEO=$(TIMEO) -f Makefile.mk test
+
+.PHONY: test-fb-docker
+test-fb-docker: build-fb
+	make IMAGE_NAMESPACE=$(IMAGE_NAMESPACE) IMAGE_NAME=$(IMAGE_NAME) \
+		IMAGE_TAG=$(IMAGE_TAG) REQUIREMENTS=$(REQUIREMENTS) DOCKERFILE=$(DOCKERFILE) \
+	       	RUN_PORT=$(RUN_PORT) TIMEO=$(TIMEO) -f Makefile.mk test-docker
