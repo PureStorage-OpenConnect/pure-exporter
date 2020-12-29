@@ -59,8 +59,8 @@ make
 
 To run a simple instance of the exporter, run:
 ```bash
-make -f Makefile.fa test-fa
-make -f Makefile.fb test-fb
+make -f Makefile.fa test
+make -f Makefile.fb test
 make -f Makefile.mk test
 ```
 
@@ -103,7 +103,7 @@ FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/pods | endpoin
 FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade | endpoint, apitoken | Full array metrics
 FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/array | endpoint, apitoken | Array only metrics
 FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/clients | endpoint, apitoken | Clients only metrics
-FlashBlade | http://\<exporter-host\>:\<port\>/metrics/lashblade/quotas | endpoint, apitoken | Quotas only metrics
+FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/quotas | endpoint, apitoken | Quotas only metrics
 
 The FlashArray-only and FlashBlade only exporters use a slightly different schema, which consists of the removal of the flasharray|flashblade string from the path.
 
