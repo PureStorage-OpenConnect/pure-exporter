@@ -1,28 +1,30 @@
 IMAGE_NAMESPACE = quay.io/purestorage
 IMAGE_NAME = pure-fb-exporter
 IMAGE_TAG ?= latest
-REQUIREMENTS = requirements.fb.txt
+EXPORTER ?= pure_fb_exporter
+REQUIREMENTS ?= requirements.fb.txt
 DOCKERFILE ?= Dockerfile.fb
 RUN_PORT ?= 9491
 TEST_PORT ?= 8123
 TIMEO ?= 30
+WORKERS ?= 2
 
-default: build-fb
+default: build
 
-.PHONY: build-fb
-build-fb: 
-	make IMAGE_NAMESPACE=$(IMAGE_NAMESPACE) IMAGE_NAME=$(IMAGE_NAME) \
-		IMAGE_TAG=$(IMAGE_TAG) REQUIREMENTS=$(REQUIREMENTS) DOCKERFILE=$(DOCKERFILE) \
-	       	RUN_PORT=$(RUN_PORT) TIMEO=$(TIMEO) -f Makefile.mk 
+.PHONY: build
+build:
+        make IMAGE_NAMESPACE=$(IMAGE_NAMESPACE) IMAGE_NAME=$(IMAGE_NAME) \
+                IMAGE_TAG=$(IMAGE_TAG) REQUIREMENTS=$(REQUIREMENTS) DOCKERFILE=$(DOCKERFILE) \
+                RUN_PORT=$(RUN_PORT) TIMEO=$(TIMEO) WORKERS=$(WORKERS) EXPORTER=$(EXPORTER) -f Makefile.mk
 
-.PHONY: test-fb
-test-fb: build-fb
-	make IMAGE_NAMESPACE=$(IMAGE_NAMESPACE) IMAGE_NAME=$(IMAGE_NAME) \
-		IMAGE_TAG=$(IMAGE_TAG) REQUIREMENTS=$(REQUIREMENTS) DOCKERFILE=$(DOCKERFILE) \
-	       	RUN_PORT=$(RUN_PORT) TIMEO=$(TIMEO) -f Makefile.mk test
+.PHONY: test
+test:
+        make IMAGE_NAMESPACE=$(IMAGE_NAMESPACE) IMAGE_NAME=$(IMAGE_NAME) \
+                IMAGE_TAG=$(IMAGE_TAG) REQUIREMENTS=$(REQUIREMENTS) DOCKERFILE=$(DOCKERFILE) \
+                RUN_PORT=$(RUN_PORT) TIMEO=$(TIMEO) WORKERS=$(WORKERS) EXPORTER=$(EXPORTER) -f Makefile.mk test
 
-.PHONY: test-fb-docker
-test-fb-docker: build-fb
-	make IMAGE_NAMESPACE=$(IMAGE_NAMESPACE) IMAGE_NAME=$(IMAGE_NAME) \
-		IMAGE_TAG=$(IMAGE_TAG) REQUIREMENTS=$(REQUIREMENTS) DOCKERFILE=$(DOCKERFILE) \
-	       	RUN_PORT=$(RUN_PORT) TIMEO=$(TIMEO) -f Makefile.mk test-docker
+.PHONY: test-docker
+test-docker: build
+        make IMAGE_NAMESPACE=$(IMAGE_NAMESPACE) IMAGE_NAME=$(IMAGE_NAME) \
+                IMAGE_TAG=$(IMAGE_TAG) REQUIREMENTS=$(REQUIREMENTS) DOCKERFILE=$(DOCKERFILE) \
+                RUN_PORT=$(RUN_PORT) TIMEO=$(TIMEO) WORKERS=$(WORKERS) -f Makefile.mk test-docker
