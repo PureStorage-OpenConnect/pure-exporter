@@ -269,7 +269,7 @@ A more robust example using docker-compose including Grafana, Prometheus and an 
 
 * Pure FlashBlade REST APIs are not designed for efficiently reporting on full clients and objects quota KPIs, therefrore it is suggested to scrape the /metrics/flasblade/array preferrably and use the /metrics/flasblade/clients and /metrics/flasblade/quotas individually and with a lower frequency that the other. In any case, as a general rule, it is advisable to do not lower the scraping interval down to less than 30 sec. In case you experience timeout issues, you may want to increase the internal Gunicorn timeout by specifically setting the `--timeout` variable and appropriately reduce the scraping intervall as well.
 
-* By default the number of workers spawn for Gunicor is set to 2 and this is not optimal when monitoring a relatively large amount of arrays. The suggested approach is therefore to run the exporter with a number of workers that approximately matches the number of arrays to be scraped.
+* By default the number of workers spawn by Gunicorn is set to 2 and this is not optimal when monitoring a relatively large amount of arrays. The suggested approach is therefore to run the exporter with a number of workers that approximately matches the number of arrays to be scraped.
 
 ### Authors
 
