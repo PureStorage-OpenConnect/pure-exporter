@@ -33,7 +33,7 @@ class ArrayPerformanceMetrics():
         """
         for k in mapping:
             if k in entity_list:
-                metric.add_metric(mapping[k], entity_list[k] if entity_list[k] is not None else 0)
+                metric.add_metric([mapping[k]], entity_list[k] if entity_list[k] is not None else 0)
 
     def _latency(self):
         """
