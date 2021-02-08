@@ -28,7 +28,7 @@ class ArraySpaceMetrics():
         Metrics values can be iterated over.
         """
         for k in mappings.array_drr_mapping:
-            self.data_reduction.add_metric(mappings.array_drr_mapping[k], 
+            self.data_reduction.add_metric([mappings.array_drr_mapping[k]], 
                                            self.fa.get_array_elem(k) if self.fa.get_array_elem(k) is not None else 0)
 
     def _capacity(self):
@@ -37,7 +37,7 @@ class ArraySpaceMetrics():
         Metrics values can be iterated over.
         """
         for k in mappings.array_capacity_mapping:
-            self.capacity.add_metric(mappings.array_capacity_mapping[k],
+            self.capacity.add_metric([mappings.array_capacity_mapping[k]],
                                      self.fa.get_array_elem(k) if self.fa.get_array_elem(k) is not None else 0)
 
     def _provisioned(self):
@@ -46,7 +46,7 @@ class ArraySpaceMetrics():
         Metrics values can be iterated over.
         """
         for k in mappings.array_provisioned_mapping:
-            self.provisioned.add_metric(mappings.array_provisioned_mapping[k],
+            self.provisioned.add_metric([mappings.array_provisioned_mapping[k]],
                                         self.fa.get_array_elem(k) if self.fa.get_array_elem(k) is not None else 0)
 
     def _used(self):
@@ -55,7 +55,7 @@ class ArraySpaceMetrics():
         Metrics values can be iterated over.
         """
         for k in mappings.array_used_mapping:
-            self.used.add_metric(mappings.array_used_mapping[k],
+            self.used.add_metric([mappings.array_used_mapping[k]],
                                  self.fa.get_array_elem(k) if self.fa.get_array_elem(k) is not None else 0)
 
     def get_metrics(self):

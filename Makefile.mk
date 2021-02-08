@@ -16,7 +16,7 @@ all: build test
 
 .PHONY: build
 build: $(DOCKERFILE) $(REQUIREMENTS) .dockerignore $(wildcard *.py)
-        docker build . -f $(DOCKERFILE) -t $(IMAGE_NAMESPACE)/$(IMAGE_NAME):$(IMAGE_TAG)
+	docker build . -f $(DOCKERFILE) -t $(IMAGE_NAMESPACE)/$(IMAGE_NAME):$(IMAGE_TAG)
 
 .PHONY: test
 test:
