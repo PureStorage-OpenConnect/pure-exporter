@@ -25,10 +25,14 @@ class FlashArray:
     Base class for FlashArray Prometheus array info
     """
     def __init__(self, endpoint, api_token):
-        self.flasharray =  purestorage.FlashArray(
-            endpoint,
-            api_token=api_token,
-            user_agent='Purity_FA_Prometheus_exporter/1.0')
+        self.flasharray = None
+        try:
+            self.flasharray =  purestorage.FlashArray(
+                endpoint,
+                api_token=api_token,
+                user_agent='Purity_FA_Prometheus_exporter/1.0')
+        except purestorage.PureError:
+            pass
 
         self.array = None
         self.hosts = None

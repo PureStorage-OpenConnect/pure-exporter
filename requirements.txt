@@ -3,3 +3,4 @@ prometheus-client>=0.7.1
 purestorage>=1.19.0
 purity-fb>=1.10.0
 urllib3>=1.25.10
+gunicorn>=20.1.0

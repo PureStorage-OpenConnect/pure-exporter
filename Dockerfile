@@ -1,17 +1,15 @@
-FROM python:3.6-alpine
+FROM python:3.9-alpine
 
 # Application directory
 WORKDIR /app
-COPY pure_exporter.py /app
-COPY requirements.txt /app
+COPY pure_exporter.py requirements.txt /app/
 COPY flasharray_collector /app/flasharray_collector
 COPY flashblade_collector /app/flashblade_collector
 
 # Install dependencies and WSGI server
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir --upgrade requests && \
-    pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir gunicorn
+    pip install --no-cache-dir -r requirements.txt
 
 # Run as non-root user
 RUN addgroup -S app && adduser -S -G app app
