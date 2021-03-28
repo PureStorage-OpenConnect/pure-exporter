@@ -10,7 +10,6 @@ COPY ./flasharray_collector /app/flasharray_collector
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir --upgrade requests && \
     pip install --no-cache-dir -r requirements.fa.txt && \
-    pip install --no-cache-dir gunicorn
 
 # Run as non-root user
 RUN addgroup -S app && adduser -S -G app app

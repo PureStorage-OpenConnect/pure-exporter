@@ -8,13 +8,17 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 PURE_NAA = 'naa.624a9370'
 
-kpi_params = [{'action': 'monitor'},
-              {'action': 'monitor', 'mirrored': True},
-              {'action': 'monitor', 'latency': True},
-              {'action': 'monitor', 'latency': True, 'mirrored': True},
-              {'action': 'monitor', 'size': True},
-              {'action': 'monitor', 'size': True, 'mirrored': True},
-              {'space': True}]
+base_kpi_params = [{'action': 'monitor'},
+                   {'action': 'monitor', 'mirrored': True},
+                   {'action': 'monitor', 'latency': True},
+                   {'action': 'monitor', 'latency': True, 'mirrored': True},
+                   {'action': 'monitor', 'size': True},
+                   {'action': 'monitor', 'size': True, 'mirrored': True}]
+
+comm_kpi_params = base_kpi_params + [{'space': True, 'pending': True}]
+
+host_kpi_params = base_kpi_params + [{'space': True}]
+
 
 class FlashArray:
     """
@@ -40,7 +44,7 @@ class FlashArray:
             return self.array
         self.array = self.flasharray.get()
 
-        for params in kpi_params:
+        for params in comm_kpi_params:
             try:
                 a = self.flasharray.get(**params)[0]
                 self.array.update(a)
@@ -65,7 +69,7 @@ class FlashArray:
         if self.volumes is not None:
             return self.volumes
         vdict = {}
-        for v in self.flasharray.list_volumes():
+        for v in self.flasharray.list_volumes(pending='true'):
             v['naaid'] = PURE_NAA + v['serial']
             vdict[v['name']] = v
         try:
@@ -81,12 +85,13 @@ class FlashArray:
         except purestorage.PureError:
             pass
 
-        for params in kpi_params:
+        for params in comm_kpi_params:
             try:
                 for v in self.flasharray.list_volumes(**params):
                     vdict[v['name']].update(v)
             except purestorage.PureError:
                 pass
+        # vdict = {key:val for key, val in vdict.items() if val['time_remaining'] is None}
         self.volumes = list(vdict.values())
         return self.volumes
 
@@ -100,7 +105,7 @@ class FlashArray:
         except purestorage.PureError:
             pass
 
-        for params in kpi_params:
+        for params in host_kpi_params:
             try:
                 for h in self.flasharray.list_hosts(**params):
                     hdict[h['name']].update(h)
@@ -114,16 +119,17 @@ class FlashArray:
             return self.pods
         pdict = {}
         try:
-            for p in self.flasharray.list_pods():
+            for p in self.flasharray.list_pods(pending='true'):
                 pdict[p['name']] = p
         except purestorage.PureError:
             pass
 
-        for params in kpi_params:
+        for params in comm_kpi_params:
             try:
                 for p in self.flasharray.list_pods(**params):
                     pdict[p['name']].update(p)
             except purestorage.PureError:
                 pass
+        # pdict = {key:val for key, val in pdict.items() if val['time_remaining'] is None}
         self.pods = list(pdict.values())
         return self.pods
