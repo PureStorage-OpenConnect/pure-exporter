@@ -26,8 +26,11 @@ class FlasharrayCollector():
     :type api_token: str
     """
     def __init__(self, endpoint, api_token, request = 'all'):
-        # self.fb = PurityFb(endpoint, conn_timeo=ctimeo, read_timeo=rtimeo, retries=retries)
-        self.fa = FlashArray(endpoint, api_token)
+        self.fa = None
+        try:
+            self.fa = FlashArray(endpoint, api_token)
+        except Exception as e:
+            raise Exception('Connection for FlashArray {} not initialized. Check array name/address and api-token'.format(endpoint))
         self.request = request
 
     def collect(self):

@@ -2,3 +2,4 @@ Flask>=1.1.2
 prometheus-client>=0.7.1
 purestorage>=1.19
 urllib3>=1.25.10
+gunicorn>=20.1.0

@@ -11,13 +11,15 @@ class FlashBlade():
     Base class for FlashBlade Prometheus array info
     """
     def __init__(self, endpoint, api_token):
-        # self.fb = PurityFb(endpoint, conn_timeo=ctimeo, read_timeo=rtimeo,
-        #                   retries=retries)
-        self.flashblade = PurityFb(host=endpoint)
-        self.flashblade.disable_verify_ssl()
-        self.flashblade._api_client.user_agent = 'Purity_FB_Prometheus_exporter/1.0'
-        self.flashblade.request_timeout = urllib3.Timeout(connect=2.0, read=60.0)
-        self.flashblade.login(api_token)
+        self.flashblade = None
+        try:
+            self.flashblade = PurityFb(host=endpoint)
+            self.flashblade.disable_verify_ssl()
+            self.flashblade._api_client.user_agent = 'Purity_FB_Prometheus_exporter/1.0'
+            self.flashblade.request_timeout = urllib3.Timeout(connect=2.0, read=60.0)
+            self.flashblade.login(api_token)
+        except Exceprion:
+            pass
         self.filesystems = []
         self.buckets = []
         self.array_performance = {}

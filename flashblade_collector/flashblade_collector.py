@@ -29,9 +29,11 @@ class FlashbladeCollector():
     :type api_token: str
     """
     def __init__(self, endpoint, api_token, request='all'):
-        # self.fb = PurityFb(endpoint, conn_timeo=ctimeo, read_timeo=rtimeo,
-        #                    retries=retries)
-        self.fb = FlashBlade(endpoint, api_token)
+        self.fb = None
+        try:
+            self.fb = FlashBlade(endpoint, api_token)
+        except Exception as e:
+            raise Exception('Connection with FlashBlade {} not initialized. Check array name/address and api-token'.format(endpoint))
         self.request = request
 
     def collect(self):

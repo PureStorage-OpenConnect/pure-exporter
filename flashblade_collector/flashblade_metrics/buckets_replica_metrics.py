@@ -29,7 +29,7 @@ class BucketsReplicaMetrics():
                                            l.remote.name,
                                            l.remote_bucket.name, 
                                            l.remote_credentials.name,
-                                           l.status], l.lag)
+                                           l.status], -1 if l.lag is None else l.lag)
 
     def get_metrics(self):
         self._replica_links()
