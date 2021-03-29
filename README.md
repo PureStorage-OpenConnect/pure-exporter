@@ -27,18 +27,18 @@ The exporter is preferably built and launched via Docker. You can also scale the
 #### The official docker images are available at Quay.io
 
 ```shell
-docker pull quay.io/purestorage/pure-exporter:1.2.3
+docker pull quay.io/purestorage/pure-exporter:1.2.4
 ```
 
 or
 
 ```shell
-docker pull quay.io/purestorage/pure-fa-exporter:1.2.3
+docker pull quay.io/purestorage/pure-fa-exporter:1.2.4
 ```
 or
 
 ```shell
-docker pull quay.io/purestorage/pure-fb-exporter:1.2.3
+docker pull quay.io/purestorage/pure-fb-exporter:1.2.4
 ```
 ---
 
