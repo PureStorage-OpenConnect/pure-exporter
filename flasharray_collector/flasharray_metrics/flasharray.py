@@ -15,9 +15,11 @@ base_kpi_params = [{'action': 'monitor'},
                    {'action': 'monitor', 'size': True},
                    {'action': 'monitor', 'size': True, 'mirrored': True}]
 
-comm_kpi_params = base_kpi_params + [{'space': True, 'pending': True}]
+array_kpi_params = base_kpi_params + [{'space': True}]
+host_kpi_params = array_kpi_params
 
-host_kpi_params = base_kpi_params + [{'space': True}]
+volume_kpi_params = base_kpi_params + [{'space': True, 'pending': True}]
+pod_kpi_params = volume_kpi_params
 
 
 class FlashArray:
@@ -48,7 +50,7 @@ class FlashArray:
             return self.array
         self.array = self.flasharray.get()
 
-        for params in comm_kpi_params:
+        for params in array_kpi_params:
             try:
                 a = self.flasharray.get(**params)[0]
                 self.array.update(a)
@@ -89,7 +91,7 @@ class FlashArray:
         except purestorage.PureError:
             pass
 
-        for params in comm_kpi_params:
+        for params in volume_kpi_params:
             try:
                 for v in self.flasharray.list_volumes(**params):
                     vdict[v['name']].update(v)
@@ -128,7 +130,7 @@ class FlashArray:
         except purestorage.PureError:
             pass
 
-        for params in comm_kpi_params:
+        for params in pod_kpi_params:
             try:
                 for p in self.flasharray.list_pods(**params):
                     pdict[p['name']].update(p)
