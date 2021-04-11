@@ -1,5 +1,6 @@
 from prometheus_client.core import GaugeMetricFamily
 from . import mappings
+import re
 
 
 class VolumePerformanceMetrics():
@@ -11,13 +12,13 @@ class VolumePerformanceMetrics():
         self.fa = fa
         self.latency = GaugeMetricFamily('purefa_volume_performance_latency_usec',
                                          'FlashArray volume IO latency',
-                                         labels = ['volume', 'naaid', 'dimension'])
+                                         labels = ['volume', 'naaid', 'pod', 'vgroup' ,'dimension'])
         self.bandwidth = GaugeMetricFamily('purefa_volume_performance_throughput_bytes',
                                            'FlashArray volume throughput',
-                                           labels = ['volume', 'naaid', 'dimension'])
+                                           labels = ['volume', 'naaid', 'pod', 'vgroup' ,'dimension'])
         self.iops = GaugeMetricFamily('purefa_volume_performance_iops',
                                       'FlashArray volume IOPS',
-                                      labels = ['volume', 'naaid', 'dimension'])
+                                      labels = ['volume', 'naaid', 'pod', 'vgroup', 'dimension'])
 
     def _mk_metric(self, metric, entity_list, mapping):
         """
@@ -25,10 +26,14 @@ class VolumePerformanceMetrics():
         dimension as label.
         Metrics values can be iterated over.
         """
+        p = re.compile(r'::')
         for e in entity_list:
             for k in mapping:
                 if k in e:
-                    metric.add_metric([e['name'], e['naaid'], mapping[k]], e[k])
+                    e_name = p.split(e['name'])
+                    if len(e_name) == 1:
+                        e_name = ['/'] + e_name
+                    metric.add_metric([e_name[1], e['naaid'], e_name[0], e['vgroup'], mapping[k]], e[k])
 
     def _latency(self):
         """

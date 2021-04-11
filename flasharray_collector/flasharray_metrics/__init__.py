@@ -9,6 +9,7 @@ __all__ = ["flasharray",
            "volume_performance_metrics",
            "host_space_metrics",
            "host_performance_metrics",
+           "host_volume_metrics",
            "pod_status_metrics",
            "pod_space_metrics",
            "pod_performance_metrics"]

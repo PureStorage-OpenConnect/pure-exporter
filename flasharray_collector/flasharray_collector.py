@@ -8,6 +8,7 @@ from .flasharray_metrics.volume_space_metrics import VolumeSpaceMetrics
 from .flasharray_metrics.volume_performance_metrics import VolumePerformanceMetrics
 from .flasharray_metrics.host_space_metrics import HostSpaceMetrics
 from .flasharray_metrics.host_performance_metrics import HostPerformanceMetrics
+from .flasharray_metrics.host_volume_metrics import HostVolumeMetrics
 from .flasharray_metrics.pod_status_metrics import PodStatusMetrics
 from .flasharray_metrics.pod_space_metrics import PodSpaceMetrics
 from .flasharray_metrics.pod_performance_metrics import PodPerformanceMetrics
@@ -51,3 +52,5 @@ class FlasharrayCollector():
             yield from PodStatusMetrics(self.fa).get_metrics()
             yield from PodSpaceMetrics(self.fa).get_metrics()
             yield from PodPerformanceMetrics(self.fa).get_metrics()
+        if self.request in ['all']:
+            yield from HostVolumeMetrics(self.fa).get_metrics()

@@ -27,18 +27,18 @@ The exporter is preferably built and launched via Docker. You can also scale the
 #### The official docker images are available at Quay.io
 
 ```shell
-docker pull quay.io/purestorage/pure-exporter:1.2.4
+docker pull quay.io/purestorage/pure-exporter:1.2.5
 ```
 
 or
 
 ```shell
-docker pull quay.io/purestorage/pure-fa-exporter:1.2.4
+docker pull quay.io/purestorage/pure-fa-exporter:1.2.5
 ```
 or
 
 ```shell
-docker pull quay.io/purestorage/pure-fb-exporter:1.2.4
+docker pull quay.io/purestorage/pure-fb-exporter:1.2.5
 ```
 ---
 
@@ -85,7 +85,7 @@ python -m pip install -r requirements.txt
 # run the application in debug mode
 python pure_exporter.py
 ```
-
+Use the same approach to modify the FlashArray and/or the FlashBlade exporter, by simply using the related requitements file.
 
 ### Scraping endpoints
 
@@ -93,7 +93,7 @@ The exporter application uses a RESTful API schema to provide Prometheus scrapin
 
 The full exporter understands the following requests:
 
-System | URL | required GET parameters | description
+System | URL | GET parameters | description
 ---|---|---|---
 FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray | endpoint, apitoken | Full array metrics
 FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/array | endpoint, apitoken | Array only metrics
@@ -104,6 +104,8 @@ FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade | endpoint, ap
 FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/array | endpoint, apitoken | Array only metrics
 FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/clients | endpoint, apitoken | Clients only metrics
 FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/quotas | endpoint, apitoken | Quotas only metrics
+
+In order to authenticate the exporter to the target array REST API the preferred mechanism is to provide the necessary api-token in the http request, by using the HTTP Authorization header of type 'Bearer'. As an alternative, it is possible to provide the api-token as a request argument, using the *apitoken* key.
 
 The FlashArray-only and FlashBlade only exporters use a slightly different schema, which consists of the removal of the flasharray|flashblade string from the path.
 
@@ -193,11 +195,11 @@ scrape_configs:
   static_configs:
   - targets: [ mypureflashblade-01.lan ]
     labels:
-      __pure_apitoken: 00000000-0000-0000-0000-000000000000
+      __pure_apitoken: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
   - targets: [ mypureflashblade-02.lan ]
     labels:
-      __pure_apitoken: 00000000-0000-0000-0000-000000000000
+      __pure_apitoken: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
 # Job for all Pure Flashblade clients
 - job_name: 'pure_flashblade clients'
@@ -222,11 +224,11 @@ scrape_configs:
   static_configs:
   - targets: [ mypureflashblade-01.lan ]
     labels:
-      __pure_apitoken: 00000000-0000-0000-0000-000000000000
+      __pure_apitoken: T-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
   - targets: [ mypureflashblade-02.lan ]
     labels:
-      __pure_apitoken: 00000000-0000-0000-0000-000000000000
+      __pure_apitoken: T-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 If you now check for the <kbd>up</kbd> metric in Prometheus, the result could look something like this:

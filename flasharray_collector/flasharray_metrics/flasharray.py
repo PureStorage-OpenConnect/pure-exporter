@@ -39,7 +39,9 @@ class FlashArray:
         self.array = None
         self.hosts = None
         self.volumes = None
+        self.vgroups = None
         self.pods = None
+        self.host_volumes = None
 
     def __del__(self):
         if self.flasharray:
@@ -73,11 +75,19 @@ class FlashArray:
 
     def get_volumes(self):
         if self.volumes is not None:
-            return self.volumes
+            return list(self.volumes.values())
         vdict = {}
+        if self.vgroups is None:
+            self.vgroups = self.flasharray.list_vgroups()
         for v in self.flasharray.list_volumes(pending='true'):
             v['naaid'] = PURE_NAA + v['serial']
+            for vg in self.vgroups:
+                if v['name'] in vg['volumes']:
+                    v['vgroup'] = vg['name']
+                else:
+                    v['vgroup'] = ''
             vdict[v['name']] = v
+
         try:
             for v in self.flasharray.list_volumes(protocol_endpoint=True):
                 # PE do not have these metrics, so it is necessasy to poulate with fake values
@@ -87,6 +97,7 @@ class FlashArray:
                 v['snapshots'] = 0
                 v['total'] = 0
                 v['data_reduction'] = 0
+                v['vgroup'] = ''
                 vdict[v['name']] = v
         except purestorage.PureError:
             pass
@@ -98,12 +109,12 @@ class FlashArray:
             except purestorage.PureError:
                 pass
         # vdict = {key:val for key, val in vdict.items() if val['time_remaining'] is None}
-        self.volumes = list(vdict.values())
-        return self.volumes
+        self.volumes = vdict
+        return list(self.volumes.values())
 
     def get_hosts(self):    
         if self.hosts is not None:
-            return self.hosts
+            return list(self.hosts.values())
         hdict = {}
         try:
             for h in self.flasharray.list_hosts():
@@ -117,12 +128,27 @@ class FlashArray:
                     hdict[h['name']].update(h)
             except purestorage.PureError:
                 pass
-        self.hosts = list(hdict.values())
-        return self.hosts
+        self.hosts = hdict
+        return list(self.hosts.values())
+
+    def get_host_volumes(self):
+        if self.host_volumes is not None:
+            return list(self.host_volumes.values())
+        hvdict = {}
+
+        try:
+            for h in self.get_hosts():
+                for c in self.flasharray.list_host_connections(h['name']):
+                    hvdict[h['name']] = {'host': h['name'], 'naaid': self.volumes[c['vol']]['naaid']}
+        except purestorage.PureError:
+            pass
+
+        self.host_volumes = hvdict
+        return list(self.host_volumes.values())
 
     def get_pods(self):
         if self.pods is not None:
-            return self.pods
+            return list(self.pods.values())
         pdict = {}
         try:
             for p in self.flasharray.list_pods(pending='true'):
@@ -137,5 +163,5 @@ class FlashArray:
             except purestorage.PureError:
                 pass
         # pdict = {key:val for key, val in pdict.items() if val['time_remaining'] is None}
-        self.pods = list(pdict.values())
-        return self.pods
+        self.pods = pdict
+        return list(self.pods.values())
