@@ -133,8 +133,8 @@ Depending on the target array, scraping for the whole set of metrics could resul
 
 ### Prometheus configuration
 
-To make full use of the statelessness of the exporter, it is required to use some tricky relabeling rules.
-The API key is given as a *meta label*, and will then be placed into the request as a GET parameter before the actual metrics scraping from the exporter happens. Afterwards, the label will be dropped for security reasons so it does not appear in the actual Prometheus database.
+There are two options to configure Prometheus for scraping FlashArray and FlashBlade arrays. The preferred option is to use the HTTP Authorization header, by the means of wich is possible to pass the array API token simply setting the authorization credentials parameter for the job configuration section in the config file. The other option consists of some tricky relabeling rules that are applied to leverage the apitoken parameter for the GET request.
+The first option forces to define multiple jobs, one for each of the scraped arrays, as authorization parameters do not allow to leverage labeling, but it enables a higher security, especially when the exporter is deployed on kubernetes. In the second option the API key is given as a *meta label*, and will then be placed into the request as a GET parameter before the actual metrics scraping from the exporter happens. Afterwards, the label will be dropped for security reasons so it does not appear in the actual Prometheus database.
 
 Take this full Prometheus configuration as a reference, but consider that, depending on the FlashArray and FlashBlade APIs response time you might have to adapt the configuration to your own environment, pherhaps splitting the job in a multitude of single jobs:
 
