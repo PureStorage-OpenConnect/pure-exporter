@@ -43,8 +43,9 @@ class FlasharrayCollector():
             yield from ArraySpaceMetrics(self.fa).get_metrics()
             yield from ArrayPerformanceMetrics(self.fa).get_metrics()
         if self.request in ['all', 'volumes']:
-            yield from VolumeSpaceMetrics(self.fa).get_metrics()
-            yield from VolumePerformanceMetrics(self.fa).get_metrics()
+            volumes = self.fa.get_volumes()
+            yield from VolumeSpaceMetrics(volumes).get_metrics()
+            yield from VolumePerformanceMetrics(volumes).get_metrics()
         if self.request in ['all', 'hosts']:
             yield from HostSpaceMetrics(self.fa).get_metrics()
             yield from HostPerformanceMetrics(self.fa).get_metrics()

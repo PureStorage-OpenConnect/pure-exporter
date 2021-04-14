@@ -8,8 +8,8 @@ class VolumePerformanceMetrics():
     Base class for FlashArray Prometheus volume performance metrics
     """
 
-    def __init__(self, fa):
-        self.fa = fa
+    def __init__(self, volumes):
+        self.volumes = volumes
         self.latency = GaugeMetricFamily('purefa_volume_performance_latency_usec',
                                          'FlashArray volume IO latency',
                                          labels = ['volume', 'naaid', 'pod', 'vgroup' ,'dimension'])
@@ -33,6 +33,8 @@ class VolumePerformanceMetrics():
                     e_name = p.split(e['name'])
                     if len(e_name) == 1:
                         e_name = ['/'] + e_name
+                    if 'vgroup' not in e.keys():
+                        e['vgroup'] = ''
                     metric.add_metric([e_name[1], e['naaid'], e_name[0], e['vgroup'], mapping[k]], e[k])
 
     def _latency(self):
@@ -40,7 +42,7 @@ class VolumePerformanceMetrics():
         Create volumes latency metrics of gauge type.
         """
         self._mk_metric(self.latency,
-                        self.fa.get_volumes(),
+                        self.volumes,
                         mappings.volume_latency_mapping)
 
     def _bandwidth(self):
@@ -48,7 +50,7 @@ class VolumePerformanceMetrics():
         Create volumes bandwidth metrics of gauge type.
         """
         self._mk_metric(self.bandwidth,
-                        self.fa.get_volumes(),
+                        self.volumes,
                         mappings.volume_bandwidth_mapping)
 
     def _iops(self):
@@ -56,7 +58,7 @@ class VolumePerformanceMetrics():
         Create IOPS bandwidth metrics of gauge type.
         """
         self._mk_metric(self.iops,
-                        self.fa.get_volumes(),
+                        self.volumes,
                         mappings.volume_iops_mapping)
 
     def get_metrics(self):

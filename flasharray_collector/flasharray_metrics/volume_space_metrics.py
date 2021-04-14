@@ -7,8 +7,9 @@ class VolumeSpaceMetrics():
     Base class for FlashArray Prometheus volume space metrics
     """
 
-    def __init__(self, fa):
-        self.fa = fa
+    def __init__(self, volumes):
+        #self.fa = fa
+        self.volumes = volumes
         self.data_reduction = GaugeMetricFamily('purefa_volume_space_datareduction_ratio',
                                                 'FlashArray volumes data reduction ratio',
                                                 labels=['volume', 'naaid', 'pod', 'vgroup'],
@@ -32,18 +33,23 @@ class VolumeSpaceMetrics():
         Create metrics of gauge type for volume data reduction
         Metrics values can be iterated over.
         """
-        for v in self.fa.get_volumes():
+        for v in self.volumes:
             v_name = self.__split_vname(v['name'])
+            if 'vgroup' not in v.keys():
+                v['vgroup'] = ''
             self.data_reduction.add_metric([v_name[1], v['naaid'], v_name[0], v['vgroup']], v['data_reduction'] if v['data_reduction'] is not None else 0)
 
-
     def _size(self):
-        for v in self.fa.get_volumes():
+        for v in self.volumes:
+            if 'vgroup' not in v.keys():
+                v['vgroup'] = ''
             v_name = self.__split_vname(v['name'])
             self.size.add_metric([v_name[1], v['naaid'], v_name[0], v['vgroup']], v['size'] if v['size'] is not None else 0)
-
+            
     def _allocated(self):
-        for v in self.fa.get_volumes():
+        for v in self.volumes:
+            if 'vgroup' not in v.keys():
+                v['vgroup'] = ''
             v_name = self.__split_vname(v['name'])
             self.allocated.add_metric([v_name[1], v['naaid'], v_name[0], v['vgroup'], 'volumes'], v['volumes'] if v['volumes'] is not None else 0)
             self.allocated.add_metric([v_name[1], v['naaid'], v_name[0], v['vgroup'], 'snapshots'], v['snapshots'] if v['snapshots'] is not None else 0)
