@@ -8,7 +8,6 @@ class VolumeSpaceMetrics():
     """
 
     def __init__(self, volumes):
-        #self.fa = fa
         self.volumes = volumes
         self.data_reduction = GaugeMetricFamily('purefa_volume_space_datareduction_ratio',
                                                 'FlashArray volumes data reduction ratio',
