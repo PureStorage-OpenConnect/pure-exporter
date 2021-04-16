@@ -81,11 +81,10 @@ class FlashArray:
             self.vgroups = self.flasharray.list_vgroups()
         for v in self.flasharray.list_volumes(pending='true'):
             v['naaid'] = PURE_NAA + v['serial']
+            v['vgroup'] = ''
             for vg in self.vgroups:
                 if v['name'] in vg['volumes']:
                     v['vgroup'] = vg['name']
-                else:
-                    v['vgroup'] = ''
             vdict[v['name']] = v
 
         try:
