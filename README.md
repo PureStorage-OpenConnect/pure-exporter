@@ -8,7 +8,7 @@ Prometheus exporter for Pure Storage FlashArrays and FlashBlades.
 
 This applications aims to help monitor Pure Storage FlashArrays and FlashBlades by providing an "exporter", which means it extracts data from the Purity API and converts it to a format which is easily readable by Prometheus.
 
-The stateless design of the exporter allows for easy configuration management as well as scalability for a whole fleet of Pure Storage systems. Each time Prometheus scrapes metrics for a specific system, it should provide the hostname and the readonly API token via GET parameters to this exporter.
+The stateless design of the exporter allows for easy configuration management as well as scalability for a whole fleet of Pure Storage systems. Each time Prometheus scrapes metrics for a specific system, it should provide the hostname via GET parameter and the API token as Authorization token to this exporter.
 
 To monitor your Pure Storage appliances, you will need to create a new dedicated user on your array, and assign read-only permissions to it. Afterwards, you also have to create a new API key.
 The exporter is provided as three different options:
@@ -44,19 +44,7 @@ docker pull quay.io/purestorage/pure-fb-exporter:1.2.5-a
 
 To build and deploy the application via Docker, your local linux user should be added to the `docker` group in order to be able to communicate with the Docker daemon. (If this is not possible, you can still use <kbd>sudo</kbd>)
 
-This can be done with this command in the context of your user:
-```bash
-# add user to group
-sudo usermod -aG docker $(whoami)
-# apply the new group (no logout required)
-newgrp docker
-```
-
-The included Makefile's takes care of the necessary build steps:
-```bash
-make
-```
-
+The detailed description on how to do that can be found on the [Docker](https://docs.docker.com/engine/install/) official documentation for your operating systemm 
 To run a simple instance of the exporter, run:
 ```bash
 make -f Makefile.fa test
@@ -95,38 +83,38 @@ The full exporter understands the following requests:
 
 System | URL | GET parameters | description
 ---|---|---|---
-FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray | endpoint, apitoken | Full array metrics
-FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/array | endpoint, apitoken | Array only metrics
-FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/volumes | endpoint, apitoken | Volumes only metrics
-FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/hosts | endpoint, apitoken | Hosts only metrics
-FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/pods | endpoint, apitoken | Pods only metrics
-FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade | endpoint, apitoken | Full array metrics
-FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/array | endpoint, apitoken | Array only metrics
-FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/clients | endpoint, apitoken | Clients only metrics
-FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/quotas | endpoint, apitoken | Quotas only metrics
+FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray | endpoint| Full array metrics
+FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/array | endpoint | Array only metrics
+FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/volumes | endpoint | Volumes only metrics
+FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/hosts | endpoint | Hosts only metrics
+FlashArray | http://\<exporter-host\>:\<port\>/metrics/flasharray/pods | endpoint| Pods only metrics
+FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade | endpoint | Full array metrics
+FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/array | endpoint | Array only metrics
+FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/clients | endpoint | Clients only metrics
+FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/quotas | endpoint | Quotas only metrics
 
-In order to authenticate the exporter to the target array REST API the preferred mechanism is to provide the necessary api-token in the http request, by using the HTTP Authorization header of type 'Bearer'. As an alternative, it is possible to provide the api-token as a request argument, using the *apitoken* key.
+In order to authenticate the exporter to the target array REST API the preferred mechanism is to provide the necessary api-token in the http request, by using the HTTP Authorization header of type 'Bearer'. As an alternative, it is possible to provide the api-token as a request argument, using the *apitoken* key. *Note* this option is deprecated and will be removed from the next releases.
 
 The FlashArray-only and FlashBlade only exporters use a slightly different schema, which consists of the removal of the flasharray|flashblade string from the path.
 
 **FlashArray**
 
-URL | required GET parameters | description
+URL | GET parameters | description
 ---|---|---
-http://\<exporter-host\>:\<port\>/metrics | endpoint, apitoken | Full array metrics
-http://\<exporter-host\>:\<port\>/metrics/array | endpoint, apitoken | Array only metrics
-http://\<exporter-host\>:\<port\>/metrics/volumes | endpoint, apitoken | Volumes only metrics
-http://\<exporter-host\>:\<port\>/metrics/hosts | endpoint, apitoken | Hosts only metrics
-http://\<exporter-host\>:\<port\>/metrics/pods | endpoint, apitoken | Pods only metrics
+http://\<exporter-host\>:\<port\>/metrics | endpoint | Full array metrics
+http://\<exporter-host\>:\<port\>/metrics/array | endpoint | Array only metrics
+http://\<exporter-host\>:\<port\>/metrics/volumes | endpoint | Volumes only metrics
+http://\<exporter-host\>:\<port\>/metrics/hosts | endpoint | Hosts only metrics
+http://\<exporter-host\>:\<port\>/metrics/pods | endpoint | Pods only metrics
 
 **FlashBlade**
 
-URL | required GET parameters | description
+URL | GET parameters | description
 ---|---|---
-http://\<exporter-host\>:\<port\>/metrics | endpoint, apitoken | Full array metrics
-http://\<exporter-host\>:\<port\>/metrics/array | endpoint, apitoken | Array only metrics
-http://\<exporter-host\>:\<port\>/metrics/clients | endpoint, apitoken | Clients only metrics
-http://\<exporter-host\>:\<port\>/metrics/quotas | endpoint, apitoken | Quotas only metrics
+http://\<exporter-host\>:\<port\>/metrics | endpoint | Full array metrics
+http://\<exporter-host\>:\<port\>/metrics/array | endpoint | Array only metrics
+http://\<exporter-host\>:\<port\>/metrics/clients | endpoint | Clients only metrics
+http://\<exporter-host\>:\<port\>/metrics/quotas | endpoint | Quotas only metrics
 
 
 Depending on the target array, scraping for the whole set of metrics could result into timeout issues, in which case it is suggested either to increase the scraping timeout or to scrape each single endpoint instead.
