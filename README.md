@@ -12,7 +12,7 @@ The stateless design of the exporter allows for easy configuration management as
 
 ---
 
-Note: The previous method to provide the API token via a GET parameter is now deprecated and will be removed in the next major version.
+**Note**: The previous method to provide the API token via a GET parameter is now deprecated and will be removed in the next major version.
 
 ---
 
