@@ -10,6 +10,10 @@ This applications aims to help monitor Pure Storage FlashArrays and FlashBlades 
 
 The stateless design of the exporter allows for easy configuration management as well as scalability for a whole fleet of Pure Storage systems. Each time Prometheus scrapes metrics for a specific system, it should provide the hostname via GET parameter and the API token as Authorization token to this exporter.
 
+
+Note: The previous method to provide the API token via a GET parameter is now deprecated and will be removed in the next major version.
+---
+
 To monitor your Pure Storage appliances, you will need to create a new dedicated user on your array, and assign read-only permissions to it. Afterwards, you also have to create a new API key.
 The exporter is provided as three different options:
 
