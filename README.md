@@ -36,12 +36,12 @@ The exporter is preferably built and launched via Docker. You can also scale the
 docker pull quay.io/purestorage/pure-exporter:1.2.5-a
 ```
 
-or
+or for the FlashArray exporter
 
 ```shell
 docker pull quay.io/purestorage/pure-fa-exporter:1.2.5-a
 ```
-or
+or for the FlashBlade exporter
 
 ```shell
 docker pull quay.io/purestorage/pure-fb-exporter:1.2.5-a
