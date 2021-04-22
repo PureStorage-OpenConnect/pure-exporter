@@ -87,7 +87,7 @@ The exporter uses a RESTful API schema to provide Prometheus scraping endpoints.
 
 **Authentication**
 
-Autentication is used by the exporter as the mechanism to cross authenticate to the scraped appliance, therefore for each array it is required to provide the REST API token for an account that has a 'readonly' role. The api-token must be provided in the http request using the HTTP Authorization header of type 'Bearer'. This is achieved by specifying the api-token value as the authorization parameter of the specific job in the Prometheus configuration file. As an alternative, it is possible to provide the api-token as a request argument, using the *apitoken* key. *Note* this option is deprecated and will be removed from the next releases.
+Authentication is used by the exporter as the mechanism to cross authenticate to the scraped appliance, therefore for each array it is required to provide the REST API token for an account that has a 'readonly' role. The api-token must be provided in the http request using the HTTP Authorization header of type 'Bearer'. This is achieved by specifying the api-token value as the authorization parameter of the specific job in the Prometheus configuration file. As an alternative, it is possible to provide the api-token as a request argument, using the *apitoken* key. *Note* this option is deprecated and will be removed from the next releases.
 
 
 The full exporter understands the following requests:
