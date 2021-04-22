@@ -83,7 +83,12 @@ Use the same approach to modify the FlashArray and/or the FlashBlade exporter, b
 
 ### Scraping endpoints
 
-The exporter application uses a RESTful API schema to provide Prometheus scraping endpoints.
+The exporter uses a RESTful API schema to provide Prometheus scraping endpoints.
+
+**Authentication**
+
+Autentication is used by the exporter as the mechanism to cross authenticate to the scraped appliance, therefore for each array it is required to provide the REST API token for an account that has a 'readonly' role. The api-token must be provided in the http request using the HTTP Authorization header of type 'Bearer'. This is achieved by specifying the api-token value as the authorization parameter of the specific job in the Prometheus configuration file. As an alternative, it is possible to provide the api-token as a request argument, using the *apitoken* key. *Note* this option is deprecated and will be removed from the next releases.
+
 
 The full exporter understands the following requests:
 
@@ -99,7 +104,6 @@ FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/array | endpoi
 FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/clients | endpoint | Clients only metrics
 FlashBlade | http://\<exporter-host\>:\<port\>/metrics/flashblade/quotas | endpoint | Quotas only metrics
 
-In order to authenticate the exporter to the target array REST API the preferred mechanism is to provide the necessary api-token in the http request, by using the HTTP Authorization header of type 'Bearer'. As an alternative, it is possible to provide the api-token as a request argument, using the *apitoken* key. *Note* this option is deprecated and will be removed from the next releases.
 
 The FlashArray-only and FlashBlade only exporters use a slightly different schema, which consists of the removal of the flasharray|flashblade string from the path.
 
