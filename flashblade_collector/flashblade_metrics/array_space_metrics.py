@@ -13,7 +13,7 @@ class ArraySpaceMetrics():
         self.reduction = GaugeMetricFamily('purefb_array_space_data_reduction',
                                            'FlashBlade overall data reduction',
                                            labels=[])
-        self.array_space = fb.get_array_space().space
+        self.array_space = fb.get_array_space()
 
     def _space(self):
         """
@@ -21,10 +21,11 @@ class ArraySpaceMetrics():
         """
         if self.array_space is  None:
             return
-        self.space.add_metric(['unique'], self.array_space.unique)
-        self.space.add_metric(['virtual'], self.array_space.virtual)
-        self.space.add_metric(['total_physical'], self.array_space.total_physical)
-        self.space.add_metric(['snapshots'], self.array_space.snapshots)
+        self.space.add_metric(['unique'], self.array_space.space.unique)
+        self.space.add_metric(['virtual'], self.array_space.space.virtual)
+        self.space.add_metric(['total_physical'], self.array_space.space.total_physical)
+        self.space.add_metric(['snapshots'], self.array_space.space.snapshots)
+        self.space.add_metric(['capacity'], self.array_space.capacity)
 
     def _reduction(self):
         """
@@ -32,7 +33,7 @@ class ArraySpaceMetrics():
         """
         if self.array_space is  None:
             return
-        self.reduction.add_metric([], self.array_space.data_reduction)
+        self.reduction.add_metric([], self.array_space.space.data_reduction)
 
     def get_metrics(self):
         self._space()
