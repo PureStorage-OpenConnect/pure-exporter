@@ -12,6 +12,7 @@ from .flasharray_metrics.host_volume_metrics import HostVolumeMetrics
 from .flasharray_metrics.pod_status_metrics import PodStatusMetrics
 from .flasharray_metrics.pod_space_metrics import PodSpaceMetrics
 from .flasharray_metrics.pod_performance_metrics import PodPerformanceMetrics
+from .flasharray_metrics.network_interface_metrics import NetworkInterfacePerformanceMetrics
 
 
 class FlasharrayCollector():
@@ -42,6 +43,7 @@ class FlasharrayCollector():
             yield from ArrayEventsMetrics(self.fa).get_metrics()
             yield from ArraySpaceMetrics(self.fa).get_metrics()
             yield from ArrayPerformanceMetrics(self.fa).get_metrics()
+            yield from NetworkInterfacePerformanceMetrics(self.fa).get_metrics()
         if self.request in ['all', 'volumes']:
             yield from VolumeSpaceMetrics(self.fa).get_metrics()
             yield from VolumePerformanceMetrics(self.fa).get_metrics()

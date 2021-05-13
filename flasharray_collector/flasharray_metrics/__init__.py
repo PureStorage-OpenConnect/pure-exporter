@@ -1,4 +1,4 @@
-__all__ = ["flasharray", 
+__all__ = ["flasharray",
            "mappings",
            "array_info_metrics",
            "array_hardware_metrics",
@@ -12,4 +12,5 @@ __all__ = ["flasharray",
            "host_volume_metrics",
            "pod_status_metrics",
            "pod_space_metrics",
-           "pod_performance_metrics"]
+           "pod_performance_metrics"
+           "network_interface_performance_metrics"]
