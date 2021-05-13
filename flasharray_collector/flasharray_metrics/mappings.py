@@ -12,6 +12,17 @@ array_latency_mapping = {'usec_per_read_op': 'read',
                          'qos_rate_limit_usec_per_write_op': 'qos_write',
                          'qos_rate_limit_usec_per_mirrored_write_op': 'qos_mirrored'}
 
+array_network_interface_mapping = {'other_errors_per_sec': 'other_errors',
+                             'received_bytes_per_sec': 'rx_bytes',
+                             'received_crc_errors_per_sec': 'rx_crc_errors',
+                             'received_frame_errors_per_sec': 'rx_frame_errors',
+                             'received_packets_per_sec': 'rx_packets',
+                             'total_errors_per_sec': 'errors',
+                             'transmitted_bytes_per_sec': 'tx_bytes',
+                             'transmitted_carrier_errors_per_sec': 'tx_carrier_errors',
+                             'transmitted_dropped_errors_per_sec': 'tx_dropped_errors',
+                             'transmitted_packets_per_sec': 'tx_packets'}
+
 array_bandwidth_mapping = {'output_per_sec': 'read',
                            'input_per_sec': 'write',
                            'mirrored_input_per_sec': 'mirrored_write'}
@@ -26,7 +37,7 @@ array_bsize_mapping = {'bytes_per_read': 'read',
 
 array_qdepth_mapping = {'queue_depth': ''}
 
-array_used_mapping = {'shared_space': 'shared', 
+array_used_mapping = {'shared_space': 'shared',
                       'system': 'system',
                       'volumes': 'volumes',
                       'snapshots': 'snapshots',
@@ -37,7 +48,7 @@ array_drr_mapping = {'data_reduction': ''}
 array_capacity_mapping = {'capacity': ''}
 
 array_provisioned_mapping = {'provisioned': ''}
-                        
+
 volume_latency_mapping = array_latency_mapping
 volume_bandwidth_mapping = array_bandwidth_mapping
 volume_iops_mapping = array_iops_mapping
