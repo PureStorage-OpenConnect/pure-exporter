@@ -99,6 +99,7 @@ class FlashArray:
                 v['snapshots'] = 0
                 v['total'] = 0
                 v['data_reduction'] = 0
+                v['thin_provision'] = 0
                 v['vgroup'] = ''
                 vdict[v['name']] = v
         except purestorage.PureError:

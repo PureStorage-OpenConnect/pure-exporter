@@ -13,6 +13,10 @@ class VolumeSpaceMetrics():
                                                 'FlashArray volumes data reduction ratio',
                                                 labels=['volume', 'naaid', 'pod', 'vgroup'],
                                                 unit='ratio')
+        self.thin_provision = GaugeMetricFamily('purefa_volume_space_thinprovision_ratio',
+                                                'FlashArray volumes data thin provision ratio',
+                                                labels=['volume', 'naaid', 'pod', 'vgroup'],
+                                                unit='ratio')
         self.size = GaugeMetricFamily('purefa_volume_space_size_bytes',
                                       'FlashArray volumes size',
                                       labels=['volume', 'naaid', 'pod', 'vgroup'])
@@ -36,6 +40,10 @@ class VolumeSpaceMetrics():
             v_name = self.__split_vname(v['name'])
             self.data_reduction.add_metric([v_name[1], v['naaid'], v_name[0], v['vgroup']], v['data_reduction'] if v['data_reduction'] is not None else 0)
 
+    def _thin_provision(self):
+        for v in self.fa.get_volumes():
+            v_name = self.__split_vname(v['name'])
+            self._thin_provision.add_metric([v_name[1], v['naaid'], v_name[0], v['vgroup']], v['thin_provision'] if v['thin_provision'] is not None else 0)
 
     def _size(self):
         for v in self.fa.get_volumes():
