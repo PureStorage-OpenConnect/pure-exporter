@@ -69,7 +69,7 @@
   "panels": [
     {
       "content": "<center>\n  <h1>Pure Storage FlashArray storage usage overview</h1>\n</center>",
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "$datasource",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -247,7 +247,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
           "custom": {}
