@@ -256,6 +256,13 @@
           "interval": "",
           "legendFormat": "{{ dimension }}",
           "refId": "C"
+        },
+        {
+          "expr": "purefb_filesystems_space_bytes{job=~\"$job\",instance=~\"$instance\",name=\"$filesystem\",dimension=\"provisioned\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ dimension }}",
+          "refId": "E"
         }
       ],
       "thresholds": [],
@@ -530,7 +537,7 @@
       "pluginVersion": "7.0.3",
       "targets": [
         {
-          "expr": "sum(purefb_filesystems_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\",name=\"$filesystem\"})\n/\nsum(purefb_filesystems_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"virtual\",name=\"$filesystem\"})",
+          "expr": "sum(purefb_filesystems_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"virtual\",name=\"$filesystem\"})\n/\nsum(purefb_filesystems_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"provisioned\",name=\"$filesystem\"})",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -634,7 +641,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "$datasource",
       "decimals": 0,
       "fieldConfig": {
         "defaults": {
@@ -964,7 +971,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -1078,7 +1085,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -1192,7 +1199,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
           "custom": {}

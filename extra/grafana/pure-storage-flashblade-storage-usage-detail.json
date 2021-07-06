@@ -75,7 +75,7 @@
   "panels": [
     {
       "content": "<center>\n  <h1>Pure Storage FlashBlade storage usage</h1>\n</center>",
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "$datasource",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -252,7 +252,7 @@
       "pluginVersion": "7.0.3",
       "targets": [
         {
-          "expr": "sum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"capacity\"})\n-\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})",
+          "expr": "sum(purefb_array_capacity_bytes{job=~\"$job\",instance=~\"$instance\"})\n-\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})",
           "instant": true,
           "refId": "A"
         }
@@ -346,7 +346,7 @@
           "refId": "A"
         },
         {
-          "expr": "sum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"capacity\"})\n-\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})",
+          "expr": "sum(purefb_array_capacity_bytes{job=~\"$job\",instance=~\"$instance\"})\n-\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "free",
@@ -533,7 +533,7 @@
       "pluginVersion": "7.0.3",
       "targets": [
         {
-          "expr": "sum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})\n/\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"capacity\"})",
+          "expr": "sum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})\n/\nsum(purefb_array_capacity_bytes{job=~\"$job\",instance=~\"$instance\"})",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 1,
@@ -610,7 +610,7 @@
       "pluginVersion": "7.0.3",
       "targets": [
         {
-          "expr": "(sum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"capacity\"}) * $norm_percent /100)\n-\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})",
+          "expr": "(sum(purefb_array_capacity_bytes{job=~\"$job\",instance=~\"$instance\"}) * $norm_percent /100)\n-\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})",
           "refId": "A"
         }
       ],
@@ -680,7 +680,7 @@
       "pluginVersion": "7.0.3",
       "targets": [
         {
-          "expr": "purefb_array_space_bytes{job=\"$job\", instance=~\"$instance\", dimension=\"capacity\"}",
+          "expr": "purefb_array_capacity_bytes{job=\"$job\", instance=~\"$instance\"}",
           "refId": "A"
         }
       ],
@@ -838,7 +838,7 @@
       "pluginVersion": "7.0.3",
       "targets": [
         {
-          "expr": "((sum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"capacity\"}) * $norm_percent /100)\n-\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})) \n* \navg(purefb_array_space_data_reduction{job=~\"$job\",instance=~\"$instance\"})",
+          "expr": "((sum(purefb_array_capacity_bytes{job=~\"$job\",instance=~\"$instance\"}) * $norm_percent /100)\n-\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})) \n* \navg(purefb_array_space_data_reduction{job=~\"$job\",instance=~\"$instance\"})",
           "refId": "A"
         }
       ],

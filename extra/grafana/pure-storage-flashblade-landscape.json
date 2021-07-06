@@ -57,7 +57,7 @@
   "panels": [
     {
       "content": "<center>\n  <h1>Pure Storage FlashBlade</h1>\n</center>",
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "$datasource",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -82,7 +82,7 @@
     },
     {
       "collapsed": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "$datasource",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -492,7 +492,7 @@
       "pluginVersion": "7.0.3",
       "targets": [
         {
-          "expr": "sum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})\n/\nsum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"capacity\"})",
+          "expr": "sum(purefb_array_space_bytes{job=~\"$job\",instance=~\"$instance\",dimension=\"total_physical\"})\n/\nsum(purefb_array_capacity_bytes{job=~\"$job\",instance=~\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"

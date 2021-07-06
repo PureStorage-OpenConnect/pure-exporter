@@ -398,7 +398,7 @@
       "pluginVersion": "7.0.3",
       "targets": [
         {
-          "expr": "sum(purefb_array_space_bytes{job=~\"$job\",instance=\"$instance\",dimension=\"total_physical\"})\n/\nsum(purefb_array_space_bytes{job=~\"$job\",instance=\"$instance\",dimension=\"capacity\"})",
+          "expr": "sum(purefb_array_space_bytes{job=~\"$job\",instance=\"$instance\",dimension=\"total_physical\"})\n/\nsum(purefb_array_capacity_bytes{job=~\"$job\",instance=\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -533,7 +533,7 @@
       "pluginVersion": "7.0.3",
       "targets": [
         {
-          "expr": "sum(purefb_array_performance_latency_usec{job=~\"$job\",instance=\"$instance\",protocol=\"all\"}) / 1000",
+          "expr": "sum(purefb_array_performance_latency_usec{job=~\"$job\",instance=\"$instance\"}) / 1000",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -621,80 +621,6 @@
       "fieldConfig": {
         "defaults": {
           "custom": {},
-          "displayName": "{{location}}",
-          "mappings": [
-            {
-              "id": 0,
-              "op": "=",
-              "text": "",
-              "type": 1,
-              "value": "1"
-            }
-          ],
-          "nullValueMode": "connected",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 0,
-        "y": 2
-      },
-      "id": 38,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "fieldOptions": {
-          "calcs": [
-            "mean"
-          ]
-        },
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "fields": "",
-          "values": false
-        }
-      },
-      "pluginVersion": "7.0.3",
-      "targets": [
-        {
-          "expr": "purefb_info{job=~\"$job\",instance=\"$instance\"}",
-          "format": "time_series",
-          "instant": true,
-          "intervalFactor": 1,
-          "legendFormat": "{{site}}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "location",
-      "type": "stat"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "$datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
           "mappings": [
             {
               "from": "null",
@@ -765,6 +691,7 @@
         {
           "expr": "count(purefb_hw_status{job=~\"$job\",instance=~\"$instance\"} == 0)",
           "format": "time_series",
+          "instant": true,
           "intervalFactor": 1,
           "refId": "A"
         }
@@ -1162,7 +1089,7 @@
     },
     {
       "collapsed": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "$datasource",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1531,7 +1458,7 @@
     },
     {
       "collapsed": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "$datasource",
       "gridPos": {
         "h": 1,
         "w": 24,
