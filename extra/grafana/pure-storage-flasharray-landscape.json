@@ -11,22 +11,10 @@
   ],
   "__requires": [
     {
-      "type": "panel",
-      "id": "gauge",
-      "name": "Gauge",
-      "version": ""
-    },
-    {
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
       "version": "7.0.1"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": ""
     },
     {
       "type": "datasource",
@@ -64,12 +52,12 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1591091438822,
+  "iteration": 1591091374355,
   "links": [],
   "panels": [
     {
-      "content": "<center>\n  <h1>Pure Storage FlashArray storage usage overview</h1>\n</center>",
-      "datasource": "${DS_PROMETHEUS}",
+      "content": "<center>\n  <h1>Pure Storage FlashArray</h1>\n</center>",
+      "datasource": "$datasource",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -83,7 +71,7 @@
         "x": 0,
         "y": 0
       },
-      "id": 93,
+      "id": 257,
       "links": [],
       "mode": "html",
       "timeFrom": null,
@@ -91,6 +79,21 @@
       "title": "",
       "transparent": true,
       "type": "text"
+    },
+    {
+      "collapsed": false,
+      "datasource": "$datasource",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 2
+      },
+      "id": 25,
+      "panels": [],
+      "repeat": "instance",
+      "title": "$instance",
+      "type": "row"
     },
     {
       "cacheTimeout": null,
@@ -107,8 +110,331 @@
               "value": "null"
             }
           ],
-          "max": 1,
-          "min": 0,
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#FF9830",
+                "value": 1
+              },
+              {
+                "color": "#d44a3a",
+                "value": 2
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 2,
+        "x": 0,
+        "y": 3
+      },
+      "id": 26,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "sum(purefa_alerts_total{job=~\"$job\",instance=~\"$instance\",severity=\"info\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "info",
+      "type": "stat"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#d44a3a",
+                "value": 1
+              },
+              {
+                "color": "#d44a3a",
+                "value": 2
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 2,
+        "x": 2,
+        "y": 3
+      },
+      "id": 52,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "sum(purefa_alerts_total{job=~\"$job\",instance=~\"$instance\",severity=\"warning\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "warnings",
+      "type": "stat"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#d44a3a",
+                "value": 1
+              },
+              {
+                "color": "#d44a3a",
+                "value": 2
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 2,
+        "x": 4,
+        "y": 3
+      },
+      "id": 53,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "sum(purefa_alerts_total{job=~\"$job\",instance=~\"$instance\",severity=\"critical\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "critical",
+      "type": "stat"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "null",
+              "id": 0,
+              "text": "N/A",
+              "to": "null",
+              "type": 2
+            },
+            {
+              "from": "0",
+              "id": 1,
+              "text": "OK",
+              "to": "0",
+              "type": 2
+            },
+            {
+              "from": "1",
+              "id": 2,
+              "text": "FAILURE",
+              "to": "1000",
+              "type": 2
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#C4162A",
+                "value": 1
+              },
+              {
+                "color": "#C4162A"
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 3,
+        "x": 6,
+        "y": 3
+      },
+      "id": 304,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "(count(purefa_hardware_component_health{job=~\"$job\",instance=~\"$instance\"})-sum(purefa_hardware_component_health{job=~\"$job\",instance=~\"$instance\"}))\n+\n(count(purefa_hardware_chassis_health{job=~\"$job\",instance=~\"$instance\"})-sum(purefa_hardware_chassis_health{job=~\"$job\",instance=~\"$instance\"}))\n+\n(count(purefa_hardware_controller_health{job=~\"$job\",instance=~\"$instance\"})-sum(purefa_hardware_controller_health{job=~\"$job\",instance=~\"$instance\"}))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "hardware",
+      "type": "stat"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
           "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
@@ -132,420 +458,44 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 2,
         "w": 3,
-        "x": 0,
-        "y": 2
+        "x": 9,
+        "y": 3
       },
-      "id": 4,
+      "id": 23,
       "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
+        "colorMode": "background",
         "fieldOptions": {
           "calcs": [
             "lastNotNull"
           ]
         },
+        "graphMode": "none",
+        "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
             "mean"
           ],
           "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        }
       },
       "pluginVersion": "7.0.1",
       "targets": [
         {
           "expr": "sum(purefa_array_space_used_bytes{job=~\"$job\",instance=~\"$instance\"})\n/\nsum(purefa_array_space_capacity_bytes{job=~\"$job\",instance=~\"$instance\"})",
           "format": "time_series",
-          "instant": true,
           "intervalFactor": 1,
           "refId": "A"
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "array capacity usage",
-      "type": "gauge"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "$datasource",
-      "description": "Physical free space (native)",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [
-            {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
-            }
-          ],
-          "nullValueMode": "connected",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "white",
-                "value": null
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 2,
-        "w": 3,
-        "x": 3,
-        "y": 2
-      },
-      "id": 12,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "values": false
-        }
-      },
-      "pluginVersion": "7.0.1",
-      "targets": [
-        {
-          "expr": "sum(purefa_array_space_capacity_bytes{job=~\"$job\",instance=~\"$instance\"})\n-\nsum(\n  purefa_array_space_used_bytes{job=~\"$job\",instance=~\"$instance\"}\n)",
-          "instant": true,
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Free space",
-      "type": "stat"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 8,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 14,
-        "x": 6,
-        "y": 2
-      },
-      "hiddenSeries": false,
-      "id": 121,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": false,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "sort": "current",
-        "sortDesc": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 0,
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": true,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "((sum(purefa_array_space_capacity_bytes{job=~\"$job\", instance=~\"$instance\"}) by(instance))\n-\nsum(purefa_array_space_used_bytes{job=~\"$job\", instance=~\"$instance\"}) by(instance))",
-          "legendFormat": "{{ instance }}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Free Space",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "bytes",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "$datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [
-            {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
-            }
-          ],
-          "nullValueMode": "connected",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "white",
-                "value": null
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 2,
-        "w": 4,
-        "x": 20,
-        "y": 2
-      },
-      "id": 101,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "values": false
-        }
-      },
-      "pluginVersion": "7.0.1",
-      "targets": [
-        {
-          "expr": "sum(purefa_array_space_used_bytes{job=\"$job\",instance=~\"$instance\"})",
-          "instant": true,
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Capacity usage on Arrays",
-      "type": "stat"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "$datasource",
-      "description": "Physical free space normalized $norm_percent %\n\npysical_free_space  * normalized_percent / 100 ",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [
-            {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
-            }
-          ],
-          "nullValueMode": "connected",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "white",
-                "value": null
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 2,
-        "w": 3,
-        "x": 3,
-        "y": 4
-      },
-      "id": 10,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "values": false
-        }
-      },
-      "pluginVersion": "7.0.1",
-      "targets": [
-        {
-          "expr": "(sum(purefa_array_space_capacity_bytes{job=~\"$job\",instance=~\"$instance\"}) * $norm_percent /100)\n-\nsum(purefa_array_space_used_bytes{job=~\"$job\",instance=~\"$instance\"})",
-          "instant": true,
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Free based on $norm_percent  % full",
-      "type": "stat"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "$datasource",
-      "description": "Provisioned volume space.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [
-            {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
-            }
-          ],
-          "nullValueMode": "connected",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "white",
-                "value": null
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 2,
-        "w": 4,
-        "x": 20,
-        "y": 4
-      },
-      "id": 100,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "values": false
-        }
-      },
-      "pluginVersion": "7.0.1",
-      "targets": [
-        {
-          "expr": "sum(purefa_array_space_provisioned_bytes{job=\"$job\",instance=~\"$instance\"})",
-          "instant": true,
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Provisioned on Arrays",
+      "title": "capacity usage",
       "type": "stat"
     },
     {
@@ -573,7 +523,7 @@
                 "value": null
               },
               {
-                "color": "#FF9830",
+                "color": "rgba(237, 129, 40, 0.89)",
                 "value": 1.5
               },
               {
@@ -589,10 +539,10 @@
       "gridPos": {
         "h": 2,
         "w": 3,
-        "x": 3,
-        "y": 6
+        "x": 12,
+        "y": 3
       },
-      "id": 8,
+      "id": 85,
       "interval": null,
       "links": [],
       "maxDataPoints": 100,
@@ -616,22 +566,20 @@
       "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "avg(purefa_array_space_datareduction_ratio{job=~\"$job\"})",
+          "expr": "sum(purefa_array_space_datareduction_ratio{job=~\"$job\",instance=~\"$instance\"})",
           "format": "time_series",
-          "instant": true,
           "intervalFactor": 1,
           "refId": "A"
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "data reduction ratio",
+      "title": "data reduction",
       "type": "stat"
     },
     {
       "cacheTimeout": null,
       "datasource": "$datasource",
-      "description": "Over provisioning in percent.......\nphysical_space / provisioned_volume_space",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -649,247 +597,38 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "white",
-                "value": null
-              }
-            ]
-          },
-          "unit": "percentunit"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 2,
-        "w": 4,
-        "x": 20,
-        "y": 6
-      },
-      "id": 103,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "values": false
-        }
-      },
-      "pluginVersion": "7.0.1",
-      "targets": [
-        {
-          "expr": "sum(purefa_array_space_provisioned_bytes{job=\"$job\",instance=~\"$instance\"}) / sum(purefa_array_space_capacity_bytes{job=\"$job\",instance=~\"$instance\"})",
-          "instant": true,
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Over provioning based on array",
-      "type": "stat"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "$datasource",
-      "description": "logical usable free Space normalized.  \n(physical_free_space  * normalized_percent\n/ 100\n) *  data_reduction",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [
-            {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
-            }
-          ],
-          "nullValueMode": "connected",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "#d44a3a",
+                "color": "#299c46",
                 "value": null
               },
               {
                 "color": "rgba(237, 129, 40, 0.89)",
-                "value": -1
+                "value": 50000
               },
               {
-                "color": "#299c46",
-                "value": 0
+                "color": "#d44a3a",
+                "value": 80000
               }
             ]
           },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 3,
-        "x": 3,
-        "y": 8
-      },
-      "id": 11,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "values": false
-        }
-      },
-      "pluginVersion": "7.0.1",
-      "targets": [
-        {
-          "expr": "((sum(purefa_array_space_capacity_bytes{job=~\"$job\",instance=~\"$instance\"}) * $norm_percent /100)\n-\nsum(purefa_array_space_used_bytes{job=~\"$job\",instance=~\"$instance\"})) \n* \navg(purefa_array_space_datareduction_ratio{job=~\"$job\",instance=~\"$instance\"})",
-          "instant": true,
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Free usable",
-      "type": "stat"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "$datasource",
-      "description": "Storage you can provision base on over provisioning ...............................................\n(physical_free_space  * normalized_percent\n/ 100\n) * over_provisioning_percent",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [
-            {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
-            }
-          ],
-          "nullValueMode": "connected",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "white",
-                "value": null
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 20,
-        "y": 8
-      },
-      "id": 106,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "values": false
-        }
-      },
-      "pluginVersion": "7.0.1",
-      "targets": [
-        {
-          "expr": "((sum(purefa_array_space_capacity_bytes{job=~\"$job\",instance=~\"$instance\"}) * $norm_percent /100)\n-\nsum(purefa_array_space_used_bytes{job=~\"$job\",instance=~\"$instance\"})) \n* \n(sum(purefa_array_space_provisioned_bytes{job=\"$job\",instance=~\"$instance\"}) / sum(purefa_array_space_capacity_bytes{job=\"$job\",instance=~\"$instance\"}))",
-          "instant": true,
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Free base on over provioning",
-      "type": "stat"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "$datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [
-            {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
-            }
-          ],
-          "nullValueMode": "connected",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "white",
-                "value": null
-              }
-            ]
-          },
-          "unit": "bytes"
+          "unit": "iops"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 2,
         "w": 3,
-        "x": 0,
-        "y": 9
+        "x": 15,
+        "y": 3
       },
-      "id": 6,
+      "id": 122,
       "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "fieldOptions": {
           "calcs": [
-            "lastNotNull"
+            "mean"
           ]
         },
         "graphMode": "none",
@@ -905,20 +644,177 @@
       "pluginVersion": "7.0.1",
       "targets": [
         {
-          "expr": "sum(\n  delta(\n    purefa_array_space_used_bytes{job=~\"$job\",instance=~\"$instance\"}[4w]\n  )\n)",
+          "expr": "sum(purefa_array_performance_iops{job=~\"$job\",instance=~\"$instance\"})",
           "format": "time_series",
-          "instant": true,
+          "instant": false,
+          "intervalFactor": 1,
+          "legendFormat": "{{ dimension }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "average iops",
+      "type": "stat"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 2000000000
+              },
+              {
+                "color": "#d44a3a",
+                "value": 4000000000
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 3,
+        "x": 18,
+        "y": 3
+      },
+      "id": 210,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "sum(purefa_array_performance_throughput_bytes{job=~\"$job\",instance=~\"$instance\"})",
+          "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
         }
       ],
-      "timeFrom": "90d",
+      "timeFrom": null,
       "timeShift": null,
-      "title": "4 week capacity delta",
+      "title": "average throughput",
+      "type": "stat"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "$datasource",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 0.8
+              },
+              {
+                "color": "#d44a3a",
+                "value": 1.5
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 3,
+        "x": 21,
+        "y": 3
+      },
+      "id": 164,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "avg(purefa_array_performance_latency_usec{job=~\"$job\",instance=~\"$instance\"}) / 1000",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "average IO latency",
       "type": "stat"
     }
   ],
-  "refresh": "30s",
+  "refresh": "5m",
   "schemaVersion": 25,
   "style": "dark",
   "tags": [],
@@ -985,49 +881,11 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
-      },
-      {
-        "allValue": null,
-        "current": {
-          "selected": true,
-          "text": "80",
-          "value": "80"
-        },
-        "hide": 0,
-        "includeAll": false,
-        "label": "normalized Percent",
-        "multi": false,
-        "name": "norm_percent",
-        "options": [
-          {
-            "selected": false,
-            "text": "60",
-            "value": "60"
-          },
-          {
-            "selected": false,
-            "text": "70",
-            "value": "70"
-          },
-          {
-            "selected": true,
-            "text": "80",
-            "value": "80"
-          },
-          {
-            "selected": false,
-            "text": "90",
-            "value": "90"
-          }
-        ],
-        "query": "60,70,80,90",
-        "skipUrlSync": false,
-        "type": "custom"
       }
     ]
   },
   "time": {
-    "from": "now-90d",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -1050,7 +908,7 @@
     ]
   },
   "timezone": "",
-  "title": "Pure Storage FlashArray storage usage overview",
-  "uid": "syPF_VsWz",
-  "version": 31
+  "title": "Pure Storage FlashArray landscape",
+  "uid": "yle1zbWWy",
+  "version": 8
 }
