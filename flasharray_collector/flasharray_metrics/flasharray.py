@@ -21,6 +21,8 @@ host_kpi_params = array_kpi_params
 volume_kpi_params = base_kpi_params + [{'space': True, 'pending': True}]
 pod_kpi_params = volume_kpi_params
 
+nic_kpi_params = base_kpi_params + [{'error': True}]
+
 
 class FlashArray:
     """
@@ -42,6 +44,7 @@ class FlashArray:
         self.vgroups = None
         self.pods = None
         self.host_volumes = None
+        self.network_interfaces = None
 
     def __del__(self):
         if self.flasharray:
@@ -111,7 +114,7 @@ class FlashArray:
         self.volumes = vdict
         return list(self.volumes.values())
 
-    def get_hosts(self):    
+    def get_hosts(self):
         if self.hosts is not None:
             return list(self.hosts.values())
         hdict = {}
@@ -164,3 +167,22 @@ class FlashArray:
         # pdict = {key:val for key, val in pdict.items() if val['time_remaining'] is None}
         self.pods = pdict
         return list(self.pods.values())
+
+    def get_network_interfaces(self):
+        if self.network_interfaces is not None:
+            return list(self.network_interfaces.values())
+        nicdict = {}
+        try:
+            for n in self.flasharray.list_network_interfaces():
+                nicdict[n['name']] = n
+        except purestorage.PureError:
+            pass
+
+        for params in nic_kpi_params:
+            try:
+                for n in self.flasharray.list_network_interfaces(**params):
+                    nicdict[n['name']].update(n)
+            except purestorage.PureError:
+                pass
+        self.network_interfaces = nicdict
+        return list(self.network_interfaces.values())
