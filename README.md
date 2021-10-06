@@ -3,6 +3,11 @@
 # Pure Storage Prometheus exporter
 Prometheus exporter for Pure Storage FlashArrays and FlashBlades.
 
+## Support Statement
+These exporters are provided under Best Efforts support by the Pure Portfolio Solutions Group, Open Source Integrations team.
+For feature requests and bugs please use GitHub Issues.
+We will address these as soon as we can, but there are no specific SLAs.
+##
 
 ### Overview
 
