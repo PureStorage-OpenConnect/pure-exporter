@@ -35,7 +35,7 @@ class FlashArray:
                 endpoint,
                 api_token=api_token,
                 user_agent='Purity_FA_Prometheus_exporter/1.0')
-        except purestorage.PureError:
+        except (purestorage.PureError,purestorage.ValueError):
             pass
 
         self.array = None
