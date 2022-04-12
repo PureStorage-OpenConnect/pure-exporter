@@ -1,4 +1,4 @@
-IMAGE_NAMESPACE = quay.io/purestorage
+IMAGE_NAMESPACE = ddejaege
 IMAGE_NAME = pure-fa-exporter
 IMAGE_TAG ?= latest
 EXPORTER ?= pure_fa_exporter
