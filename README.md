@@ -1,5 +1,7 @@
 ![Current version](https://img.shields.io/github/v/tag/PureStorage-OpenConnect/pure-exporter?label=current%20version)
 
+# NOTE.... This exporter is deprecated in favor of the individual OpenMetrics exporters for [FlashArray](https://github.com/PureStorage-OpenConnect/pure-fa-openmetrics-exporter) and [FlashBlade](https://github.com/PureStorage-OpenConnect/pure-fb-openmetrics-exporter)
+
 # Pure Storage Prometheus exporter
 Prometheus exporter for Pure Storage FlashArrays and FlashBlades.
 
